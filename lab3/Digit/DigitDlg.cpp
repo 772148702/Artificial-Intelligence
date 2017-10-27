@@ -193,6 +193,7 @@ void CDigitDlg::showState() {
 void CDigitDlg::OnBnClickedBntStart()
 {
 	// TODO: 在此添加控件通知处理程序代码
+	listbox.ResetContent();
 	vector<int> v;
 	for (int i = 0; i < 9; i++) {
 		CString s;
@@ -200,24 +201,42 @@ void CDigitDlg::OnBnClickedBntStart()
 		v.push_back(_ttoi(s));
 	}
 	cnt = 0;
-	al.init(v);
-	CDigitDlg * a = this;
-	AfxBeginThread(Thread1, a);
+	if (((CButton *)(GetDlgItem(IDC_RD_H1)))->GetCheck()) {
+		listbox.AddString(L"错位启发函数");
+		al.init1(v);
+		CDigitDlg * a = this;
+		AfxBeginThread(Thread1, a);
+	}
+	else {
+		listbox.AddString(L"距离启发函数");
+		al.init2(v);
+		CDigitDlg * a = this;
+		AfxBeginThread(Thread2, a);
+	}
 	SetTimer(1, 10,NULL);
 	stage = Stage::running;
 
 }
 
  UINT CDigitDlg::Thread1(LPVOID  param) {
+	 
 	CDigitDlg * p = (CDigitDlg *)param;
-	if (p->al.run()) {
+	if (p->al.run1()) {
 		p->show((p->al.new_cur));
 		return 1;
 	}
 	p->MessageBox(L"无解");
 	return 1;
 }
-
+ UINT CDigitDlg::Thread2(LPVOID  param) {
+	 CDigitDlg * p = (CDigitDlg *)param;
+	 if (p->al.run2()) {
+		 p->show((p->al.new_cur));
+		 return 1;
+	 }
+	 p->MessageBox(L"无解");
+	 return 1;
+ }
  void CDigitDlg::OnTimer(UINT_PTR nIDEvent)
  {
 	 // TODO: 在此添加消息处理程序代码和/或调用默认值

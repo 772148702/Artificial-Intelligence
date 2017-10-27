@@ -22,8 +22,8 @@
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{E1FAEAAE-0767-47DA-8B65-11F067793ABD}</ProjectGuid>
     <RootNamespace>TspMFC</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.15063.0</WindowsTargetPlatformVersion>
     <Keyword>MFCProj</Keyword>
+    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -207,6 +207,8 @@
     <None Include="res\TspMFC.rc2" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="res\app.ico" />
+    <Image Include="res\icon1.ico" />
     <Image Include="res\TspMFC.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

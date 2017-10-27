@@ -4,6 +4,7 @@
 
 lqd2::lqd2()
 {
+	isEnd = false;
 }
 
 

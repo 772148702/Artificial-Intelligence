@@ -10,6 +10,7 @@
 enum Stage {
 	running, notrunning
 };
+
 class CDigitDlg : public CDialogEx
 {
 // ππ‘Ï
@@ -40,6 +41,7 @@ public:
 	Stage stage;
 	void showState();
 	afx_msg void OnBnClickedBntStart();
+	static UINT Thread2(LPVOID  param);
 	static UINT Thread1(LPVOID  param);
 	void show(state tmp);
 	afx_msg void OnTimer(UINT_PTR nIDEvent);

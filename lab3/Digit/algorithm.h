@@ -13,7 +13,6 @@ public:
 	int r, c;
 	int fn, gn, hn;
 	void init() {
-	
 		for (int i = 0; i < st.size(); i++)
 		{
 			if (st[i] == 0) {
@@ -23,7 +22,14 @@ public:
 			}
 		}
 	}
-	void upDateHn() {
+	void upDateHn2() {  //hn的计算方法二
+		hn = 0;
+		int k[] = { 4,0,1,2,5,8,7,6,3 }; //数字所在位置的索引。
+		for (int i = 0; i < st.size(); i++) {
+			hn += abs(i - k[st[i]]); //位置i的数移动到对应位置的的距离。
+		}
+	}
+	void upDateHn1() {   //hn的计算方法一
 		hn = 0;
 		if (st[0] != 1) hn++;
 		if (st[1] != 2) hn++;
@@ -69,10 +75,12 @@ public:
 	algorithm();
 	~algorithm();
 
-	void init(vector<int> tmp);
+	void init1(vector<int> tmp);
+	void init2(vector<int> a);
 	state new_cur;
 	queue <Record> record;
-	bool run();
+	bool run1();
+	bool run2();
 	priority_queue<state,vector<state>,CMP2> open;
 	set<state,CMP1> close;
 
