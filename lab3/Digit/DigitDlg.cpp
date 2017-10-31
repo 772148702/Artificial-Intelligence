@@ -7,6 +7,7 @@
 #include "DigitDlg.h"
 #include "afxdialogex.h"
 #include "algorithm.h"
+#include <algorithm>
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
@@ -59,6 +60,7 @@ void CDigitDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_LIST_STATE, listbox);
+	DDX_Control(pDX, IDC_LIST_STATE2, listbox2);
 }
 
 BEGIN_MESSAGE_MAP(CDigitDlg, CDialogEx)
@@ -67,6 +69,7 @@ BEGIN_MESSAGE_MAP(CDigitDlg, CDialogEx)
 	ON_WM_QUERYDRAGICON()
 	ON_BN_CLICKED(IDC_BNT_START, &CDigitDlg::OnBnClickedBntStart)
 	ON_WM_TIMER()
+	ON_BN_CLICKED(IDC_BNT_RND, &CDigitDlg::OnBnClickedBntRnd)
 END_MESSAGE_MAP()
 
 
@@ -156,22 +159,22 @@ HCURSOR CDigitDlg::OnQueryDragIcon()
 }
 
 void CDigitDlg::show(state tmp) {
-	MessageBox(L"找到了解");
-	for (int i = 0; i < 9; i++) {
+	
+	/*for (int i = 0; i < 9; i++) {
 		CString s;
 		s.Format(L"%d", tmp.st[i]);
 		GetDlgItem(1009 + i)->UpdateData(true);
 		GetDlgItem(1009+ i)->SetWindowTextW(s);
 		GetDlgItem(1009 + i)->UpdateData(false);
-	}
+	}*/
 }
 void CDigitDlg::showState() {
-	if (al.record.size()!=0) {
+	if (al1.record.size()!=0) {
 		CString c;
-		c.Format(L"第%d个当前节点\n", cnt);
+		c.Format(L"第%d个当前节点\n", cnt1);
 		listbox.AddString(c);
-		Record re = al.record.front();
-		al.record.pop();
+		Record re = al1.record.front();
+		al1.record.pop();
 
 		c.Format(L"open 表当中有%d个节点\n", re.opensize);
 		listbox.AddString(c);
@@ -186,9 +189,30 @@ void CDigitDlg::showState() {
 			c.Format(L"%d %d %d", re.cur.st[i * 3], re.cur.st[i * 3 + 1], re.cur.st[i * 3 + 2]);
 			listbox.AddString(c);
 		}
-		cnt++;
+		cnt1++;
 	}
+	if (al2.record.size() != 0) {
+		CString c;
+		c.Format(L"第%d个当前节点\n", cnt2);
+		listbox2.AddString(c);
+		Record re = al2.record.front();
+		al2.record.pop();
 
+		c.Format(L"open 表当中有%d个节点\n", re.opensize);
+		listbox2.AddString(c);
+		c.Format(L"close表当中有%d个节点\n", re.closesize);
+		listbox2.AddString(c);
+		c.Format(L"当前节点为:\n");
+		listbox2.AddString(c);
+		c.Format(L"当前节点fn为%d,gn:%d,hn:%d\n", re.cur.fn, re.cur.gn, re.cur.hn);
+		listbox2.AddString(c);
+		for (int i = 0; i < 3; i++)
+		{
+			c.Format(L"%d %d %d", re.cur.st[i * 3], re.cur.st[i * 3 + 1], re.cur.st[i * 3 + 2]);
+			listbox2.AddString(c);
+		}
+		cnt2++;
+	}
 }
 void CDigitDlg::OnBnClickedBntStart()
 {
@@ -200,20 +224,23 @@ void CDigitDlg::OnBnClickedBntStart()
 		GetDlgItem(1009+i)->GetWindowTextW(s);
 		v.push_back(_ttoi(s));
 	}
-	cnt = 0;
-	if (((CButton *)(GetDlgItem(IDC_RD_H1)))->GetCheck()) {
+	cnt1 = 0;
+	cnt2 = 0;
+	
 		listbox.AddString(L"错位启发函数");
-		al.init1(v);
+		al1.init1(v);
+		al2.init2(v);
 		CDigitDlg * a = this;
+
 		AfxBeginThread(Thread1, a);
-	}
-	else {
-		listbox.AddString(L"距离启发函数");
-		al.init2(v);
-		CDigitDlg * a = this;
+	
+	
+		listbox2.AddString(L"距离启发函数");
+	
+		
 		AfxBeginThread(Thread2, a);
-	}
-	SetTimer(1, 10,NULL);
+	
+	SetTimer(1, 0.01,NULL);
 	stage = Stage::running;
 
 }
@@ -221,20 +248,22 @@ void CDigitDlg::OnBnClickedBntStart()
  UINT CDigitDlg::Thread1(LPVOID  param) {
 	 
 	CDigitDlg * p = (CDigitDlg *)param;
-	if (p->al.run1()) {
-		p->show((p->al.new_cur));
+	if (p->al1.run1()) {
+		p->show((p->al1.new_cur));
+		p->MessageBox(L"启发式一找到了解");
 		return 1;
 	}
-	p->MessageBox(L"无解");
+	p->MessageBox(L"启发式一无解");
 	return 1;
 }
  UINT CDigitDlg::Thread2(LPVOID  param) {
 	 CDigitDlg * p = (CDigitDlg *)param;
-	 if (p->al.run2()) {
-		 p->show((p->al.new_cur));
+	 if (p->al2.run2()) {
+		 p->show((p->al2.new_cur));
+		 p->MessageBox(L"启发式二找到了解");
 		 return 1;
 	 }
-	 p->MessageBox(L"无解");
+	 p->MessageBox(L"启发式二无解");
 	 return 1;
  }
  void CDigitDlg::OnTimer(UINT_PTR nIDEvent)
@@ -247,4 +276,27 @@ void CDigitDlg::OnBnClickedBntStart()
 		 showState();
 	 }
 	 CDialogEx::OnTimer(nIDEvent);
+ }
+
+
+ void CDigitDlg::OnBnClickedBntRnd()
+ {
+	 // TODO: 在此添加控件通知处理程序代码
+	 vector<int> v;
+	 srand(time(0));
+	 for (int i = 0; i < 9; i++) {
+		 v.push_back(i);
+	 }
+	 for (int i = 0; i < 100; i++) {
+		 int k1 = rand() % 9;
+		 int k2 = rand() % 9;
+		 swap(v[k1], v[k2]);
+	 }
+	 for (int i = 0; i < 9; i++) {
+		 CString s;
+		 s.Format(L"%d", v[i]);
+		 GetDlgItem(1009 + i)->UpdateData(true);
+		 GetDlgItem(1009 + i)->SetWindowTextW(s);
+		 GetDlgItem(1009 + i)->UpdateData(false);
+	 }
  }

@@ -29,7 +29,8 @@ public:
 // 实现
 protected:
 	HICON m_hIcon;
-	algorithm al;
+	algorithm al1;
+	algorithm al2;
 	// 生成的消息映射函数
 	virtual BOOL OnInitDialog();
 	afx_msg void OnSysCommand(UINT nID, LPARAM lParam);
@@ -37,7 +38,8 @@ protected:
 	afx_msg HCURSOR OnQueryDragIcon();
 	DECLARE_MESSAGE_MAP()
 public:
-	int cnt;  //记录已经输出record的数目
+	int cnt1;  //记录已经输出record的数目
+	int cnt2;
 	Stage stage;
 	void showState();
 	afx_msg void OnBnClickedBntStart();
@@ -46,4 +48,6 @@ public:
 	void show(state tmp);
 	afx_msg void OnTimer(UINT_PTR nIDEvent);
 	CListBox listbox;
+	CListBox listbox2;
+	afx_msg void OnBnClickedBntRnd();
 };

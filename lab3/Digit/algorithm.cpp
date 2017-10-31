@@ -39,6 +39,7 @@ bool algorithm::run1() {  //以update1来计算法
 		open.pop();
 		new_cur = cur;
 		close.insert(cur);
+		//Record是一个用于帮助界面显示的变量
 		Record re(cur, open.size(), close.size());
 		record.push(re);
 		
@@ -62,10 +63,7 @@ bool algorithm::run1() {  //以update1来计算法
 			if (close.count(tmp1) == 0) {
 				open.push(tmp1);
 			}
-			if (tmp1.hn == 0) {
-				new_cur = tmp1;
-				return true;
-			}
+		
 		}
 		//向下一行移动
 		if (cur.r < 2) {
@@ -83,10 +81,7 @@ bool algorithm::run1() {  //以update1来计算法
 			if (close.count(tmp2) == 0) {
 				open.push(tmp2);
 			}
-			if (tmp2.hn == 0) {
-				new_cur = tmp2;
-				return true;
-			}
+		
 		}
 		if (cur.c > 0) {
 			state tmp3 = cur;
@@ -103,10 +98,7 @@ bool algorithm::run1() {  //以update1来计算法
 			if (close.count(tmp3) == 0) {
 				open.push(tmp3);
 			}
-			if (tmp3.hn == 0) {
-				new_cur = tmp3;
-				return true;
-			}
+		
 		}
 		if (cur.c < 2) {
 			state tmp4 = cur;
@@ -122,10 +114,7 @@ bool algorithm::run1() {  //以update1来计算法
 			if (close.count(tmp4) == 0) {
 				open.push(tmp4);
 			}
-			if (tmp4.hn == 0) {
-				new_cur = tmp4;
-				return true;
-			}
+		
 		}
 	}
 	return false;
@@ -161,10 +150,7 @@ bool algorithm::run2() {  //以update1来计算法
 			if (close.count(tmp1) == 0) {
 				open.push(tmp1);
 			}
-			if (tmp1.hn == 0) {
-				new_cur = tmp1;
-				return true;
-			}
+		
 		}
 		//向下一行移动
 		if (cur.r < 2) {
@@ -182,10 +168,7 @@ bool algorithm::run2() {  //以update1来计算法
 			if (close.count(tmp2) == 0) {
 				open.push(tmp2);
 			}
-			if (tmp2.hn == 0) {
-				new_cur = tmp2;
-				return true;
-			}
+		
 		}
 		if (cur.c > 0) {
 			state tmp3 = cur;
@@ -202,10 +185,7 @@ bool algorithm::run2() {  //以update1来计算法
 			if (close.count(tmp3) == 0) {
 				open.push(tmp3);
 			}
-			if (tmp3.hn == 0) {
-				new_cur = tmp3;
-				return true;
-			}
+		
 		}
 		if (cur.c < 2) {
 			state tmp4 = cur;
@@ -221,10 +201,7 @@ bool algorithm::run2() {  //以update1来计算法
 			if (close.count(tmp4) == 0) {
 				open.push(tmp4);
 			}
-			if (tmp4.hn == 0) {
-				new_cur = tmp4;
-				return true;
-			}
+		
 		}
 	}
 	return false;
