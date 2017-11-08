@@ -50,4 +50,8 @@ public:
 	CListBox listbox;
 	CListBox listbox2;
 	afx_msg void OnBnClickedBntRnd();
+	void  showMethod();
+	void showMethod2();
+	CListBox listboxMethod;
+	CListBox ListBoxMethod2;
 };

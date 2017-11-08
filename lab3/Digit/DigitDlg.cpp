@@ -61,6 +61,8 @@ void CDigitDlg::DoDataExchange(CDataExchange* pDX)
 	CDialogEx::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_LIST_STATE, listbox);
 	DDX_Control(pDX, IDC_LIST_STATE2, listbox2);
+	DDX_Control(pDX, IDC_LIST_METHOD, listboxMethod);
+	DDX_Control(pDX, IDC_LIST_METHOD2, ListBoxMethod2);
 }
 
 BEGIN_MESSAGE_MAP(CDigitDlg, CDialogEx)
@@ -224,13 +226,14 @@ void CDigitDlg::OnBnClickedBntStart()
 		GetDlgItem(1009+i)->GetWindowTextW(s);
 		v.push_back(_ttoi(s));
 	}
-	cnt1 = 0;
-	cnt2 = 0;
-	
-		listbox.AddString(L"错位启发函数");
-		al1.init1(v);
-		al2.init2(v);
+	   cnt1 = 0;
+	   cnt2 = 0;
+	    al1.init1(v);
+	    al2.init2(v);
 		CDigitDlg * a = this;
+		listbox.AddString(L"错位启发函数");
+	
+	
 
 		AfxBeginThread(Thread1, a);
 	
@@ -240,17 +243,56 @@ void CDigitDlg::OnBnClickedBntStart()
 		
 		AfxBeginThread(Thread2, a);
 	
-	SetTimer(1, 0.01,NULL);
+	//SetTimer(1, 0.01,NULL);
 	stage = Stage::running;
 
+}
+void  CDigitDlg::showMethod() {
+	   CString c;
+	   int i = 1;
+	   c.Format(L"启发式一的结果");
+	   listboxMethod.AddString(c);
+	while (!al1.method.empty()) {
+		state tmp = al1.method.top();
+		al1.method.pop();
+		c.Format(L"第%d步:", i++);
+		listboxMethod.AddString(c);
+		c.Format(L"fn:%d,dn:%dn,hn:%d", tmp.fn, tmp.gn, tmp.hn);
+		listboxMethod.AddString(c);
+		for (int j = 0; j < 3; j++) {
+			c.Format(L"%d %d %d", tmp.st[j * 3], tmp.st[j * 3 + 1], tmp.st[j * 3 + 2]);
+			listboxMethod.AddString(c);
+		}
+		
+	  }
+}
+void  CDigitDlg::showMethod2() {
+	CString c;
+	int i = 1;
+	c.Format(L"启发式二的结果");
+	ListBoxMethod2.AddString(c);
+	while (!al2.method.empty()) {
+		state tmp = al2.method.top();
+		al2.method.pop();
+		c.Format(L"第%d步:", i++);
+		ListBoxMethod2.AddString(c);
+		c.Format(L"fn:%d,dn:%dn,hn:%d", tmp.fn, tmp.gn, tmp.hn);
+		ListBoxMethod2.AddString(c);
+		for (int j = 0; j < 3; j++) {
+			c.Format(L"%d %d %d", tmp.st[j * 3], tmp.st[j * 3 + 1], tmp.st[j * 3 + 2]);
+			ListBoxMethod2.AddString(c);
+		}
+
+	}
 }
 
  UINT CDigitDlg::Thread1(LPVOID  param) {
 	 
 	CDigitDlg * p = (CDigitDlg *)param;
 	if (p->al1.run1()) {
-		p->show((p->al1.new_cur));
+		//p->show((p->al1.new_cur));
 		p->MessageBox(L"启发式一找到了解");
+		p->showMethod();
 		return 1;
 	}
 	p->MessageBox(L"启发式一无解");
@@ -259,8 +301,10 @@ void CDigitDlg::OnBnClickedBntStart()
  UINT CDigitDlg::Thread2(LPVOID  param) {
 	 CDigitDlg * p = (CDigitDlg *)param;
 	 if (p->al2.run2()) {
-		 p->show((p->al2.new_cur));
+		// p->show((p->al2.new_cur));
+		 p->showMethod2();
 		 p->MessageBox(L"启发式二找到了解");
+		 
 		 return 1;
 	 }
 	 p->MessageBox(L"启发式二无解");
@@ -273,7 +317,7 @@ void CDigitDlg::OnBnClickedBntStart()
 		 if (stage == Stage::notrunning) {
 			 KillTimer(1);
 		 }
-		 showState();
+		 /*showState();*/
 	 }
 	 CDialogEx::OnTimer(nIDEvent);
  }
