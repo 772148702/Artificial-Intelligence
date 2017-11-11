@@ -7,12 +7,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Search;
 
 namespace tictactoe
 {
+    enum Operation
+    {
+       noai,ai
+    }
+
     enum Turn
     {
-        firstChess=-1, secondChess=1
+        firstChess=1, secondChess=2
     }
     enum State
     {
@@ -29,9 +35,16 @@ namespace tictactoe
         private State state;
         private ChessResult re;
         private int count;
-
+        private Operation op;
+        private bool isAiTurn;
+        private bool isAiFirst;
+        private Ai ai = new Ai();
+        DialogResult dr_AI = DialogResult.Yes;
+        DialogResult dr_M = DialogResult.No;
+        bool mode = true;
         public Form1()
         {
+            op = Operation.ai;
             state = State.ready;
             turn = Turn.firstChess;
             InitializeComponent();
@@ -63,7 +76,7 @@ namespace tictactoe
             }
             if(count==9)
             {
-                re = ChessResult.noWin;
+                re = ChessResult.noWin; 
                 return true;
             }
             return false;
@@ -73,20 +86,39 @@ namespace tictactoe
         private void Onstart(object sender, EventArgs e)
         {
             Tips.Tag = "准备中。";
+            count = 0;
             chessState = new int[3, 3];
             for (int i = 0; i < 3; i++)
                 for (int j = 0; j < 3; j++)
                     chessState[i, j] = 0;
             state = State.running;
-            if (radioButton1.Checked == true)
+            if (dr_AI == DialogResult.Yes && mode) AiFisrt();
+            if (dr_AI == DialogResult.No && mode) AiSecond();
+            if (op == Operation.ai )
             {
-                turn = Turn.firstChess;
+                ai.init();
+                if(isAiTurn)
+                {
+                    int x=-1, y=-1;
+                    if (isAiFirst)
+                    {
+                        ai.dfs(ai.state, 2);
+                        ai.getnext(ai.state, ref x, ref y);
+                        ai.state=ai.put(ai.state,x, y, 2);
+
+                        chessState[x,y] = 1;
+                        loadImage(x, y);
+                        turn = Turn.secondChess;
+                        isAiTurn = false;
+                        count++;
+                    }
+                }
             }
             else
             {
-                turn = Turn.secondChess;
+                if (dr_M == DialogResult.Yes && !mode) NoAiPlayerOneFirst();
+                if (dr_M == DialogResult.No && !mode) NoAiPlayerTwoFirst();
             }
-            count = 0;
             button11.Enabled = true;
             button12.Enabled = true;
             button13.Enabled = true;
@@ -103,14 +135,15 @@ namespace tictactoe
             Button btn = (Button) sender;
             int row = Convert.ToInt32(btn.Name.Substring(btn.Name.Length - 2, 1)) - 1;
             int column = Convert.ToInt32(btn.Name.Substring(btn.Name.Length - 1, 1)) - 1;
-            if (state == State.running&&btn.Enabled==true)
+            if (state == State.running&&btn.Enabled==true&&isAiTurn==false)  //human ' s turn
             {
                 count++;
-                if(turn==Turn.firstChess)
+                if(turn == Turn.firstChess)
                 {
                     btn.BackgroundImage = imageList1.Images[0];
                     turn = Turn.secondChess;
                     chessState[row, column] = 1;
+                    
                 }
                 else
                 {
@@ -118,28 +151,94 @@ namespace tictactoe
                     turn = Turn.firstChess;
                     chessState[row, column] = -1;
                 }
-                
+                if (op == Operation.ai)
+                {
+                    ai.state= ai.put(ai.state, row, column, 1); // 人是2
+                    isAiTurn = true;
+                }
+
                 btn.Enabled = false;
                 if (CheckWin()) {
                     state = State.end;
                     showResult();
+                }
+                if (op == Operation.ai)
+                {
+
+                    int x = -1, y = -1;
+                    ai.dfs(ai.state, 2);
+                    ai.getnext(ai.state, ref x, ref y);
+                    if(x < 0 || y < 0)
+                    {
+                        re = ChessResult.noWin;
+                        showResult();
+                        state = State.end;
+                        return ;
+                    }
+                    ai.state = ai.put(ai.state, x, y, 2); //机器2
+                    loadImage(x, y);
+                    if(isAiFirst) chessState[x,y] = 1;
+                    else chessState[x, y] = -1;
+                    if (turn == Turn.firstChess)
+                        turn = Turn.secondChess;
+                    else turn = Turn.firstChess;
+                    isAiTurn = false;
+                    count++;
+                    if (CheckWin())
+                    {
+                        state = State.end;
+                        showResult();
+                    }
                 }
             }
         }
 
         private void showResult()
         {
-            if(re==ChessResult.firstWin)
+
+            if (op == Operation.noai)
             {
-                Tips.Text= "第一位选手获得了胜利！";
+                if (re == ChessResult.firstWin)
+                {
+                    Tips.Text = "第一位选手获得了胜利！";
+                }
+                if (re == ChessResult.secondWin)
+                {
+                    Tips.Text = "第二位选手获得了胜利！";
+                }
+                if (re == ChessResult.noWin)
+                {
+                    Tips.Text = "平局";
+                }
             }
-            if(re==ChessResult.secondWin)
+            else
             {
-                Tips.Text = "第二位选手获得了胜利！";
-            }
-            if (re == ChessResult.noWin)
-            {
-                Tips.Text = "平局";
+                if(isAiFirst)
+                {
+                    if (re == ChessResult.firstWin)
+                    {
+                        Tips.Text = "ai选手获得了胜利！";
+                    }
+                    if (re == ChessResult.secondWin)
+                    {
+                        Tips.Text = "人类选手获得了胜利！";
+                    }
+                }
+                else
+                {
+                    if (re == ChessResult.firstWin)
+                    {
+                        Tips.Text = "人类选手获得了胜利！"; 
+                    }
+                    if (re == ChessResult.secondWin)
+                    {
+                        Tips.Text = "ai选手获得了胜利！";
+                    }
+                }
+                if (re == ChessResult.noWin)
+                {
+                    Tips.Text = "平局";
+                }
             }
         }
 
@@ -147,20 +246,6 @@ namespace tictactoe
 
         private void OnReStart(object sender, EventArgs e)
         {
-            Tips.Tag = "准备中。";
-            chessState = new int[3, 3];
-            for (int i = 0; i < 3; i++)
-                for (int j = 0; j < 3; j++)
-                    chessState[i, j] = 0;
-            state = State.running;
-            if(radioButton1.Checked==true)
-            {
-                turn = Turn.firstChess;
-            }
-            else
-            {
-                turn = Turn.secondChess;
-            }
             count = 0;
             button11.BackgroundImage = null;
             button12.BackgroundImage = null;
@@ -171,7 +256,6 @@ namespace tictactoe
             button31.BackgroundImage = null;
             button32.BackgroundImage = null;
             button33.BackgroundImage = null;
-
             button11.Enabled = true;
             button12.Enabled = true;
             button13.Enabled = true;
@@ -181,6 +265,168 @@ namespace tictactoe
             button31.Enabled = true;
             button32.Enabled = true;
             button33.Enabled = true;
+            Tips.Tag = "准备中。";
+            Tips.Text = "游戏已重开";  //重置Tips提醒字符串，覆盖上一局结果
+            chessState = new int[3, 3];
+            for (int i = 0; i < 3; i++)
+                for (int j = 0; j < 3; j++)
+                    chessState[i, j] = 0;
+            state = State.running;
+            if (dr_AI == DialogResult.Yes && mode) AiFisrt();
+            if (dr_AI == DialogResult.No && mode) AiSecond();
+            if (op == Operation.ai)
+            {
+
+                ai.init();
+                if (isAiTurn)
+                {
+                    int x = 0, y = 0;
+                    if (isAiFirst)
+                    {
+                        ai.dfs(ai.state, 2);
+                        ai.getnext(ai.state, ref x, ref y);
+                        ai.state = ai.put(ai.state, x, y, 2);
+                        chessState[x, y] = 1;
+                        loadImage(x, y);
+                        count++;
+                        turn = Turn.secondChess;
+                        isAiTurn = false;
+
+                    }
+                }
+            }
+            else
+            {
+                if (dr_M == DialogResult.Yes && !mode) NoAiPlayerOneFirst();
+                if (dr_M == DialogResult.No && !mode) NoAiPlayerTwoFirst();
+            }   
+        }
+
+        private void AiFisrt()
+        {
+            op = Operation.ai;
+            turn = Turn.firstChess;
+            isAiTurn = true;
+            isAiFirst = true ;
+        }
+        private void AiSecond()
+        {
+            op = Operation.ai;
+            turn = Turn.firstChess;
+            isAiTurn = false;
+            isAiFirst = false;
+        }
+        private void NoAiPlayerOneFirst()
+        {
+            op = Operation.noai;
+            turn = Turn.firstChess;
+            isAiTurn = false;
+            isAiFirst = false;
+        }
+        private void NoAiPlayerTwoFirst()
+        {
+            op = Operation.noai;
+            turn = Turn.secondChess;
+            isAiTurn = false;
+            isAiFirst = false;
+        }
+        public void loadImage(int x,int y)
+        {
+            int who = 1;
+            if (isAiFirst) who = 1;
+            else who = 2;
+            if(x==0&&y==0)
+            {
+                button11.Enabled = false;
+                button11.BackgroundImage = imageList1.Images[who - 1];
+            }
+            if (x == 0 && y == 1)
+            {
+                button12.Enabled = false;
+                button12.BackgroundImage = imageList1.Images[who - 1];
+            }
+            if (x == 0 && y == 2)
+            {
+                button13.Enabled = false;
+                button13.BackgroundImage = imageList1.Images[who - 1];
+            }
+            if (x == 1 && y == 0)
+            {
+                button21.Enabled = false;
+                button21.BackgroundImage = imageList1.Images[who - 1];
+            }
+            if (x == 1&& y == 1)
+            {
+                button22.Enabled = false;
+                button22.BackgroundImage = imageList1.Images[who - 1];
+
+            }
+            if (x == 1 && y == 2)
+            {
+                button23.Enabled = false;
+                button23.BackgroundImage = imageList1.Images[who - 1];
+            }
+            if (x == 2 && y == 0)
+            {
+                button31.Enabled = false;
+                button31.BackgroundImage = imageList1.Images[who - 1];
+            }
+            if (x == 2&& y == 1)
+            {
+                button32.Enabled = false;
+                button32.BackgroundImage = imageList1.Images[who - 1];
+            }
+            if (x == 2 && y == 2)
+            {
+                button33.Enabled = false;
+                button33.BackgroundImage = imageList1.Images[who - 1];
+            }
+
+        }
+
+     
+
+        private void ManVSMachine(object sender, EventArgs e)
+        {
+            op = Operation.ai;
+
+            mode = true;
+            dr_AI = MessageBox.Show("是否电脑先手", "人机先后手对战选择", MessageBoxButtons.YesNo,
+                     MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1);
+            if (dr_AI == DialogResult.Yes)
+            {
+                //MessageBox.Show("电脑将先手", "你选择的为“是”按钮");
+                AiFisrt();
+                OnReStart(null, EventArgs.Empty);
+            }
+                
+            else if (dr_AI == DialogResult.No)
+            {
+               //MessageBox.Show("玩家将先手", "你选择的为“否”按钮");
+                AiSecond();
+                OnReStart(null, EventArgs.Empty);
+            }    
+        }
+
+        private void ManVsMan(object sender, EventArgs e)
+        {
+            op = Operation.noai;
+            mode = false;
+            dr_M = MessageBox.Show("是否玩家1（部落）先手", "人人先后手对战选择", MessageBoxButtons.YesNo,
+                     MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1);
+            if (dr_M == DialogResult.Yes)
+            {
+               // MessageBox.Show("玩家1（部落）将先手", "你选择的为“是”按钮");
+                NoAiPlayerOneFirst();
+                OnReStart(null, EventArgs.Empty);
+            }
+
+            else if (dr_M == DialogResult.No)
+            {
+                //MessageBox.Show("玩家2（联盟）将先手", "你选择的为“否”按钮");
+                NoAiPlayerTwoFirst();
+                OnReStart(null, EventArgs.Empty);
+            }
         }
     }
 }
