@@ -1,0 +1,10 @@
+G:\GitHub\Artificial-Intelligence\lab1\tictactoe\bin\Debug\tictactoe.exe.config
+G:\GitHub\Artificial-Intelligence\lab1\tictactoe\bin\Debug\tictactoe.exe
+G:\GitHub\Artificial-Intelligence\lab1\tictactoe\bin\Debug\tictactoe.pdb
+G:\GitHub\Artificial-Intelligence\lab1\tictactoe\obj\Debug\tictactoe.csprojResolveAssemblyReference.cache
+G:\GitHub\Artificial-Intelligence\lab1\tictactoe\obj\Debug\tictactoe.Form1.resources
+G:\GitHub\Artificial-Intelligence\lab1\tictactoe\obj\Debug\tictactoe.Properties.Resources.resources
+G:\GitHub\Artificial-Intelligence\lab1\tictactoe\obj\Debug\tictactoe.csproj.GenerateResource.Cache
+G:\GitHub\Artificial-Intelligence\lab1\tictactoe\obj\Debug\tictactoe.csproj.CoreCompileInputs.cache
+G:\GitHub\Artificial-Intelligence\lab1\tictactoe\obj\Debug\tictactoe.exe
+G:\GitHub\Artificial-Intelligence\lab1\tictactoe\obj\Debug\tictactoe.pdb
