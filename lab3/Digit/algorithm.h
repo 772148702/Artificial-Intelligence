@@ -3,6 +3,7 @@
 #include <iostream>
 #include <queue>
 #include <set>
+#include <stack>
 using namespace std;
 
 class state {
@@ -12,6 +13,7 @@ public:
 	//r,c是0的位置
 	int r, c;
 	int fn, gn, hn;
+	int pre;
 	void init() {
 		for (int i = 0; i < st.size(); i++)
 		{
@@ -21,6 +23,7 @@ public:
 				break;
 			}
 		}
+		pre = -1;
 	}
 	void upDateHn2() {  //hn的计算方法二
 		hn = 0;
@@ -41,7 +44,11 @@ public:
 		if (st[7] != 6) hn++;
 		if (st[8] != 5) hn++;
 	}
-
+	bool operator==(state rhy) {
+		for (int i = 0; i < 9; i++)
+			if (st[i] != rhy.st[i]) return false;
+		return true;
+	}
 };
 struct Record {
 	state cur;
@@ -82,7 +89,7 @@ public:
 	bool run1();
 	bool run2();
 	priority_queue<state,vector<state>,CMP2> open;
-	set<state,CMP1> close;
-
+	vector<state> close;
+	stack<state> method;
 };
 
