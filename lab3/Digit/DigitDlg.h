@@ -41,7 +41,8 @@ public:
 	int cnt1;  //记录已经输出record的数目
 	int cnt2;
 	Stage stage;
-	void showState();
+	void showState1();
+	void showState2();
 	afx_msg void OnBnClickedBntStart();
 	static UINT Thread2(LPVOID  param);
 	static UINT Thread1(LPVOID  param);
@@ -53,4 +54,7 @@ public:
 	void showMethod2();
 	CListBox listboxMethod;
 	CListBox ListBoxMethod2;
+	afx_msg void OnLbnSelchangeListMethod();
+	CListBox listbox1;
+	CListBox listbox2;
 };

@@ -5,6 +5,7 @@
 #include <set>
 #include <stack>
 #include "time.h"
+#define   CLOCKS_PER_SEC ((clock_t)1000) 
 using namespace std;
 
 class state {
@@ -82,11 +83,11 @@ class algorithm
 public:
 	algorithm();
 	~algorithm();
-	double  cst;
+	clock_t start, end;
 	void init1(vector<int> tmp);
 	void init2(vector<int> a);
 	state new_cur;
-	queue <Record> record;
+	vector <Record> record;
 	bool run1();
 	bool run2();
 	priority_queue<state,vector<state>,CMP2> open;

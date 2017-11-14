@@ -62,6 +62,8 @@ void CDigitDlg::DoDataExchange(CDataExchange* pDX)
 
 	DDX_Control(pDX, IDC_LIST_METHOD, listboxMethod);
 	DDX_Control(pDX, IDC_LIST_METHOD2, ListBoxMethod2);
+	DDX_Control(pDX, IDC_LIST_IT1, listbox1);
+	DDX_Control(pDX, IDC_LIST2_IT2, listbox2);
 }
 
 BEGIN_MESSAGE_MAP(CDigitDlg, CDialogEx)
@@ -71,6 +73,7 @@ BEGIN_MESSAGE_MAP(CDigitDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_BNT_START, &CDigitDlg::OnBnClickedBntStart)
 	ON_WM_TIMER()
 	ON_BN_CLICKED(IDC_BNT_RND, &CDigitDlg::OnBnClickedBntRnd)
+	ON_LBN_SELCHANGE(IDC_LIST_METHOD, &CDigitDlg::OnLbnSelchangeListMethod)
 END_MESSAGE_MAP()
 
 
@@ -169,48 +172,63 @@ void CDigitDlg::show(state tmp) {
 		GetDlgItem(1009 + i)->UpdateData(false);
 	}*/
 }
-void CDigitDlg::showState() {
-	if (al1.record.size()!=0) {
+void CDigitDlg::showState1() {
+	//freopen("out1.out", "w", stdout);
+	for (auto re:al1.record) {
 		CString c;
 		c.Format(L"第%d个当前节点\n", cnt1);
-		//listbox.AddString(c);
+
+		listbox1.AddString(c);
 		Record re = al1.record.front();
-		al1.record.pop();
+	
 
 		c.Format(L"open 表当中有%d个节点\n", re.opensize);
-		//listbox.AddString(c);
+		
+		listbox1.AddString(c);
 		c.Format(L"close表当中有%d个节点\n", re.closesize);
-		//listbox.AddString(c);
+	
+		listbox1.AddString(c);
 		c.Format(L"当前节点为:\n");
-		//listbox.AddString(c);
+	
+		listbox1.AddString(c);
 		c.Format(L"当前节点fn为%d,gn:%d,hn:%d\n",re.cur.fn,re.cur.gn,re.cur.hn);
-		//listbox.AddString(c);
+	
+		listbox1.AddString(c);
 		for (int i = 0; i < 3; i++)
 		{
 			c.Format(L"%d %d %d", re.cur.st[i * 3], re.cur.st[i * 3 + 1], re.cur.st[i * 3 + 2]);
-			//listbox.AddString(c);
+			listbox1.AddString(c);
+		
 		}
 		cnt1++;
 	}
-	if (al2.record.size() != 0) {
+	
+}
+void CDigitDlg::showState2() {
+	
+	for (auto re : al2.record) {
 		CString c;
 		c.Format(L"第%d个当前节点\n", cnt2);
-		//listbox2.AddString(c);
-		Record re = al2.record.front();
-		al2.record.pop();
+		listbox2.AddString(c);
+	
 
 		c.Format(L"open 表当中有%d个节点\n", re.opensize);
-		//listbox2.AddString(c);
+	
+		listbox2.AddString(c);
 		c.Format(L"close表当中有%d个节点\n", re.closesize);
-		//listbox2.AddString(c);
+	
+		listbox2.AddString(c);
 		c.Format(L"当前节点为:\n");
-		//listbox2.AddString(c);
+		listbox2.AddString(c);
+		
 		c.Format(L"当前节点fn为%d,gn:%d,hn:%d\n", re.cur.fn, re.cur.gn, re.cur.hn);
-		//listbox2.AddString(c);
+		
+		listbox2.AddString(c);
 		for (int i = 0; i < 3; i++)
 		{
 			c.Format(L"%d %d %d", re.cur.st[i * 3], re.cur.st[i * 3 + 1], re.cur.st[i * 3 + 2]);
-			//listbox2.AddString(c);
+			listbox2.AddString(c);
+			
 		}
 		cnt2++;
 	}
@@ -227,8 +245,8 @@ void CDigitDlg::OnBnClickedBntStart()
 	}
 	   cnt1 = 0;
 	   cnt2 = 0;
-	    al1.init1(v);
-	    al2.init2(v);
+	   al1.init1(v);
+	   al2.init2(v);
 		CDigitDlg * a = this;
 		//listbox.AddString(L"错位启发函数");
 	
@@ -264,6 +282,8 @@ void  CDigitDlg::showMethod() {
 		}
 		
 	  }
+	c.Format(L"花费的时间为%f", double(al1.end - al1.start)/CLOCKS_PER_SEC);
+	listboxMethod.AddString(c);
 }
 void  CDigitDlg::showMethod2() {
 	CString c;
@@ -281,10 +301,24 @@ void  CDigitDlg::showMethod2() {
 			c.Format(L"%d %d %d", tmp.st[j * 3], tmp.st[j * 3 + 1], tmp.st[j * 3 + 2]);
 			ListBoxMethod2.AddString(c);
 		}
-
 	}
+	c.Format(L"花费的时间为%f", double(al2.end - al2.start) / CLOCKS_PER_SEC);
+	ListBoxMethod2.AddString(c);
+
+}
+UINT  Thread3(LPVOID  param) {
+	CDigitDlg * p = (CDigitDlg *)param;
+	p->showState1();
+	return 1;
 }
 
+UINT  Thread4(LPVOID  param) {
+	CDigitDlg * p = (CDigitDlg *)param;
+	p->showState2();
+	return 1;
+
+
+}
  UINT CDigitDlg::Thread1(LPVOID  param) {
 	 
 	CDigitDlg * p = (CDigitDlg *)param;
@@ -292,9 +326,14 @@ void  CDigitDlg::showMethod2() {
 		//p->show((p->al1.new_cur));
 		p->MessageBox(L"启发式一找到了解");
 		p->showMethod();
-		return 1;
+		AfxBeginThread(Thread3, p);
+	 
 	}
-	p->MessageBox(L"启发式一无解");
+	else {
+
+		p->MessageBox(L"启发式一无解");
+	}
+	
 	return 1;
 }
  UINT CDigitDlg::Thread2(LPVOID  param) {
@@ -303,10 +342,12 @@ void  CDigitDlg::showMethod2() {
 		// p->show((p->al2.new_cur));
 		 p->showMethod2();
 		 p->MessageBox(L"启发式二找到了解");
-		 
-		 return 1;
+		 AfxBeginThread(Thread4, p);
 	 }
-	 p->MessageBox(L"启发式二无解");
+	 else {
+		 p->MessageBox(L"启发式二无解");
+	 }
+	
 	 return 1;
  }
  void CDigitDlg::OnTimer(UINT_PTR nIDEvent)
@@ -342,4 +383,10 @@ void  CDigitDlg::showMethod2() {
 		 GetDlgItem(1009 + i)->SetWindowTextW(s);
 		 GetDlgItem(1009 + i)->UpdateData(false);
 	 }
+ }
+
+
+ void CDigitDlg::OnLbnSelchangeListMethod()
+ {
+	 // TODO: 在此添加控件通知处理程序代码
  }

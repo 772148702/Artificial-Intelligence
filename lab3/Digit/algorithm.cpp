@@ -19,7 +19,7 @@ void algorithm::init1(vector<int> a) {
 	new_cur.fn = new_cur.gn + new_cur.hn;
 	while (!open.empty()) open.pop();
 	open.push(new_cur);
-	while (!record.empty()) record.pop();
+	record.clear();
 
 }
 void algorithm::init2(vector<int> a) {
@@ -30,7 +30,7 @@ void algorithm::init2(vector<int> a) {
 	new_cur.fn = new_cur.gn + new_cur.hn;
 	while (!open.empty()) open.pop();
 	open.push(new_cur);
-	while (!record.empty()) record.pop();
+	record.clear();
 
 }
 int factory[] = { 1, 1, 2, 6, 24, 120, 720, 5040, 40320 };
@@ -73,6 +73,7 @@ bool algorithm::run1() {  //以update1来计算法
 	vector<int> cantor(370000, 0);
 	
 	int  cntCantor = 0;
+	start = clock();
 	while (!open.empty()) {
 		state cur = open.top();
 		open.pop();
@@ -83,7 +84,7 @@ bool algorithm::run1() {  //以update1来计算法
 		close.push_back(cur);
 		//Record是一个用于帮助界面显示的变量
 		Record re(cur, open.size(), cntCantor);
-		record.push(re);
+		record.push_back(re);
 		
 
 		if (cur.hn == 0) {
@@ -93,6 +94,7 @@ bool algorithm::run1() {  //以update1来计算法
 				method.push(tmp);
 				tmp = close[tmp.pre];
 			}
+			end = clock();
 			return true;
 
 		}
@@ -178,6 +180,7 @@ bool algorithm::run1() {  //以update1来计算法
 		
 		}
 	}
+	end = clock();
 	return false;
 }
 
@@ -186,6 +189,7 @@ bool algorithm::run2() {  //以update1来计算法
 
 	vector<int> cantor(370000, 0);
 	int  cntCantor = 0;
+	start = clock();
 	while (!open.empty()) {
 		state cur = open.top();
 		open.pop();
@@ -196,7 +200,7 @@ bool algorithm::run2() {  //以update1来计算法
 		close.push_back(cur);
 		//Record是一个用于帮助界面显示的变量
 		Record re(cur, open.size(), cntCantor);
-		record.push(re);
+		record.push_back(re);
 
 		if (cur.hn == 0) {
 			method.push(cur);
@@ -205,6 +209,7 @@ bool algorithm::run2() {  //以update1来计算法
 				method.push(tmp);
 				tmp = close[tmp.pre];
 			}
+			end = clock();
 			return true;
 		}
 		if (cur.r > 0) {
@@ -286,5 +291,6 @@ bool algorithm::run2() {  //以update1来计算法
 		
 		}
 	}
+	end = clock();
 	return false;
 }
