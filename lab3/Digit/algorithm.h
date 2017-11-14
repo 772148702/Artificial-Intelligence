@@ -4,6 +4,7 @@
 #include <queue>
 #include <set>
 #include <stack>
+#include "time.h"
 using namespace std;
 
 class state {
@@ -81,7 +82,7 @@ class algorithm
 public:
 	algorithm();
 	~algorithm();
-
+	double  cst;
 	void init1(vector<int> tmp);
 	void init2(vector<int> a);
 	state new_cur;

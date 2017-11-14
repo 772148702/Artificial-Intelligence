@@ -69,6 +69,7 @@ vector<int> deCantor(int val) {
 
 //stat 为初始的状态 
 bool algorithm::run1() {  //以update1来计算法
+
 	vector<int> cantor(370000, 0);
 	
 	int  cntCantor = 0;

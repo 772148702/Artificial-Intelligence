@@ -10,7 +10,7 @@
 #define IDC_BNT_START                   1004
 #define IDC_EDIT_OPEN                   1005
 #define IDC_EDIT_CLOSE                  1006
-#define IDC_LIST_STATE                  1007
+
 #define IDC_RD_H1                       1008
 #define IDC_EDIT0                       1009
 #define IDC_EDIT1                       1010
@@ -23,7 +23,7 @@
 #define IDC_EDIT8                       1017
 #define IDC_RD_H2                       1019
 #define IDC_LIST1                       1020
-#define IDC_LIST_STATE2                 1021
+
 #define IDC_BNT_RND                     1022
 #define IDC_LIST_METHOD                 1023
 #define IDC_LIST_METHOD2                1024

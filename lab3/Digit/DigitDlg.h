@@ -47,8 +47,7 @@ public:
 	static UINT Thread1(LPVOID  param);
 	void show(state tmp);
 	afx_msg void OnTimer(UINT_PTR nIDEvent);
-	CListBox listbox;
-	CListBox listbox2;
+
 	afx_msg void OnBnClickedBntRnd();
 	void  showMethod();
 	void showMethod2();

@@ -59,8 +59,7 @@ CDigitDlg::CDigitDlg(CWnd* pParent /*=NULL*/)
 void CDigitDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
-	DDX_Control(pDX, IDC_LIST_STATE, listbox);
-	DDX_Control(pDX, IDC_LIST_STATE2, listbox2);
+
 	DDX_Control(pDX, IDC_LIST_METHOD, listboxMethod);
 	DDX_Control(pDX, IDC_LIST_METHOD2, ListBoxMethod2);
 }
@@ -174,44 +173,44 @@ void CDigitDlg::showState() {
 	if (al1.record.size()!=0) {
 		CString c;
 		c.Format(L"第%d个当前节点\n", cnt1);
-		listbox.AddString(c);
+		//listbox.AddString(c);
 		Record re = al1.record.front();
 		al1.record.pop();
 
 		c.Format(L"open 表当中有%d个节点\n", re.opensize);
-		listbox.AddString(c);
+		//listbox.AddString(c);
 		c.Format(L"close表当中有%d个节点\n", re.closesize);
-		listbox.AddString(c);
+		//listbox.AddString(c);
 		c.Format(L"当前节点为:\n");
-		listbox.AddString(c);
+		//listbox.AddString(c);
 		c.Format(L"当前节点fn为%d,gn:%d,hn:%d\n",re.cur.fn,re.cur.gn,re.cur.hn);
-		listbox.AddString(c);
+		//listbox.AddString(c);
 		for (int i = 0; i < 3; i++)
 		{
 			c.Format(L"%d %d %d", re.cur.st[i * 3], re.cur.st[i * 3 + 1], re.cur.st[i * 3 + 2]);
-			listbox.AddString(c);
+			//listbox.AddString(c);
 		}
 		cnt1++;
 	}
 	if (al2.record.size() != 0) {
 		CString c;
 		c.Format(L"第%d个当前节点\n", cnt2);
-		listbox2.AddString(c);
+		//listbox2.AddString(c);
 		Record re = al2.record.front();
 		al2.record.pop();
 
 		c.Format(L"open 表当中有%d个节点\n", re.opensize);
-		listbox2.AddString(c);
+		//listbox2.AddString(c);
 		c.Format(L"close表当中有%d个节点\n", re.closesize);
-		listbox2.AddString(c);
+		//listbox2.AddString(c);
 		c.Format(L"当前节点为:\n");
-		listbox2.AddString(c);
+		//listbox2.AddString(c);
 		c.Format(L"当前节点fn为%d,gn:%d,hn:%d\n", re.cur.fn, re.cur.gn, re.cur.hn);
-		listbox2.AddString(c);
+		//listbox2.AddString(c);
 		for (int i = 0; i < 3; i++)
 		{
 			c.Format(L"%d %d %d", re.cur.st[i * 3], re.cur.st[i * 3 + 1], re.cur.st[i * 3 + 2]);
-			listbox2.AddString(c);
+			//listbox2.AddString(c);
 		}
 		cnt2++;
 	}
@@ -219,7 +218,7 @@ void CDigitDlg::showState() {
 void CDigitDlg::OnBnClickedBntStart()
 {
 	// TODO: 在此添加控件通知处理程序代码
-	listbox.ResetContent();
+	
 	vector<int> v;
 	for (int i = 0; i < 9; i++) {
 		CString s;
@@ -231,14 +230,14 @@ void CDigitDlg::OnBnClickedBntStart()
 	    al1.init1(v);
 	    al2.init2(v);
 		CDigitDlg * a = this;
-		listbox.AddString(L"错位启发函数");
+		//listbox.AddString(L"错位启发函数");
 	
 	
 
 		AfxBeginThread(Thread1, a);
 	
 	
-		listbox2.AddString(L"距离启发函数");
+		//listbox2.AddString(L"距离启发函数");
 	
 		
 		AfxBeginThread(Thread2, a);
