@@ -23,8 +23,14 @@ public:
 	struct ChessNode{
 		CPoint pos;
 		int ChessID;
-		ChessNode(CPoint npos=CPoint(0,0),int nChessID=0){pos=npos,ChessID=nChessID;}
-		bool operator!=(const ChessNode& n){if(n.pos==this->pos && n.ChessID==this->ChessID)return false;return true;}
+		ChessNode(CPoint npos=CPoint(0,0),int nChessID=0) {
+			pos = npos, ChessID = nChessID;
+		}
+		bool operator!=(const ChessNode& n) {
+			if (n.pos == this->pos && n.ChessID == this->ChessID)
+				return false;
+			return true;
+		}
 	};
 	protected:
 	virtual void DoDataExchange(CDataExchange* pDX);	// DDX/DDV 支持
