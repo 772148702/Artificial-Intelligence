@@ -73,17 +73,17 @@ CEvaluation::~CEvaluation(void)
 int CEvaluation::GetBingValue(CPoint pos, int Map[10][9])
 {
 	count = 0;
-	if(Map[pos.x][pos.y]==R_PAWN)
+	if (Map[pos.x][pos.y] == R_PAWN)
 		return BA0[pos.x][pos.y];
-	if(Map[pos.x][pos.y]==B_PAWN)
+	if (Map[pos.x][pos.y] == B_PAWN)
 		return BA1[pos.x][pos.y];
 	return 0;
 }
 
 void CEvaluation::AddPoint(const CPoint &pos)
 {
-	RelatePos[m_nRelatePos].x=pos.x;
-	RelatePos[m_nRelatePos].y=pos.y;
+	RelatePos[m_nRelatePos].x = pos.x;
+	RelatePos[m_nRelatePos].y = pos.y;
 	m_nRelatePos++;
 }
 
@@ -104,13 +104,7 @@ int CEvaluation::GetRelatePiece(int Map[10][9],CPoint pos)
 		GNT_JiangRelate(Map,pos);
 		break;
 	case R_BISHOP:
-		GNT_RShiRelate(Map,pos);
-		break;
-	case B_BISHOP:
 		GNT_BShiRelate(Map,pos);
-		break;
-	case R_ELEPHANT:
-		GNT_RXiangRelate(Map,pos);
 		break;
 	case B_ELEPHANT:
 		GNT_BXiangRelate(Map,pos);
@@ -132,14 +126,14 @@ int CEvaluation::GetRelatePiece(int Map[10][9],CPoint pos)
 			AddPoint(addp);
 		if(pos.x < 5)
 		{
-			y=pos.y+1;
-			x=pos.x;
-			addp.x=x;
-			addp.y=y;
+			y = pos.y + 1;
+			x = pos.x;
+			addp.x = x;
+			addp.y = y;
 			if(y < 9 )
 				AddPoint(addp);
-			y=pos.y-1;
-			addp.y=y;
+			y = pos.y - 1;
+			addp.y = y;
 			if(y >= 0 )
 				AddPoint(addp);
 		}
@@ -147,21 +141,21 @@ int CEvaluation::GetRelatePiece(int Map[10][9],CPoint pos)
 
 	case B_PAWN:
 		y = pos.y;
-		x = pos.x+1;
-		addp.x=x;
-		addp.y=y;
+		x = pos.x + 1;
+		addp.x = x;
+		addp.y = y;;
 		if(x < 10 )
 			AddPoint(addp);
 		if(pos.x > 4)
 		{
-			y=pos.y+1;
-			x=pos.x;
-			addp.x=x;
-			addp.y=y;
+			y = pos.y + 1;
+			x = pos.x;
+			addp.x = x;
+			addp.y = y;
 			if(y < 9)
 				AddPoint(addp);
-			y=pos.y-1;
-			addp.y=y;
+			y = pos.y - 1;
+			addp.y = y;
 			if(y >= 0)
 				AddPoint(addp);
 		}
@@ -182,30 +176,30 @@ inline void CEvaluation::GNT_JiangRelate(int Map[][9], const CPoint &pos)
 {
 	int x;
 	int y;
-	x=pos.x;
-	y=pos.y+1;
+	x = pos.x;
+	y = pos.y + 1;
 	CPoint addp;
-	addp.x=x;
-	addp.y=y;
-	if(y<=5)
+	addp.x = x;
+	addp.y = y;
+	if (y <= 5)
 		AddPoint(addp);
-	x=pos.x;
-	y=pos.y-1;
-	addp.x=x;
-	addp.y=y;
-	if(y>=3)
+	x = pos.x;
+	y = pos.y - 1;
+	addp.x = x;
+	addp.y = y;
+	if (y >= 3)
 		AddPoint(addp);
-	x=pos.x+1;
-	y=pos.y;
-	addp.x=x;
-	addp.y=y;
-	if(x<=2)
+	x = pos.x + 1;
+	y = pos.y;
+	addp.x = x;
+	addp.y = y;
+	if (x <= 2)
 		AddPoint(addp);
-	x=pos.x-1;
-	y=pos.y;
-	addp.x=x;
-	addp.y=y;
-	if(x>=0)
+	x = pos.x - 1;
+	y = pos.y;
+	addp.x = x;
+	addp.y = y;
+	if (x >= 0)
 		AddPoint(addp);
 }
 
@@ -262,73 +256,11 @@ inline void CEvaluation::GNT_BShiRelate(int Map[][9], const CPoint &pos)
 	addp.y=y;
 	if(x>=0 && y<=5)
 		AddPoint(addp);
-	x=pos.x-1;
-	y=pos.y-1;
+	x = pos.x - 1;
+	y = pos.y - 1;
 	addp.x=x;
 	addp.y=y;
 	if(x>=0 && y>=3)
-		AddPoint(addp);
-}
-
-inline void CEvaluation::GNT_RShiRelate(int Map[][9], const CPoint &pos)
-{
-	CPoint addp;
-	int x,y;
-	x=pos.x+1;
-	y=pos.y+1;
-	addp.x=x;
-	addp.y=y;
-	if(x<=9 && y<=5)
-		AddPoint(addp);
-	x=pos.x+1;
-	y=pos.y-1;
-	addp.x=x;
-	addp.y=y;
-	if(x<=9 && y>=3)
-		AddPoint(addp);
-	x=pos.x-1;
-	y=pos.y+1;
-	addp.x=x;
-	addp.y=y;
-	if(x>=7 && y<=5)
-		AddPoint(addp);
-	x=pos.x-1;
-	y=pos.y-1;
-	addp.x=x;
-	addp.y=y;
-	if(x>=7 && y>=3)
-		AddPoint(addp);
-}
-
-inline void CEvaluation::GNT_RXiangRelate(int Map[][9],const CPoint &pos)
-{
-	CPoint addp;
-	int srcx=pos.x;
-	int srcy=pos.y;
-	int x, y;
-	x=pos.x+2;
-	y=pos.y+2;
-	addp.x=x;
-	addp.y=y;
-	if(x<10 && y<9 && Map[srcx+1][srcy+1]!=NOCHESS)
-		AddPoint(addp);
-	x=srcx+2;
-	y=srcy-2;
-	addp.x=x;
-	addp.y=y;
-	if(x<10 && y>=0 && Map[srcx+1][srcy-1]!=NOCHESS)
-		AddPoint(addp);
-	x=srcx-2;
-	y=srcy+2;
-	addp.x=x;
-	addp.y=y;
-	if(x>=5 && y<9 && Map[srcx-1][srcy+1]!=NOCHESS)
-		AddPoint(addp);
-	x=srcx-2;
-	y=srcy-2;
-	addp.x=x;
-	addp.y=y;
-	if(x>=5 && y>=0 && Map[srcx-1][srcy-1]!=NOCHESS)
 		AddPoint(addp);
 }
 
@@ -583,18 +515,16 @@ inline void CEvaluation::GNT_CannonRelate(int Map[][9],const CPoint &pos)
 	}
 }
 
-
-
 int CEvaluation::Evaluate(int Map[10][9],bool bIsRedTurn)
 {
 	int i, j, k;
 	int nChessType, nTargetType;
 	count++;
 
-	memset(m_chessValue,0, 90*sizeof(int));
-	memset(m_AttackPos,0, 90*sizeof(int)); 
-	memset(m_GuardPos,0, 90*sizeof(int)); 
-	memset(m_FlexibilityPos, 0, 90*sizeof(int));
+	memset(m_chessValue, 0, 90 * sizeof(int));
+	memset(m_AttackPos, 0, 90 * sizeof(int));
+	memset(m_GuardPos, 0, 90 * sizeof(int));
+	memset(m_FlexibilityPos, 0, 90 * sizeof(int));
 
 	for(i = 0; i < 10; i++)
 		for(j = 0; j < 9; j++) {

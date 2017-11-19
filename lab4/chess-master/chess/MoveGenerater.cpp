@@ -15,7 +15,7 @@ CMoveGenerater::~CMoveGenerater(void)
 
 inline void CMoveGenerater::AddMove(MoveStep p,int nPly)
 {
-	MoveList[nPly][m_nMoveCount]=p;
+	MoveList[nPly][m_nMoveCount] = p;
 	m_nMoveCount++;
 }
 
@@ -322,7 +322,7 @@ int CMoveGenerater::AllValidMove(int Map[10][9],int nPly,int nSide)
 					break;
 
 				case R_BISHOP:
-					GNT_RShiMove(Map, CPoint(i,j), nPly);
+					GNT_BShiMove(Map, CPoint(i,j), nPly);
 					break;
 
 				case B_BISHOP:
@@ -345,7 +345,7 @@ int CMoveGenerater::AllValidMove(int Map[10][9],int nPly,int nSide)
 					break;
 
 				case R_PAWN:
-					GNT_RBingMove(Map,CPoint(i,j), nPly);
+					GNT_BBingMove(Map,CPoint(i,j), nPly);
 					break;
 
 				case B_PAWN:
@@ -367,20 +367,20 @@ int CMoveGenerater::AllValidMove(int Map[10][9],int nPly,int nSide)
 
 void CMoveGenerater::GNT_JiangMove(int Map[10][9],CPoint &pos,int nPly)
 {
-	int x,y;
-	for(x=0 ; x<3 ; x++)
-		for(y=3 ; y<6 ; y++)
-			if(IsValidMove(Map,pos,CPoint(x,y)))
-				AddMove(MoveStep(pos,CPoint(x, y)),nPly);
+	int x, y;
+	for (x = 0; x < 3; x++)
+		for (y = 3; y < 6; y++)
+			if (IsValidMove(Map, pos, CPoint(x, y)))
+				AddMove(MoveStep(pos, CPoint(x, y)), nPly);
 }
 
 void CMoveGenerater::GNT_ShuaiMove(int Map[10][9],CPoint &pos,int nPly)
 {
 	int x, y;
-	for(x=7 ; x<10 ; x++)
-		for(y=3 ; y<6 ; y++)
-			if(IsValidMove(Map,pos,CPoint(x,y)))
-				AddMove(MoveStep(pos,CPoint(x, y)),nPly);
+	for (x = 7; x < 10; x++)
+		for (y = 3; y < 6; y++)
+			if (IsValidMove(Map, pos, CPoint(x, y)))
+				AddMove(MoveStep(pos, CPoint(x, y)), nPly);
 }
 
 void CMoveGenerater::GNT_BJuMove(int Map[10][9],CPoint &pos,int nPly)
@@ -593,33 +593,24 @@ void CMoveGenerater::GNT_BXiangMove(int Map[10][9] , CPoint &pos , int nPly)
 
 	x=pos.x-2;
 	y=pos.y+2;
-	if(y < 9 && x>=0  &&  IsValidMove(Map, pos, CPoint(x, y)))
-		AddMove(MoveStep(pos,CPoint(x, y)),nPly);
+	if (y < 9 && x >= 0 && IsValidMove(Map, pos, CPoint(x, y)))
+		AddMove(MoveStep(pos, CPoint(x, y)), nPly);
 
 	x=pos.x+2;
 	y=pos.y-2;
-	if(y>=0 && x < 10  && IsValidMove(Map, pos, CPoint(x, y)))
-		AddMove(MoveStep(pos,CPoint(x, y)),nPly);
+	if (y >= 0 && x < 10 && IsValidMove(Map, pos, CPoint(x, y)))
+		AddMove(MoveStep(pos, CPoint(x, y)), nPly);
 
 	x=pos.x-2;
 	y=pos.y-2;
-	if(x>=0 && y>=0  && IsValidMove(Map, pos, CPoint(x, y)))
-		AddMove(MoveStep(pos,CPoint(x, y)),nPly);
+	if (x >= 0 && y >= 0 && IsValidMove(Map, pos, CPoint(x, y)))
+		AddMove(MoveStep(pos, CPoint(x, y)), nPly);
 }
 
 void CMoveGenerater::GNT_BShiMove(int Map[10][9],CPoint &pos,int nPly)
 {
 	int x,  y;
 	for (x = 0; x < 3; x++)
-		for (y = 3; y < 6; y++)
-			if (IsValidMove(Map,  pos, CPoint(x, y)))
-				AddMove(MoveStep(pos,CPoint(x, y)),nPly);
-}
-
-void CMoveGenerater::GNT_RShiMove(int Map[10][9],CPoint &pos , int nPly)
-{
-	int x,  y;
-	for (x = 7; x < 10; x++)
 		for (y = 3; y < 6; y++)
 			if (IsValidMove(Map,  pos, CPoint(x, y)))
 				AddMove(MoveStep(pos,CPoint(x, y)),nPly);
@@ -649,7 +640,7 @@ void CMoveGenerater::GNT_BZuMove(int Map[10][9],CPoint &pos , int nPly)
 	}
 }
 
-void CMoveGenerater::GNT_RBingMove(int Map[10][9],CPoint &pos , int nPly)
+void CMoveGenerater::GNT_BBingMove(int Map[10][9],CPoint &pos , int nPly)
 {
 	int x, y;
 	int nChessID;

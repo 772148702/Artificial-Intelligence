@@ -35,9 +35,7 @@ protected:
 	inline void GNT_JiangRelate(int Map[][9], const CPoint &pos);
 	inline void GNT_ShuaiRelate(int Map[][9], const CPoint &pos);
 	inline void GNT_BShiRelate(int Map[][9], const CPoint &pos);
-	inline void GNT_RShiRelate(int Map[][9], const CPoint &pos);
 	inline void GNT_BXiangRelate(int Map[][9], const CPoint &pos);
-	inline void GNT_RXiangRelate(int Map[][9], const CPoint &pos);
 	inline void GNT_MaRelate(int Map[][9], const CPoint &pos);
 	void CEvaluation::AddPoint(const CPoint &pos);
 	int m_BaseValue[15];

@@ -22,32 +22,22 @@ protected:
 	inline void AddMove(MoveStep p , int ply);
 	//下面规定所有棋子的走法！！！！
 	//将
-	void GNT_JiangMove(int Map[10][9] ,CPoint &pos , int ply);
+	void GNT_JiangMove(int Map[10][9] ,CPoint &pos , int nPly);
 	//帅
-	void GNT_ShuaiMove(int Map[10][9] , CPoint &pos , int ply);
-	//红相
-	void GNT_RXiangMove(int Map[10][9] , CPoint &pos , int ply);
-	//黑象
-	void GNT_BXiangMove(int Map[10][9] , CPoint &pos , int ply);
-	//红士
-	void GNT_RShiMove(int Map[10][9] , CPoint &pos , int ply);
+	void GNT_ShuaiMove(int Map[10][9] , CPoint &pos , int nPly);
+	//黑相
+	void GNT_BXiangMove(int Map[10][9] , CPoint &pos , int nPly);
 	//黑士
-	void GNT_BShiMove(int Map[10][9] , CPoint &pos , int ply);
-	//红马
-	void GNT_RMaMove(int Map[10][9] , CPoint &pos , int ply);
+	void GNT_BShiMove(int Map[10][9] , CPoint &pos , int nPly);
 	//黑马
-	void GNT_BMaMove(int Map[10][9] , CPoint &pos , int ply);
-	//红車
-	void GNT_RJuMove(int Map[10][9] , CPoint &pos , int ply);
+	void GNT_BMaMove(int Map[10][9] , CPoint &pos , int nPly);
 	//黑車
-	void GNT_BJuMove(int Map[10][9] , CPoint &pos , int ply);
-	//红兵
-	void GNT_RBingMove(int Map[10][9] ,CPoint &pos , int ply);
+	void GNT_BJuMove(int Map[10][9] , CPoint &pos , int nPly);
+	//黑兵
+	void GNT_BBingMove(int Map[10][9], CPoint &pos, int nPly);
 	//黑卒
-	void GNT_BZuMove(int Map[10][9] , CPoint &pos , int ply);
-	//红炮
-	void GNT_RPaoMove(int Map[10][9] , CPoint &pos , int ply);
+	void GNT_BZuMove(int Map[10][9] , CPoint &pos , int nPly);
 	//黑炮
-	void GNT_BPaoMove(int Map[10][9] , CPoint &pos , int ply);
+	void GNT_BPaoMove(int Map[10][9] , CPoint &pos , int nPly);
 };
 
