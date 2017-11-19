@@ -21,13 +21,13 @@ class CAboutDlg : public CDialogEx
 public:
 	CAboutDlg();
 
-	// 对话框数据
+// 对话框数据
 	enum { IDD = IDD_ABOUTBOX };
 
-protected:
+	protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV 支持
 
-														// 实现
+// 实现
 protected:
 	DECLARE_MESSAGE_MAP()
 };
@@ -102,15 +102,15 @@ BOOL CchessDlg::OnInitDialog()
 	//  执行此操作
 	SetIcon(m_hIcon, TRUE);			// 设置大图标
 	SetIcon(m_hIcon, FALSE);		// 设置小图标
-	memcpy(m_ChessBoard, InitChessBoard, 90 * sizeof(int));
-	m_chessman.Create(41, 41, ILC_COLOR24 | ILC_MASK, 14, 0);
+	memcpy(m_ChessBoard,InitChessBoard,90*sizeof(int));
+	m_chessman.Create(41,41,ILC_COLOR24 | ILC_MASK ,14 , 0);
 	CBitmap bm;
 	bm.LoadBitmapW(IDB_CHESSMAN);
-	m_chessman.Add(&bm, RGB(0, 255, 0));
+	m_chessman.Add(&bm,RGB(0,255,0));
 	// TODO: 在此添加额外的初始化代码
-	m_pSE = new CNegamaxEngine;
-	m_pMG = new CMoveGenerater;
-	m_pEva = new CEvaluation;
+	m_pSE=new CNegamaxEngine;
+	m_pMG=new CMoveGenerater;
+	m_pEva=new CEvaluation;
 	m_pSE->SetEvaluator(m_pEva);
 	m_pSE->SetMoveGenerator(m_pMG);
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
@@ -156,26 +156,26 @@ void CchessDlg::OnPaint()
 	{
 		CDialogEx::OnPaint();
 	}
-	CDC *pDC = this->GetDC();
+	CDC *pDC=this->GetDC();
 	CDC memDC;
 	memDC.CreateCompatibleDC(pDC);
 	m_chessboard.LoadBitmapW(IDB_CHESSBOARD);
 	BITMAP bm;
-	m_chessboard.GetObject(sizeof(BITMAP), &bm);
-	CBitmap *old = memDC.SelectObject(&m_chessboard);
+	m_chessboard.GetObject(sizeof(BITMAP),&bm);
+	CBitmap *old=memDC.SelectObject(&m_chessboard);
 	CPoint pt;
-	for (int i = 0; i<10; i++) {
-		for (int j = 0; j<9; j++) {
-			if (m_ChessBoard[i][j]) {
-				pt.x = j*GRILLEWIDTH + BOARDERWIDTH;
-				pt.y = i*GRILLEHEIGHT + BOARDERHEIGHT;
-				m_chessman.Draw(&memDC, m_ChessBoard[i][j] - 1, pt, ILD_TRANSPARENT);
+	for(int i=0 ; i<10 ; i++){
+		for(int j=0 ; j<9 ; j++){
+			if(m_ChessBoard[i][j]){
+				pt.x=j*GRILLEWIDTH+BOARDERWIDTH;
+				pt.y=i*GRILLEHEIGHT+BOARDERHEIGHT;
+				m_chessman.Draw(&memDC,m_ChessBoard[i][j]-1,pt,ILD_TRANSPARENT);
 			}
 		}
 	}
-	if (m_move.ChessID != NOCHESS)
-		m_chessman.Draw(&memDC, m_move.ChessID - 1, m_move.pos, ILD_TRANSPARENT);
-	pDC->BitBlt(0, 0, bm.bmWidth, bm.bmHeight, &memDC, 0, 0, SRCCOPY);
+	if(m_move.ChessID!=NOCHESS)
+		m_chessman.Draw(&memDC,m_move.ChessID-1,m_move.pos,ILD_TRANSPARENT);
+	pDC->BitBlt(0,0,bm.bmWidth,bm.bmHeight,&memDC,0,0,SRCCOPY);
 	memDC.SelectObject(&old);
 	memDC.DeleteDC();
 	m_chessboard.DeleteObject();
@@ -193,18 +193,18 @@ HCURSOR CchessDlg::OnQueryDragIcon()
 void CchessDlg::OnLButtonDown(UINT nFlags, CPoint point)
 {
 	// TODO: 在此添加消息处理程序代码和/或调用默认值
-	int x = (point.y - BOARDERHEIGHT) / GRILLEHEIGHT;
-	int y = (point.x - BOARDERWIDTH) / GRILLEWIDTH;
-	m_from.pos.x = x;
-	m_from.pos.y = y;
-	m_from.ChessID = m_ChessBoard[x][y];
-	if (x >= 0 && y >= 0 && y < 9 && x < 10 && IsRed(m_ChessBoard[x][y])) {
-		point.x -= 22;
-		point.y -= 22;
-		m_move.pos = point;
-		m_move.ChessID = m_ChessBoard[x][y];
-		m_ChessBoard[x][y] = NOCHESS;
-		InvalidateRect(NULL, FALSE);
+	int x=(point.y-BOARDERHEIGHT)/GRILLEHEIGHT;
+	int y=(point.x-BOARDERWIDTH)/GRILLEWIDTH;
+	m_from.pos.x=x;
+	m_from.pos.y=y;
+	m_from.ChessID=m_ChessBoard[x][y];
+	if(x>=0 && y>=0 && y<9 && x<10 && IsRed(m_ChessBoard[x][y])){
+		point.x-=22;
+		point.y-=22;
+		m_move.pos=point;
+		m_move.ChessID=m_ChessBoard[x][y];
+		m_ChessBoard[x][y]=NOCHESS;
+		InvalidateRect(NULL,FALSE);
 		UpdateWindow();
 	}
 
@@ -215,37 +215,37 @@ void CchessDlg::OnLButtonDown(UINT nFlags, CPoint point)
 void CchessDlg::OnLButtonUp(UINT nFlags, CPoint point)
 {
 	// TODO: 在此添加消息处理程序代码和/或调用默认值
-	int x = (point.y - BOARDERHEIGHT) / GRILLEHEIGHT;
-	int y = (point.x - BOARDERWIDTH) / GRILLEWIDTH;
+	int x=(point.y-BOARDERHEIGHT)/GRILLEHEIGHT;
+	int y=(point.x-BOARDERWIDTH)/GRILLEWIDTH;
 	MoveStep AiMove;
-	m_to.pos.x = x;
-	m_to.pos.y = y;
-	m_ChessBoard[m_from.pos.x][m_from.pos.y] = m_from.ChessID;
-	if (m_move.ChessID && m_to != m_from && CMoveGenerater::IsValidMove(m_ChessBoard, m_from.pos, m_to.pos)) {
-		m_ChessBoard[m_from.pos.x][m_from.pos.y] = NOCHESS;
-		int target = m_ChessBoard[x][y];
-		m_ChessBoard[x][y] = m_move.ChessID;
+	m_to.pos.x=x;
+	m_to.pos.y=y;
+	m_ChessBoard[m_from.pos.x][m_from.pos.y]=m_from.ChessID;
+	if(m_move.ChessID && m_to!=m_from && CMoveGenerater::IsValidMove(m_ChessBoard,m_from.pos,m_to.pos)){
+		m_ChessBoard[m_from.pos.x][m_from.pos.y]=NOCHESS;
+		int target=m_ChessBoard[x][y];
+		m_ChessBoard[x][y]=m_move.ChessID;
 		UpdateWindow();
-		regret.push(ChessNode(CPoint(x, y), target));
-		regret.push(ChessNode(CPoint(m_from.pos), m_move.ChessID));
-		AiMove = m_pSE->SearchAGoodMove(m_ChessBoard);
-		if (AiMove.from == AiMove.to) {//do something
-			if (MessageBox(L"恭喜你，你赢了") == IDOK)
+		regret.push(ChessNode(CPoint(x,y),target));
+		regret.push(ChessNode(CPoint(m_from.pos),m_move.ChessID));
+		AiMove=m_pSE->SearchAGoodMove(m_ChessBoard);
+		if(AiMove.from==AiMove.to){//do something
+			if(MessageBox(L"恭喜你，你赢了")==IDOK)
 				StartANewGame();
 		}
-		else {
-			AiMove.ChessID = m_ChessBoard[AiMove.to.x][AiMove.to.y];
-			target = m_ChessBoard[AiMove.from.x][AiMove.from.y];
-			regret.push(ChessNode(CPoint(AiMove.from), target));
-			m_ChessBoard[AiMove.from.x][AiMove.from.y] = NOCHESS;
-			m_ChessBoard[AiMove.to.x][AiMove.to.y] = target;
-			regret.push(ChessNode(CPoint(AiMove.to), AiMove.ChessID));
+		else{
+			AiMove.ChessID=m_ChessBoard[AiMove.to.x][AiMove.to.y];
+			target=m_ChessBoard[AiMove.from.x][AiMove.from.y];
+			regret.push(ChessNode(CPoint(AiMove.from),target));
+			m_ChessBoard[AiMove.from.x][AiMove.from.y]=NOCHESS;
+			m_ChessBoard[AiMove.to.x][AiMove.to.y]=target;
+			regret.push(ChessNode(CPoint(AiMove.to),AiMove.ChessID));
 		}
 	}
 	else
-		m_ChessBoard[m_from.pos.x][m_from.pos.y] = m_from.ChessID;
-	m_move.ChessID = NOCHESS;
-	InvalidateRect(NULL, FALSE);
+		m_ChessBoard[m_from.pos.x][m_from.pos.y]=m_from.ChessID;		
+	m_move.ChessID=NOCHESS;
+	InvalidateRect(NULL,FALSE);
 	UpdateWindow();
 	CDialogEx::OnLButtonUp(nFlags, point);
 }
@@ -254,19 +254,19 @@ void CchessDlg::OnLButtonUp(UINT nFlags, CPoint point)
 void CchessDlg::OnMouseMove(UINT nFlags, CPoint point)
 {
 	// TODO: 在此添加消息处理程序代码和/或调用默认值
-	if (m_move.ChessID) {
-		if (point.x<BOARDERWIDTH)
-			point.x = BOARDERWIDTH;
-		if (point.y<BOARDERHEIGHT)
-			point.y = BOARDERHEIGHT;
-		if (point.x>NBOARDWIDTH)
-			point.x = NBOARDWIDTH;
-		if (point.y>NBOARDHEIGHT)
-			point.y = NBOARDHEIGHT;
-		point.x -= 22;
-		point.y -= 22;
-		m_move.pos = point;
-		InvalidateRect(NULL, FALSE);
+	if(m_move.ChessID){
+		if(point.x<BOARDERWIDTH)
+			point.x=BOARDERWIDTH;
+		if(point.y<BOARDERHEIGHT)
+			point.y=BOARDERHEIGHT;
+		if(point.x>NBOARDWIDTH)
+			point.x=NBOARDWIDTH;
+		if(point.y>NBOARDHEIGHT)
+			point.y=NBOARDHEIGHT;
+		point.x-=22;
+		point.y-=22;
+		m_move.pos=point;
+		InvalidateRect(NULL,FALSE);
 		UpdateWindow();
 	}
 	CDialogEx::OnMouseMove(nFlags, point);
@@ -276,22 +276,22 @@ void CchessDlg::OnMouseMove(UINT nFlags, CPoint point)
 void CchessDlg::OnBnClickedRegret()
 {
 	// TODO: 在此添加控件通知处理程序代码
-	if (regret.size()<4)
+	if(regret.size()<4)
 		return;
-	for (int i = 0; i<4; i++) {
-		ChessNode temp = regret.top();
-		m_ChessBoard[temp.pos.x][temp.pos.y] = temp.ChessID;
+	for(int i=0 ;i<4 ; i++){
+		ChessNode temp=regret.top();
+		m_ChessBoard[temp.pos.x][temp.pos.y]=temp.ChessID;
 		regret.pop();
 	}
-	InvalidateRect(NULL, FALSE);
+	InvalidateRect(NULL,FALSE);
 	UpdateWindow();
 }
 
 void CchessDlg::StartANewGame()
 {
-	memcpy(m_ChessBoard, InitChessBoard, 90 * sizeof(int));
-	while (!regret.empty())
+	memcpy(m_ChessBoard,InitChessBoard,90*sizeof(int));
+	while(!regret.empty())
 		regret.pop();
-	InvalidateRect(NULL, FALSE);
+	InvalidateRect(NULL,FALSE);
 	UpdateWindow();
 }
