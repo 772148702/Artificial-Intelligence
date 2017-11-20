@@ -28,7 +28,7 @@ int CNegamaxEngine::NegaMax(int depth)
 {
 	int current = -MaxInt;
 	int score;
-	int Count,i;
+	int Count, i;
 	int type;
 
 	if (depth <= 0)	//叶子节点取估值
@@ -40,7 +40,7 @@ int CNegamaxEngine::NegaMax(int depth)
 	{
 		type = MakeMove(&(m_pMG->MoveList[depth][i]));
 		score = -NegaMax(depth - 1);
-		UnMakeMove(&(m_pMG->MoveList[depth][i]),type); 
+		UnMakeMove(&(m_pMG->MoveList[depth][i]), type); 
 		if (score > current) {
 			current = score;
 			if(depth == m_nMaxDepth)

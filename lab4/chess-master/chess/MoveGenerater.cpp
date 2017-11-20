@@ -299,8 +299,8 @@ bool CMoveGenerater::IsValidMove(int Map[10][9] , const CPoint &from, const CPoi
 
 int CMoveGenerater::AllValidMove(int Map[10][9],int nPly,int nSide)
 {
-	int     nChessID;
-	int		i,j;
+	int nChessID;
+	int	i,j;
 
 	m_nMoveCount=0;
 	for (i = 0; i < 10; i++)
@@ -315,45 +315,28 @@ int CMoveGenerater::AllValidMove(int Map[10][9],int nPly,int nSide)
 					continue;
 				switch(nChessID)
 				{
-				case R_KING:
-					GNT_ShuaiMove(Map, CPoint(i,j), nPly);
 				case B_KING:
 					GNT_JiangMove(Map, CPoint(i,j), nPly);
 					break;
-
-				case R_BISHOP:
-					GNT_BShiMove(Map, CPoint(i,j), nPly);
-					break;
-
 				case B_BISHOP:
 					GNT_BShiMove(Map, CPoint(i,j), nPly);
 					break;
-
-				case R_ELEPHANT:
 				case B_ELEPHANT:
 					GNT_BXiangMove(Map, CPoint(i,j), nPly);
-					break;
-
-				case R_HORSE:		
+					break;	
 				case B_HORSE:		
 					GNT_BMaMove(Map,CPoint(i,j), nPly);
 					break;
-
-				case R_CAR:
 				case B_CAR:
 					GNT_BJuMove(Map, CPoint(i,j), nPly);
 					break;
-
 				case R_PAWN:
 					GNT_BBingMove(Map,CPoint(i,j), nPly);
 					break;
-
 				case B_PAWN:
 					GNT_BZuMove(Map, CPoint(i,j), nPly);
 					break;
-
 				case B_CANON:
-				case R_CANON:
 					GNT_BPaoMove(Map, CPoint(i,j), nPly);
 					break;
 				default:

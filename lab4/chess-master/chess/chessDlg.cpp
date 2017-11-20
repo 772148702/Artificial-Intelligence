@@ -235,7 +235,7 @@ void CchessDlg::OnLButtonUp(UINT nFlags, CPoint point)
 		regret.push(ChessNode(CPoint(x, y), target));
 		regret.push(ChessNode(CPoint(m_from.pos), m_move.ChessID));
 		AiMove = m_pSE->SearchAGoodMove(m_ChessBoard);
-		if (AiMove.from == AiMove.to) {//do something
+		if (target == B_KING) {//do something
 			if (MessageBox(L"恭喜你，你赢了") == IDOK)
 				StartANewGame();
 		}
