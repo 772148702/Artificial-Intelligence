@@ -65,4 +65,5 @@ public:
 	afx_msg void OnMouseMove(UINT nFlags, CPoint point);
 	afx_msg void OnBnClickedRegret();
 	afx_msg void OnBnClickedRegame();
+	int m_iSearchDep;
 };

@@ -52,6 +52,7 @@ END_MESSAGE_MAP()
 
 CchessDlg::CchessDlg(CWnd* pParent /*=NULL*/)
 	: CDialogEx(CchessDlg::IDD, pParent)
+	, m_iSearchDep(0)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
@@ -59,6 +60,8 @@ CchessDlg::CchessDlg(CWnd* pParent /*=NULL*/)
 void CchessDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
+	DDX_Text(pDX, IDC_SEARCH_DEPTH, m_iSearchDep);
+	DDV_MinMaxInt(pDX, m_iSearchDep, 2, 100);
 }
 
 BEGIN_MESSAGE_MAP(CchessDlg, CDialogEx)
@@ -114,6 +117,8 @@ BOOL CchessDlg::OnInitDialog()
 	m_pEva = new CEvaluation;
 	m_pSE->SetEvaluator(m_pEva);
 	m_pSE->SetMoveGenerator(m_pMG);
+	m_iSearchDep = 3;
+	UpdateData(FALSE);
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
 }
 
@@ -311,8 +316,12 @@ void CchessDlg::StartANewGame()
 	memcpy(m_ChessBoard, InitChessBoard, 90 * sizeof(int));
 	while (!regret.empty())
 		regret.pop();
+	UpdateData(TRUE);
+	m_pSE->SetSearchDepth(m_iSearchDep);
+	UpdateData(FALSE);
 	InvalidateRect(NULL, FALSE);
 	UpdateWindow();
+	
 }
 
 void CchessDlg::OnBnClickedRegame()
