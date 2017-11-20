@@ -103,42 +103,18 @@ int CEvaluation::GetRelatePiece(int Map[10][9],CPoint pos)
 	case B_KING:
 		GNT_JiangRelate(Map,pos);
 		break;
-	case R_BISHOP:
+	case B_BISHOP:
 		GNT_BShiRelate(Map,pos);
 		break;
 	case B_ELEPHANT:
 		GNT_BXiangRelate(Map,pos);
 		break;
-	case R_HORSE:
 	case B_HORSE:
 		GNT_MaRelate(Map,pos);
 		break;
-	case R_CAR:
 	case B_CAR:
 		GNT_JuRelate(Map,pos);
 		break;
-	case R_PAWN:
-		y = pos.y;
-		x = pos.x-1;
-		addp.x=x;
-		addp.y=y;
-		if(x >= 0)
-			AddPoint(addp);
-		if(pos.x < 5)
-		{
-			y = pos.y + 1;
-			x = pos.x;
-			addp.x = x;
-			addp.y = y;
-			if(y < 9 )
-				AddPoint(addp);
-			y = pos.y - 1;
-			addp.y = y;
-			if(y >= 0 )
-				AddPoint(addp);
-		}
-		break;
-
 	case B_PAWN:
 		y = pos.y;
 		x = pos.x + 1;
@@ -160,8 +136,6 @@ int CEvaluation::GetRelatePiece(int Map[10][9],CPoint pos)
 				AddPoint(addp);
 		}
 		break;
-
-	case B_CANON:
 	case R_CANON:
 		GNT_CannonRelate(Map,pos);
 		break;

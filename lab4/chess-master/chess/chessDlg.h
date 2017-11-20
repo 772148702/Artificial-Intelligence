@@ -51,6 +51,7 @@ protected:
 	CMoveGenerater *m_pMG;
 	CEvaluation *m_pEva;
 	stack<ChessNode> regret;
+	bool player_lose = false;
 	void StartANewGame();
 	// 生成的消息映射函数
 	virtual BOOL OnInitDialog();

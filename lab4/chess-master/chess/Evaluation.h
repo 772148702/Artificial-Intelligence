@@ -28,7 +28,7 @@ public:
 	virtual int Evaluate(int Map[10][9],bool bIsRedTurn);
 protected:
 	int GetRelatePiece(int Map[10][9],CPoint pos);
-	bool CanTouch(int Map[10][9],CPoint from , CPoint to);
+	//bool CanTouch(int Map[10][9],CPoint from , CPoint to);
 	int GetBingValue(CPoint pos, int Map[10][9]);
 	inline void GNT_JuRelate(int Map[][9] , const CPoint &pos);
 	inline void GNT_CannonRelate(int Map[][9],const CPoint &pos);

@@ -241,6 +241,24 @@ void CchessDlg::OnLButtonUp(UINT nFlags, CPoint point)
 			m_ChessBoard[AiMove.from.x][AiMove.from.y] = NOCHESS;
 			m_ChessBoard[AiMove.to.x][AiMove.to.y] = target;
 			regret.push(ChessNode(CPoint(AiMove.to), AiMove.ChessID));
+			if (AiMove.ChessID == R_KING) {
+				player_lose = true;
+				InvalidateRect(NULL, FALSE);
+				UpdateWindow();
+				if (MessageBox(L"是否悔棋", L"将军了，废物你输了！", MB_OKCANCEL) == IDCANCEL) {
+					player_lose = false;
+					MessageBox(L"将重新开始");
+					StartANewGame();
+				}
+				else {
+					player_lose = false;
+					InvalidateRect(NULL, FALSE);
+					UpdateWindow();
+					CchessDlg::OnBnClickedRegret();
+					MessageBox(L"退回上一步");
+				}
+					
+			}
 		}
 	}
 	else
