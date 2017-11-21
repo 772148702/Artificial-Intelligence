@@ -1,8 +1,4 @@
 ﻿#pragma once
-/************************************************************************/
-/* 这个文件主要是生成象棋的走法,查看某种走法是否合法.                           */
-/************************************************************************/
-
 
 #include <vector>
 #include "global.h"
@@ -21,23 +17,25 @@ protected:
 	//将产生的走法插入到M_MoveList中去！！！！！！！！！！
 	inline void AddMove(MoveStep p , int ply);
 	//下面规定所有棋子的走法！！！！
-	//将
-	void GNT_JiangMove(int Map[10][9] ,CPoint &pos , int nPly);
-	//帅
-	void GNT_ShuaiMove(int Map[10][9] , CPoint &pos , int nPly);
-	//黑相
-	void GNT_BXiangMove(int Map[10][9] , CPoint &pos , int nPly);
+	//黑将
+	void GNT_BJiangMove(int Map[10][9] ,CPoint &pos , int nPly);
+	//红帅
+	void GNT_RShuaiMove(int Map[10][9] , CPoint &pos , int nPly);
 	//黑士
-	void GNT_BShiMove(int Map[10][9] , CPoint &pos , int nPly);
-	//黑马
-	void GNT_BMaMove(int Map[10][9] , CPoint &pos , int nPly);
-	//黑車
-	void GNT_BJuMove(int Map[10][9] , CPoint &pos , int nPly);
-	//黑兵
-	void GNT_BBingMove(int Map[10][9], CPoint &pos, int nPly);
+	void GNT_BShiMove(int Map[10][9], CPoint &pos, int nPly);
+	//红士
+	void GNT_RShiMove(int Map[10][9], CPoint &pos, int nPly);
+	//相
+	void GNT_XiangMove(int Map[10][9] , CPoint &pos , int nPly);
+	//马
+	void GNT_MaMove(int Map[10][9] , CPoint &pos , int nPly);
+	//車
+	void GNT_JuMove(int Map[10][9] , CPoint &pos , int nPly);
+	//炮
+	void GNT_PaoMove(int Map[10][9], CPoint &pos, int nPly);
+	//红兵
+	void GNT_RBingMove(int Map[10][9], CPoint &pos, int nPly);
 	//黑卒
 	void GNT_BZuMove(int Map[10][9] , CPoint &pos , int nPly);
-	//黑炮
-	void GNT_BPaoMove(int Map[10][9] , CPoint &pos , int nPly);
 };
 

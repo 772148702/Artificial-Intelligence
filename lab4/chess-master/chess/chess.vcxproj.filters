@@ -60,6 +60,9 @@
     <ClInclude Include="NegamaxEngine.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="CAlphabetaEngine.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="chess.cpp">
@@ -81,6 +84,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="NegamaxEngine.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="CAlphabetaEngine.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

@@ -8,6 +8,8 @@
 #include "afxdialogex.h"
 #include "global.h"
 #include "NegamaxEngine.h"
+#include "SearchEngine.h"
+#include "CAlphabetaEngine.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -60,8 +62,8 @@ CchessDlg::CchessDlg(CWnd* pParent /*=NULL*/)
 void CchessDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
-	DDX_Text(pDX, IDC_SEARCH_DEPTH, m_iSearchDep);
-	DDV_MinMaxInt(pDX, m_iSearchDep, 2, 100);
+	DDX_Text(pDX, IDC_Search_Depth, m_iSearchDep);
+	DDV_MinMaxInt(pDX, m_iSearchDep, 2, 8);
 }
 
 BEGIN_MESSAGE_MAP(CchessDlg, CDialogEx)
@@ -112,12 +114,16 @@ BOOL CchessDlg::OnInitDialog()
 	bm.LoadBitmapW(IDB_CHESSMAN);
 	m_chessman.Add(&bm, RGB(0, 255, 0));
 	// TODO: 在此添加额外的初始化代码
-	m_pSE = new CNegamaxEngine;
+	//m_pSE = new CNegamaxEngine;
+	m_iSearchDep = 3;
+	pVertProg = (CProgressCtrl *)GetDlgItem(IDC_AIProgress);
+	m_pSE = new CAlphabetaEngine;
 	m_pMG = new CMoveGenerater;
 	m_pEva = new CEvaluation;
 	m_pSE->SetEvaluator(m_pEva);
 	m_pSE->SetMoveGenerator(m_pMG);
-	m_iSearchDep = 3;
+	m_pSE->SetSearchDepth(3);
+	m_pSE->SetAiProgressCtrl(pVertProg);
 	UpdateData(FALSE);
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
 }
@@ -316,9 +322,9 @@ void CchessDlg::StartANewGame()
 	memcpy(m_ChessBoard, InitChessBoard, 90 * sizeof(int));
 	while (!regret.empty())
 		regret.pop();
-	UpdateData(TRUE);
+	UpdateData(true);
 	m_pSE->SetSearchDepth(m_iSearchDep);
-	UpdateData(FALSE);
+	UpdateData(false);
 	InvalidateRect(NULL, FALSE);
 	UpdateWindow();
 	

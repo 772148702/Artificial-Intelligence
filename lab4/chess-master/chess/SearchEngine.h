@@ -10,22 +10,25 @@ public:
 	CSearchEngine(void);
 	~CSearchEngine(void);
 	virtual CHESSMOVE SearchAGoodMove(int Map[10][9])=0;
-	virtual void SetSearchDepth(int nDepth) {
+	void SetAiProgressCtrl(CProgressCtrl* pAiP);
+	void SetSearchDepth(int nDepth) {
 		m_nSearchDepth = nDepth;
 	}
-	virtual void SetEvaluator(CEvaluation *pEval) {
+	void SetEvaluator(CEvaluation* pEval) {
 		m_pEval = pEval;
 	}
-	virtual void SetMoveGenerator(CMoveGenerater *pMG) {
+	void SetMoveGenerator(CMoveGenerater* pMG) {
 		m_pMG = pMG;
 	}
 protected:
 	virtual int MakeMove(CHESSMOVE *move);
 	virtual void UnMakeMove(CHESSMOVE*move,int type);
+	int IsGameOver(int position[10][9], int nDepth);
 	CHESSMOVE m_cmBestMove;
 	int CurMap[10][9];
 	CEvaluation * m_pEval;
 	CMoveGenerater *m_pMG;
+	CProgressCtrl* pAi;
 	int m_nSearchDepth;
 	int m_nMaxDepth;
 };

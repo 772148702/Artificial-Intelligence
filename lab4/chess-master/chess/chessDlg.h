@@ -47,9 +47,10 @@ protected:
 	ChessNode m_from;
 	ChessNode m_to;
 	ChessNode m_move;
-	CSearchEngine *m_pSE;
-	CMoveGenerater *m_pMG;
-	CEvaluation *m_pEva;
+	CSearchEngine* m_pSE;
+	CMoveGenerater* m_pMG;
+	CEvaluation* m_pEva;
+	CProgressCtrl* pVertProg;
 	stack<ChessNode> regret;
 	bool player_lose = false;
 	void StartANewGame();

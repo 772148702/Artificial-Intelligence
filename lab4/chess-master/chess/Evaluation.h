@@ -4,7 +4,7 @@
 
 using namespace std;
 
-#define BASEVALUE_PAWN 100
+#define BASEVALUE_PAWN 150
 #define BASEVALUE_BISHOP 250
 #define BASEVALUE_ELEPHANT 250
 #define BASEVALUE_CAR 500

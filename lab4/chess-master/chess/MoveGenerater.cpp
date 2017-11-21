@@ -315,29 +315,39 @@ int CMoveGenerater::AllValidMove(int Map[10][9],int nPly,int nSide)
 					continue;
 				switch(nChessID)
 				{
-				case B_KING:
-					GNT_JiangMove(Map, CPoint(i,j), nPly);
+				case R_KING://红帅
+					GNT_RShuaiMove(Map, CPoint(i, j), nPly);
 					break;
-				case B_BISHOP:
+				case B_KING: //黑将
+					GNT_BJiangMove(Map, CPoint(i,j), nPly);
+					break;
+				case R_BISHOP://红士
+					GNT_RShiMove(Map, CPoint(i, j), nPly);
+					break;
+				case B_BISHOP: //黑士
 					GNT_BShiMove(Map, CPoint(i,j), nPly);
 					break;
-				case B_ELEPHANT:
-					GNT_BXiangMove(Map, CPoint(i,j), nPly);
+				case R_ELEPHANT:  //红相
+				case B_ELEPHANT:  //黑相
+					GNT_XiangMove(Map, CPoint(i,j), nPly);
 					break;	
-				case B_HORSE:		
-					GNT_BMaMove(Map,CPoint(i,j), nPly);
+				case R_HORSE:  //红马
+				case B_HORSE:  //黑马		
+					GNT_MaMove(Map,CPoint(i,j), nPly);
 					break;
-				case B_CAR:
-					GNT_BJuMove(Map, CPoint(i,j), nPly);
+				case R_CAR:  //红车
+				case B_CAR:  //黑车
+					GNT_JuMove(Map, CPoint(i,j), nPly);
 					break;
-				case R_PAWN:
-					GNT_BBingMove(Map,CPoint(i,j), nPly);
+				case R_PAWN: //红兵
+					GNT_RBingMove(Map,CPoint(i,j), nPly);
 					break;
-				case B_PAWN:
+				case B_PAWN: //黑兵
 					GNT_BZuMove(Map, CPoint(i,j), nPly);
 					break;
-				case B_CANON:
-					GNT_BPaoMove(Map, CPoint(i,j), nPly);
+				case R_CANON: //红炮
+				case B_CANON: //黑炮
+					GNT_PaoMove(Map, CPoint(i,j), nPly);
 					break;
 				default:
 					break;
@@ -348,7 +358,7 @@ int CMoveGenerater::AllValidMove(int Map[10][9],int nPly,int nSide)
 		return m_nMoveCount;
 }
 
-void CMoveGenerater::GNT_JiangMove(int Map[10][9],CPoint &pos,int nPly)
+void CMoveGenerater::GNT_BJiangMove(int Map[10][9],CPoint &pos,int nPly)
 {
 	int x, y;
 	for (x = 0; x < 3; x++)
@@ -357,7 +367,7 @@ void CMoveGenerater::GNT_JiangMove(int Map[10][9],CPoint &pos,int nPly)
 				AddMove(MoveStep(pos, CPoint(x, y)), nPly);
 }
 
-void CMoveGenerater::GNT_ShuaiMove(int Map[10][9],CPoint &pos,int nPly)
+void CMoveGenerater::GNT_RShuaiMove(int Map[10][9],CPoint &pos,int nPly)
 {
 	int x, y;
 	for (x = 7; x < 10; x++)
@@ -366,73 +376,98 @@ void CMoveGenerater::GNT_ShuaiMove(int Map[10][9],CPoint &pos,int nPly)
 				AddMove(MoveStep(pos, CPoint(x, y)), nPly);
 }
 
-void CMoveGenerater::GNT_BJuMove(int Map[10][9],CPoint &pos,int nPly)
+void CMoveGenerater::GNT_JuMove(int Map[10][9],CPoint &pos,int nPly)
 {
-	int x,  y;
+	int x, y;
 	int nChessID;
 
 	nChessID = Map[pos.x][pos.y];
 
-	x=pos.x;
-	y=pos.y+1;
-	while(y < 9)
+	x = pos.x;
+	y = pos.y + 1;
+	while (y < 9)
 	{
-		if( NOCHESS == Map[x][y] )
-			AddMove(MoveStep(pos,CPoint(x, y)),nPly);
+		if (NOCHESS == Map[x][y])
+			AddMove(MoveStep(pos, CPoint(x, y)), nPly);
 		else
 		{
-			if(!IsSameSide(nChessID, Map[x][y]))
-				AddMove(MoveStep(pos,CPoint(x, y)),nPly);
+			if (!IsSameSide(nChessID, Map[x][y]))
+				AddMove(MoveStep(pos, CPoint(x, y)), nPly);
 			break;
 		}
 		y++;
 	}
 
 	x = pos.x;
-	y = pos.y-1;
-	while(y >= 0)
+	y = pos.y - 1;
+	while (y >= 0)
 	{
-		if( NOCHESS == Map[x][y] )
-			AddMove(MoveStep(pos,CPoint(x, y)),nPly);
+		if (NOCHESS == Map[x][y])
+			AddMove(MoveStep(pos, CPoint(x, y)), nPly);
 		else
 		{
-			if(!IsSameSide(nChessID, Map[x][y]))
-				AddMove(MoveStep(pos,CPoint(x, y)),nPly);
+			if (!IsSameSide(nChessID, Map[x][y]))
+				AddMove(MoveStep(pos, CPoint(x, y)), nPly);
 			break;
 		}
 		y--;
 	}
 
-	x=pos.x+1;
-	y=pos.y;//
-	while(x < 10)
+	x = pos.x + 1;
+	y = pos.y;//
+	while (x < 10)
 	{
-		if( NOCHESS == Map[x][y])
-			AddMove(MoveStep(pos,CPoint(x, y)),nPly);
+		if (NOCHESS == Map[x][y])
+			AddMove(MoveStep(pos, CPoint(x, y)), nPly);
 		else
 		{
-			if(!IsSameSide(nChessID, Map[x][y]))
-				AddMove(MoveStep(pos,CPoint(x, y)),nPly);
+			if (!IsSameSide(nChessID, Map[x][y]))
+				AddMove(MoveStep(pos, CPoint(x, y)), nPly);
 			break;
 		}
 		x++;
 	}
 
-	x = pos.x-1;
+	x = pos.x - 1;
 	y = pos.y;//
-	while(x>=0)	{
-		if( NOCHESS == Map[x][y])
-			AddMove(MoveStep(pos,CPoint(x, y)),nPly);
+	while (x >= 0) {
+		if (NOCHESS == Map[x][y])
+			AddMove(MoveStep(pos, CPoint(x, y)), nPly);
 		else {
-			if(!IsSameSide(nChessID, Map[x][y]))
-				AddMove(MoveStep(pos,CPoint(x, y)),nPly);
+			if (!IsSameSide(nChessID, Map[x][y]))
+				AddMove(MoveStep(pos, CPoint(x, y)), nPly);
 			break;
 		}
 		x--;
 	}
 }
 
-void CMoveGenerater::GNT_BMaMove(int Map[10][9],CPoint &pos,int nPly)
+void CMoveGenerater::GNT_XiangMove(int Map[10][9], CPoint &pos, int nPly)
+{
+	int x, y;
+
+	x = pos.x + 2;
+	y = pos.y + 2;
+	if (y < 9 && x < 10 && IsValidMove(Map, pos, CPoint(x, y)))
+		AddMove(MoveStep(pos, CPoint(x, y)), nPly);
+
+	x = pos.x - 2;
+	y = pos.y + 2;
+	if (y < 9 && x >= 0 && IsValidMove(Map, pos, CPoint(x, y)))
+		AddMove(MoveStep(pos, CPoint(x, y)), nPly);
+
+	x = pos.x + 2;
+	y = pos.y - 2;
+	if (y >= 0 && x < 10 && IsValidMove(Map, pos, CPoint(x, y)))
+		AddMove(MoveStep(pos, CPoint(x, y)), nPly);
+
+	x = pos.x - 2;
+	y = pos.y - 2;
+	if (x >= 0 && y >= 0 && IsValidMove(Map, pos, CPoint(x, y)))
+		AddMove(MoveStep(pos, CPoint(x, y)), nPly);
+}
+
+void CMoveGenerater::GNT_MaMove(int Map[10][9],CPoint &pos,int nPly)
 {
 	int x,  y;
 
@@ -474,120 +509,94 @@ void CMoveGenerater::GNT_BMaMove(int Map[10][9],CPoint &pos,int nPly)
 		AddMove(MoveStep(pos,CPoint(x, y)),nPly);
 }
 
-void CMoveGenerater::GNT_BPaoMove(int Map[10][9],CPoint &pos,int nPly)
+void CMoveGenerater::GNT_PaoMove(int Map[10][9],CPoint &pos,int nPly)
 {
 	int x, y;
-	BOOL	flag;
+	BOOL flag;
 	int nChessID;
 
 	nChessID = Map[pos.x][pos.y];
 
-	x=pos.x;		//各种不同的判断实在是太二了
-	y=pos.y+1;
-	flag=FALSE;
-	while(y < 9)		
+	x = pos.x;
+	y = pos.y + 1;
+	flag = FALSE;
+	while (y < 9)
 	{
-		if( NOCHESS == Map[x][y] ){
-			if(!flag)
-				AddMove(MoveStep(pos,CPoint(x, y)),nPly);
+		if (NOCHESS == Map[x][y]) {
+			if (!flag)
+				AddMove(MoveStep(pos, CPoint(x, y)), nPly);
 		}
-		else{
-			if(!flag)
-				flag=TRUE;
+		else {
+			if (!flag)
+				flag = TRUE;
 			else {
-				if(!IsSameSide(nChessID, Map[x][y]))
-					AddMove(MoveStep(pos,CPoint(x, y)),nPly);
+				if (!IsSameSide(nChessID, Map[x][y]))
+					AddMove(MoveStep(pos, CPoint(x, y)), nPly);
 				break;
 			}
 		}
 		y++;
 	}
 
-	y=pos.y-1;
-	flag=FALSE;	
-	while(y>=0)
+	y = pos.y - 1;
+	flag = FALSE;
+	while (y >= 0)
 	{
-		if( NOCHESS == Map[x][y] ){
-			if(!flag)
-				AddMove(MoveStep(pos,CPoint(x, y)),nPly);
+		if (NOCHESS == Map[x][y]) {
+			if (!flag)
+				AddMove(MoveStep(pos, CPoint(x, y)), nPly);
 		}
-		else{
-			if(!flag)
-				flag=TRUE;
+		else {
+			if (!flag)
+				flag = TRUE;
 			else {
-				if(!IsSameSide(nChessID, Map[y][x]))
-					AddMove(MoveStep(pos,CPoint(x, y)),nPly);
+				if (!IsSameSide(nChessID, Map[y][x]))
+					AddMove(MoveStep(pos, CPoint(x, y)), nPly);
 				break;
 			}
 		}
 		y--;
 	}
-	x=pos.x+1;	
-	y=pos.y;
-	flag=FALSE;
-	while(x < 10)
+	x = pos.x + 1;
+	y = pos.y;
+	flag = FALSE;
+	while (x < 10)
 	{
-		if( NOCHESS == Map[x][y] ){
-			if(!flag)
-				AddMove(MoveStep(pos,CPoint(x, y)),nPly);
+		if (NOCHESS == Map[x][y]) {
+			if (!flag)
+				AddMove(MoveStep(pos, CPoint(x, y)), nPly);
 		}
 		else {
-			if(!flag)
-				flag=TRUE;
+			if (!flag)
+				flag = TRUE;
 			else {
-				if(!IsSameSide(nChessID, Map[x][y]))
-					AddMove(MoveStep(pos,CPoint(x, y)),nPly);
+				if (!IsSameSide(nChessID, Map[x][y]))
+					AddMove(MoveStep(pos, CPoint(x, y)), nPly);
 				break;
 			}
 		}
 		x++;
 	}
 
-	x=pos.x-1;	//
-	flag=FALSE;	
-	while(x>=0)
+	x = pos.x - 1;	//
+	flag = FALSE;
+	while (x >= 0)
 	{
-		if( NOCHESS == Map[x][y] ) {
-			if(!flag)
-				AddMove(MoveStep(pos,CPoint(x, y)),nPly);
+		if (NOCHESS == Map[x][y]) {
+			if (!flag)
+				AddMove(MoveStep(pos, CPoint(x, y)), nPly);
 		}
 		else {
-			if(!flag)
-				flag=TRUE;
+			if (!flag)
+				flag = TRUE;
 			else {
-				if(!IsSameSide(nChessID, Map[x][y]))
-					AddMove(MoveStep(pos,CPoint(x, y)),nPly);
+				if (!IsSameSide(nChessID, Map[x][y]))
+					AddMove(MoveStep(pos, CPoint(x, y)), nPly);
 				break;
 			}
 		}
 		x--;
 	}
-
-}
-
-void CMoveGenerater::GNT_BXiangMove(int Map[10][9] , CPoint &pos , int nPly)
-{
-	int x,  y;
-
-	x=pos.x+2;
-	y=pos.y+2;
-	if(y < 9 && x < 10  && IsValidMove(Map, pos, CPoint(x, y)))
-		AddMove(MoveStep(pos,CPoint(x, y)),nPly);
-
-	x=pos.x-2;
-	y=pos.y+2;
-	if (y < 9 && x >= 0 && IsValidMove(Map, pos, CPoint(x, y)))
-		AddMove(MoveStep(pos, CPoint(x, y)), nPly);
-
-	x=pos.x+2;
-	y=pos.y-2;
-	if (y >= 0 && x < 10 && IsValidMove(Map, pos, CPoint(x, y)))
-		AddMove(MoveStep(pos, CPoint(x, y)), nPly);
-
-	x=pos.x-2;
-	y=pos.y-2;
-	if (x >= 0 && y >= 0 && IsValidMove(Map, pos, CPoint(x, y)))
-		AddMove(MoveStep(pos, CPoint(x, y)), nPly);
 }
 
 void CMoveGenerater::GNT_BShiMove(int Map[10][9],CPoint &pos,int nPly)
@@ -597,6 +606,15 @@ void CMoveGenerater::GNT_BShiMove(int Map[10][9],CPoint &pos,int nPly)
 		for (y = 3; y < 6; y++)
 			if (IsValidMove(Map,  pos, CPoint(x, y)))
 				AddMove(MoveStep(pos,CPoint(x, y)),nPly);
+}
+
+void CMoveGenerater::GNT_RShiMove(int Map[10][9], CPoint &pos, int nPly)
+{
+	int x, y;
+	for (x = 7; x < 10; x++)
+		for (y = 3; y < 6; y++)
+			if (IsValidMove(Map, pos, CPoint(x, y)))
+				AddMove(MoveStep(pos, CPoint(x, y)), nPly);
 }
 
 void CMoveGenerater::GNT_BZuMove(int Map[10][9],CPoint &pos , int nPly)
@@ -623,7 +641,7 @@ void CMoveGenerater::GNT_BZuMove(int Map[10][9],CPoint &pos , int nPly)
 	}
 }
 
-void CMoveGenerater::GNT_BBingMove(int Map[10][9],CPoint &pos , int nPly)
+void CMoveGenerater::GNT_RBingMove(int Map[10][9],CPoint &pos , int nPly)
 {
 	int x, y;
 	int nChessID;
@@ -645,3 +663,4 @@ void CMoveGenerater::GNT_BBingMove(int Map[10][9],CPoint &pos , int nPly)
 			AddMove(MoveStep(pos,CPoint(x, y)),nPly);
 	}
 }
+

@@ -17,7 +17,7 @@ MoveStep CNegamaxEngine::SearchAGoodMove(int Map[10][9])
 {
 	m_nMaxDepth = m_nSearchDepth;
 	memcpy(CurMap, Map, 90 * sizeof(int));
-	if(NegaMax(m_nMaxDepth) != -MaxInt){
+	if(NegaMax(m_nMaxDepth) != -20000){
 		MakeMove(&m_cmBestMove);
 		return m_cmBestMove;
 	}
@@ -26,7 +26,7 @@ MoveStep CNegamaxEngine::SearchAGoodMove(int Map[10][9])
 
 int CNegamaxEngine::NegaMax(int depth)
 {
-	int current = -MaxInt;
+	int current = -20000;
 	int score;
 	int Count, i;
 	int type;
@@ -46,7 +46,6 @@ int CNegamaxEngine::NegaMax(int depth)
 			if(depth == m_nMaxDepth)
 				m_cmBestMove = m_pMG->MoveList[depth][i];
 		}
-
 	}
 	return current;
 }
