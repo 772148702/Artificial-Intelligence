@@ -14,7 +14,8 @@ MoveStep CAlphabetaEngine::SearchAGoodMove(int Map[10][9])
 {
 	m_nMaxDepth = m_nSearchDepth;
 	memcpy(CurMap, Map, 90 * sizeof(int));
-	if (AlphaBeta(m_nMaxDepth, -20000, 20000) != -20000) {//进行alphabeta搜索
+	curAlpha = AlphaBeta(m_nMaxDepth, -20000, 20000);
+	if (curAlpha != -20000) {//进行alphabeta搜索
 		MakeMove(&m_cmBestMove);
 		return m_cmBestMove;
 	}
@@ -62,4 +63,9 @@ int CAlphabetaEngine::AlphaBeta(int nDepth, int alpha, int beta)
 			break;//剪枝，放弃搜索剩下的节点
 	}
 	return alpha;//返回极大值
+}
+
+int CAlphabetaEngine::GetAlpha()
+{
+	return curAlpha;
 }

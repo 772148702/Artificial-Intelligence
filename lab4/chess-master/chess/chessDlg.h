@@ -7,6 +7,7 @@
 #include "MoveGenerater.h"
 #include "SearchEngine.h"
 #include "Evaluation.h"
+#include "CAlphabetaEngine.h"
 #include <stack>
 
 using namespace std;
@@ -67,4 +68,5 @@ public:
 	afx_msg void OnBnClickedRegret();
 	afx_msg void OnBnClickedRegame();
 	int m_iSearchDep;
+	int m_iAlpha;
 };

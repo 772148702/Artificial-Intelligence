@@ -11,6 +11,11 @@ CSearchEngine::~CSearchEngine(void)
 {
 }
 
+int CSearchEngine::GetAlpha()
+{
+	return 0;
+}
+
 void CSearchEngine::SetAiProgressCtrl(CProgressCtrl * pAiP)
 {
 	pAi = pAiP;

@@ -10,6 +10,7 @@ public:
 	CSearchEngine(void);
 	~CSearchEngine(void);
 	virtual CHESSMOVE SearchAGoodMove(int Map[10][9])=0;
+	virtual int GetAlpha();
 	void SetSearchDepth(int nDepth){m_nSearchDepth=nDepth;}
 	void SetEvaluator(CEvaluation *pEval){m_pEval=pEval;}
 	void SetMoveGenerator(CMoveGenerater *pMG){m_pMG=pMG;}

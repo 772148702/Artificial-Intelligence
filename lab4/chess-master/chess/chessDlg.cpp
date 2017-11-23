@@ -52,6 +52,7 @@ END_MESSAGE_MAP()
 CchessDlg::CchessDlg(CWnd* pParent /*=NULL*/)
 	: CDialogEx(CchessDlg::IDD, pParent)
 	, m_iSearchDep(0)
+	, m_iAlpha(0)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
@@ -61,6 +62,7 @@ void CchessDlg::DoDataExchange(CDataExchange* pDX)
 	CDialogEx::DoDataExchange(pDX);
 	DDX_Text(pDX, IDC_Search_Depth, m_iSearchDep);
 	DDV_MinMaxInt(pDX, m_iSearchDep, 2, 9);
+	DDX_Text(pDX, IDC_Alpha_Value, m_iAlpha);
 }
 
 BEGIN_MESSAGE_MAP(CchessDlg, CDialogEx)
@@ -238,6 +240,8 @@ void CchessDlg::OnLButtonUp(UINT nFlags, CPoint point)
 		regret.push(ChessNode(CPoint(x, y), target));
 		regret.push(ChessNode(CPoint(m_from.pos), m_move.ChessID));
 		AiMove = m_pSE->SearchAGoodMove(m_ChessBoard);
+		m_iAlpha = m_pSE->GetAlpha();
+		UpdateData(false);
 		if (target == B_KING) {//do something
 			if (MessageBox(L"恭喜你，你赢了") == IDOK)
 				StartANewGame();
@@ -319,8 +323,10 @@ void CchessDlg::StartANewGame()
 	memcpy(m_ChessBoard, InitChessBoard, 90 * sizeof(int));
 	while (!regret.empty())
 		regret.pop();
+	pVertProg->SetPos(0);
 	UpdateData(true);
 	m_pSE->SetSearchDepth(m_iSearchDep);
+	m_iAlpha = 0;
 	UpdateData(false);
 	InvalidateRect(NULL, FALSE);
 	UpdateWindow();
