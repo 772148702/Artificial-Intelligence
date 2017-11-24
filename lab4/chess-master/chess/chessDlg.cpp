@@ -236,29 +236,35 @@ void CchessDlg::OnLButtonUp(UINT nFlags, CPoint point)
 		m_ChessBoard[m_from.pos.x][m_from.pos.y] = NOCHESS;
 		int target = m_ChessBoard[x][y];
 		m_ChessBoard[x][y] = m_move.ChessID;
-		UpdateWindow();
+		GetDlgItem(IDC_REGRET)->EnableWindow(true);
 		regret.push(ChessNode(CPoint(x, y), target));
 		regret.push(ChessNode(CPoint(m_from.pos), m_move.ChessID));
-		AiMove = m_pSE->SearchAGoodMove(m_ChessBoard);
-		m_iAlpha = m_pSE->GetAlpha();
-		UpdateData(false);
-		if (target == B_KING) {//do something
+		if (target == B_KING) {
+			InvalidateRect(NULL, FALSE);
+			UpdateWindow();
 			if (MessageBox(L"恭喜你，你赢了") == IDOK)
 				StartANewGame();
 		}
 		else {
+			AiMove = m_pSE->SearchAGoodMove(m_ChessBoard);
+			m_iAlpha = m_pSE->GetAlpha();
+			UpdateData(false);
 			AiMove.ChessID = m_ChessBoard[AiMove.to.x][AiMove.to.y];
 			target = m_ChessBoard[AiMove.from.x][AiMove.from.y];
 			regret.push(ChessNode(CPoint(AiMove.from), target));
 			m_ChessBoard[AiMove.from.x][AiMove.from.y] = NOCHESS;
 			m_ChessBoard[AiMove.to.x][AiMove.to.y] = target;
+			InvalidateRect(NULL, FALSE);
+			UpdateWindow();
 			regret.push(ChessNode(CPoint(AiMove.to), AiMove.ChessID));
 			if (AiMove.ChessID == R_KING) {
 				player_lose = true;
 				InvalidateRect(NULL, FALSE);
 				UpdateWindow();
-				if (MessageBox(L"是否悔棋", L"将军了，废物你输了！", MB_OKCANCEL) == IDCANCEL) {
+				Sleep(400);
+				if (MessageBox(L"是否悔棋", L"将军了，你输了！", MB_OKCANCEL) == IDCANCEL) {
 					player_lose = false;
+					Sleep(400);
 					MessageBox(L"将重新开始");
 					StartANewGame();
 				}
@@ -274,7 +280,7 @@ void CchessDlg::OnLButtonUp(UINT nFlags, CPoint point)
 		}
 	}
 	else
-		m_ChessBoard[m_from.pos.x][m_from.pos.y] = m_from.ChessID;
+	m_ChessBoard[m_from.pos.x][m_from.pos.y] = m_from.ChessID;
 	m_move.ChessID = NOCHESS;
 	InvalidateRect(NULL, FALSE);
 	UpdateWindow();
@@ -298,7 +304,7 @@ void CchessDlg::OnMouseMove(UINT nFlags, CPoint point)
 		point.y -= 22;
 		m_move.pos = point;
 		InvalidateRect(NULL, FALSE);
-		UpdateWindow();
+	    UpdateWindow();
 	}
 	CDialogEx::OnMouseMove(nFlags, point);
 }
@@ -314,6 +320,9 @@ void CchessDlg::OnBnClickedRegret()
 		m_ChessBoard[temp.pos.x][temp.pos.y] = temp.ChessID;
 		regret.pop();
 	}
+	pVertProg->SetPos(0);
+	m_iAlpha = 0;
+	UpdateData(false);
 	InvalidateRect(NULL, FALSE);
 	UpdateWindow();
 }
@@ -328,6 +337,7 @@ void CchessDlg::StartANewGame()
 	m_pSE->SetSearchDepth(m_iSearchDep);
 	m_iAlpha = 0;
 	UpdateData(false);
+	GetDlgItem(IDC_REGRET)->EnableWindow(false);
 	InvalidateRect(NULL, FALSE);
 	UpdateWindow();
 	
