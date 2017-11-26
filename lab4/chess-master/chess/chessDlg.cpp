@@ -63,6 +63,7 @@ void CchessDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_Search_Depth, m_iSearchDep);
 	DDV_MinMaxInt(pDX, m_iSearchDep, 2, 9);
 	DDX_Text(pDX, IDC_Alpha_Value, m_iAlpha);
+	DDX_Control(pDX, IDC_USED_TIME, m_cTime);
 }
 
 BEGIN_MESSAGE_MAP(CchessDlg, CDialogEx)
@@ -225,9 +226,9 @@ void CchessDlg::OnLButtonDown(UINT nFlags, CPoint point)
 void CchessDlg::OnLButtonUp(UINT nFlags, CPoint point)
 {
 	// TODO: 在此添加消息处理程序代码和/或调用默认值
+	bool AiWillGo = false;
 	int x = (point.y - BOARDERHEIGHT) / GRILLEHEIGHT;
 	int y = (point.x - BOARDERWIDTH) / GRILLEWIDTH;
-	MoveStep AiMove;
 	m_to.pos.x = x;
 	m_to.pos.y = y;
 	m_ChessBoard[m_from.pos.x][m_from.pos.y] = m_from.ChessID;
@@ -245,45 +246,14 @@ void CchessDlg::OnLButtonUp(UINT nFlags, CPoint point)
 			if (MessageBox(L"恭喜你，你赢了") == IDOK)
 				StartANewGame();
 		}
-		else {
-			AiMove = m_pSE->SearchAGoodMove(m_ChessBoard);
-			m_iAlpha = m_pSE->GetAlpha();
-			UpdateData(false);
-			AiMove.ChessID = m_ChessBoard[AiMove.to.x][AiMove.to.y];
-			target = m_ChessBoard[AiMove.from.x][AiMove.from.y];
-			regret.push(ChessNode(CPoint(AiMove.from), target));
-			m_ChessBoard[AiMove.from.x][AiMove.from.y] = NOCHESS;
-			m_ChessBoard[AiMove.to.x][AiMove.to.y] = target;
-			InvalidateRect(NULL, FALSE);
-			UpdateWindow();
-			regret.push(ChessNode(CPoint(AiMove.to), AiMove.ChessID));
-			if (AiMove.ChessID == R_KING) {
-				player_lose = true;
-				InvalidateRect(NULL, FALSE);
-				UpdateWindow();
-				Sleep(400);
-				if (MessageBox(L"是否悔棋", L"将军了，你输了！", MB_OKCANCEL) == IDCANCEL) {
-					player_lose = false;
-					Sleep(400);
-					MessageBox(L"将重新开始");
-					StartANewGame();
-				}
-				else {
-					player_lose = false;
-					InvalidateRect(NULL, FALSE);
-					UpdateWindow();
-					CchessDlg::OnBnClickedRegret();
-					MessageBox(L"退回上一步");
-				}
-					
-			}
-		}
+		else AiWillGo = true;
 	}
-	else
-	m_ChessBoard[m_from.pos.x][m_from.pos.y] = m_from.ChessID;
+	else 
+		m_ChessBoard[m_from.pos.x][m_from.pos.y] = m_from.ChessID;
 	m_move.ChessID = NOCHESS;
 	InvalidateRect(NULL, FALSE);
 	UpdateWindow();
+	if(AiWillGo) AIgo();
 	CDialogEx::OnLButtonUp(nFlags, point);
 }
 
@@ -341,6 +311,48 @@ void CchessDlg::StartANewGame()
 	InvalidateRect(NULL, FALSE);
 	UpdateWindow();
 	
+}
+
+void CchessDlg::AIgo()
+{
+	CString time_used;
+	long t1 = GetTickCount();
+	MoveStep AiMove;
+	int target;
+	AiMove = m_pSE->SearchAGoodMove(m_ChessBoard);
+	m_iAlpha = m_pSE->GetAlpha();
+	UpdateData(false);
+	AiMove.ChessID = m_ChessBoard[AiMove.to.x][AiMove.to.y];
+	target = m_ChessBoard[AiMove.from.x][AiMove.from.y];
+	regret.push(ChessNode(CPoint(AiMove.from), target));
+	m_ChessBoard[AiMove.from.x][AiMove.from.y] = NOCHESS;
+	m_ChessBoard[AiMove.to.x][AiMove.to.y] = target;
+	regret.push(ChessNode(CPoint(AiMove.to), AiMove.ChessID));
+	long t2 = GetTickCount();
+	time_used.Format(_T("%ldms"), (t2 - t1));
+	GetDlgItem(IDC_USED_TIME)->SetWindowText(time_used);
+	InvalidateRect(NULL, FALSE);
+	UpdateWindow();
+	Sleep(400);
+	if (AiMove.ChessID == R_KING) {
+		player_lose = true;
+		InvalidateRect(NULL, FALSE);
+		UpdateWindow();
+		Sleep(400);
+		if (MessageBox(L"是否悔棋", L"将军了，你输了！", MB_OKCANCEL) == IDCANCEL) {
+			player_lose = false;
+			Sleep(400);
+			MessageBox(L"将重新开始");
+			StartANewGame();
+		}
+		else {
+			player_lose = false;
+			InvalidateRect(NULL, FALSE);
+			UpdateWindow();
+			CchessDlg::OnBnClickedRegret();
+			MessageBox(L"退回上一步");
+		}
+	}
 }
 
 void CchessDlg::OnBnClickedRegame()

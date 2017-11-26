@@ -9,6 +9,7 @@
 #include "Evaluation.h"
 #include "CAlphabetaEngine.h"
 #include <stack>
+#include "afxwin.h"
 
 using namespace std;
 
@@ -55,6 +56,7 @@ protected:
 	stack<ChessNode> regret;
 	bool player_lose = false;
 	void StartANewGame();
+	void AIgo();
 	// 生成的消息映射函数
 	virtual BOOL OnInitDialog();
 	afx_msg void OnSysCommand(UINT nID, LPARAM lParam);
@@ -69,4 +71,5 @@ public:
 	afx_msg void OnBnClickedRegame();
 	int m_iSearchDep;
 	int m_iAlpha;
+	CEdit m_cTime;
 };
