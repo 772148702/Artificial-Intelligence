@@ -64,7 +64,6 @@ CEvaluation::CEvaluation(void)
 	m_nRelatePos=0;
 }
 
-
 CEvaluation::~CEvaluation(void)
 {
 
@@ -299,62 +298,62 @@ inline void CEvaluation::GNT_BXiangRelate(int Map[][9],const CPoint &pos)
 inline void CEvaluation::GNT_MaRelate(int Map[][9], const CPoint &pos)
 {
 	CPoint addp;
-	int srcx=pos.x;
-	int srcy=pos.y;
+	int srcx = pos.x;
+	int srcy = pos.y;
 	int x, y;
-	x=srcx+1;
-	y=srcy+2;
-	addp.x=x;
-	addp.y=y;
-	if(x < 9 && y < 10 && Map[srcx][srcy+1]!=NOCHESS)
+	x = srcx + 1;
+	y = srcy + 2;
+	addp.x = x;
+	addp.y = y;
+	if (x < 9 && y < 10 && Map[srcx][srcy + 1] != NOCHESS)
 		AddPoint(addp);
 
-	x=srcx+2;
-	y=srcy+1;
-	addp.x=x;
-	addp.y=y;
-	if(x < 9 && y < 10 && Map[srcx+1][srcy]!=NOCHESS)
+	x = srcx + 2;
+	y = srcy + 1;
+	addp.x = x;
+	addp.y = y;
+	if (x < 9 && y < 10 && Map[srcx + 1][srcy] != NOCHESS)
 		AddPoint(addp);
-	x=srcx-1;
-	y=srcy+2;
-	addp.x=x;
-	addp.y=y;
-	if(y < 9 && x >= 0 && Map[srcx][srcy+1]!=NOCHESS)
-		AddPoint(addp);
-
-	x=srcx+1;
-	y=srcy-2;
-	addp.x=x;
-	addp.y=y;
-	if( y >= 0 && x < 10 && Map[srcx][srcy-1]!=NOCHESS)
+	x = srcx - 1;
+	y = srcy + 2;
+	addp.x = x;
+	addp.y = y;
+	if (y < 9 && x >= 0 && Map[srcx][srcy + 1] != NOCHESS)
 		AddPoint(addp);
 
-	x=srcx-1;
-	y=srcy-2;
-	addp.x=x;
-	addp.y=y;
-	if( x >= 0 && y >= 0  && Map[srcx][srcy-1]!=NOCHESS)
+	x = srcx + 1;
+	y = srcy - 2;
+	addp.x = x;
+	addp.y = y;
+	if (y >= 0 && x < 10 && Map[srcx][srcy - 1] != NOCHESS)
 		AddPoint(addp);
 
-	x=srcx+2;
-	y=srcy-1;
-	addp.x=x;
-	addp.y=y;
-	if( y >= 0 && x < 10 && Map[srcx+1][srcy]!=NOCHESS)
+	x = srcx - 1;
+	y = srcy - 2;
+	addp.x = x;
+	addp.y = y;
+	if (x >= 0 && y >= 0 && Map[srcx][srcy - 1] != NOCHESS)
 		AddPoint(addp);
 
-	x=srcx-2;
-	y=srcy+1;
-	addp.x=x;
-	addp.y=y;
-	if( y < 9 && x >= 0 && Map[srcx-1][srcy]!=NOCHESS)
+	x = srcx + 2;
+	y = srcy - 1;
+	addp.x = x;
+	addp.y = y;
+	if (y >= 0 && x < 10 && Map[srcx + 1][srcy] != NOCHESS)
 		AddPoint(addp);
 
-	x=srcx-2;
-	y=srcy-1;
-	addp.x=x;
-	addp.y=y;
-	if((x >= 0 && y >= 0) && Map[srcx-1][srcy]!=NOCHESS)
+	x = srcx - 2;
+	y = srcy + 1;
+	addp.x = x;
+	addp.y = y;
+	if (y < 9 && x >= 0 && Map[srcx - 1][srcy] != NOCHESS)
+		AddPoint(addp);
+
+	x = srcx - 2;
+	y = srcy - 1;
+	addp.x = x;
+	addp.y = y;
+	if ((x >= 0 && y >= 0) && Map[srcx - 1][srcy] != NOCHESS)
 		AddPoint(addp);
 }
 

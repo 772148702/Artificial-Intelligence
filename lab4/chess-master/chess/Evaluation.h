@@ -5,11 +5,11 @@
 using namespace std;
 
 #define BASEVALUE_PAWN 100
-#define BASEVALUE_BISHOP 250
+#define BASEVALUE_BISHOP 200
 #define BASEVALUE_ELEPHANT 250
-#define BASEVALUE_CAR 500
-#define BASEVALUE_HORSE 350
-#define BASEVALUE_CANON 350
+#define BASEVALUE_HORSE 450
+#define BASEVALUE_CANON 500
+#define BASEVALUE_CAR 1000
 #define BASEVALUE_KING 10000
 
 #define FLEXIBILITY_PAWN 15
@@ -28,7 +28,6 @@ public:
 	virtual int Evaluate(int Map[10][9],bool bIsRedTurn);
 protected:
 	int GetRelatePiece(int Map[10][9],CPoint pos);
-	bool CanTouch(int Map[10][9],CPoint from , CPoint to);
 	int GetBingValue(CPoint pos, int Map[10][9]);
 	inline void GNT_JuRelate(int Map[][9] , const CPoint &pos);
 	inline void GNT_CannonRelate(int Map[][9],const CPoint &pos);

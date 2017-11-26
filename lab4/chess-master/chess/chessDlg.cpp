@@ -333,7 +333,7 @@ void CchessDlg::AIgo()
 	GetDlgItem(IDC_USED_TIME)->SetWindowText(time_used);
 	InvalidateRect(NULL, FALSE);
 	UpdateWindow();
-	Sleep(400);
+	Sleep(250);
 	if (AiMove.ChessID == R_KING) {
 		player_lose = true;
 		InvalidateRect(NULL, FALSE);
