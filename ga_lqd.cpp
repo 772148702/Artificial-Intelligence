@@ -24,7 +24,7 @@ public:
 	vector <int> r1, r2;
 	vector <sol> po[2];
 	sol ans;
-	int pocnt, swapcnt, imax;
+	int pocnt, swapcnt, badimax;
 	double p1, p2;
 	void input(int _n, vector <double> _x, vector <double> _y) {
 		X = _x; Y = _y; n = _n;
@@ -33,8 +33,8 @@ public:
 				double dx = X[i] - X[j], dy = Y[i] - Y[j];
 				dist[i][j] = sqrt(dx * dx + dy * dy);
 			}
-		pocnt = 100; swapcnt = 10; imax = 2000000;
-		p1 = 0.4; p2 = 0.3;
+		pocnt = 60; swapcnt = 7; badimax = 50000;
+		p1 = 0.8; p2 = 0.4;
 	}
 	
 	void init() {
@@ -64,7 +64,9 @@ public:
 			for (int j = 0; j < swapcnt; ++ j) {
 				int a = rand() % n, b = rand() % n;
 				while (a == b) b = rand() % n;
-				swap(po[id][i].r[a], po[id][i].r[b]);
+				if (a > b) swap(a, b);
+				reverse(po[id][i].r.begin() + a, po[id][i].r.begin() + b + 1);
+				//swap(po[id][i].r[a], po[id][i].r[b]);
 			}
 			po[id][i].calc(dist);
 			if (po[id][i].c < ans.c) ans = po[id][i];
@@ -163,11 +165,16 @@ public:
 		srand(time(0));
 		init();
 		int f1 = 0, f2 = 1;
-		for (int i = 0; i < imax; ++ i) {
+		for (int i = 0; i < badimax;) {
+			double last = ans.c;
 			calcfitness(f1);
 			cross(f1);
 			change(f2);
 			swap(f1, f2);
+			if (ans.c + 1e-4 < last) {
+				i = 0;
+				printf("%lf\n", ans.c);
+			} else i ++;
 		}
 		showans();
 	}
