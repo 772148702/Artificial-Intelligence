@@ -306,6 +306,7 @@ void CchessDlg::StartANewGame()
 	UpdateData(true);
 	m_pSE->SetSearchDepth(m_iSearchDep);
 	m_iAlpha = 0;
+	GetDlgItem(IDC_USED_TIME)->SetWindowText(_T(""));
 	UpdateData(false);
 	GetDlgItem(IDC_REGRET)->EnableWindow(false);
 	InvalidateRect(NULL, FALSE);
