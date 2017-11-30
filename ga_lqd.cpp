@@ -16,6 +16,9 @@ public:
 				c += dist[r[i]][r[j]];
 			}
 		}
+		bool operator < (const sol &oth) const {
+			return this->v > oth.v;
+		}
 	};
 	double dist[300][300];
 	bool vis[300];
@@ -33,43 +36,59 @@ public:
 				double dx = X[i] - X[j], dy = Y[i] - Y[j];
 				dist[i][j] = sqrt(dx * dx + dy * dy);
 			}
-		pocnt = 60; swapcnt = 7; badimax = 50000;
-		p1 = 0.8; p2 = 0.4;
+		pocnt = 60; swapcnt = n; badimax = 700;
+		p1 = 0.7; p2 = 0.3;
 	}
-	
+	void calcfitness(int id) {
+		//double sum = 0.0;
+		//for (int i = 0; i < po[id].size(); ++ i) sum += po[id][i].c;
+		for (int i = 0; i < po[id].size(); ++ i) {
+			po[id][i].v = (po[id][i].c - ans.c) / ans.c;
+			po[id][i].v = 1.0 / (po[id][i].v + 0.001);
+			//po[id][i].v = sum / po[id][i].c * 10;
+		}
+	}
 	void init() {
 		po[0].clear(); ans.c = 1e20;
 		sol tmp;
+		tmp.r.clear();
+		for (int i = 0; i < n; ++ i) tmp.r.push_back(i);
 		for (int i = 0; i < pocnt; ++ i) {
-			tmp.r.clear();
-			for (int j = 0; j < n; ++ j) vis[j] = false;
-			for (int j = 0; j < n; ++ j) {
-				int t = rand() % n;
-				while (vis[t]) t = rand() % n;
-				tmp.r.push_back(t); vis[t] = true;
-			}
-			tmp.calc(dist); po[0].push_back(tmp); if (tmp.c < ans.c) ans = tmp;
+			random_shuffle(tmp.r.begin(), tmp.r.end());
+			tmp.calc(dist);
+			po[0].push_back(tmp);
+			if (tmp.c < ans.c) ans = tmp;
 		}
+		calcfitness(0);
+		sort(po[0].begin(), po[0].end());
 	}
-	void calcfitness(int id) {
-		for (int i = 0; i < pocnt; ++ i) {
-			po[id][i].v = (po[id][i].c - ans.c) / ans.c;
-			po[id][i].v = 1.0 * (po[id][i].v + 0.5);
-		}
-	}
-	void change(int id) {
-		for (int i = 0; i < pocnt; ++ i) {
+	
+	void change(int id, int nxt, int sz) {
+		sol tmp;
+		for (int i = 0; i < sz; ++ i) {
 			double p = 1.0 * rand() / RAND_MAX;
 			if (p >= p2) continue;
+			tmp = po[id][i];
+			int besti = -1, bestj;
+			double minv = 1e20;
 			for (int j = 0; j < swapcnt; ++ j) {
 				int a = rand() % n, b = rand() % n;
 				while (a == b) b = rand() % n;
 				if (a > b) swap(a, b);
-				reverse(po[id][i].r.begin() + a, po[id][i].r.begin() + b + 1);
-				//swap(po[id][i].r[a], po[id][i].r[b]);
+				//reverse(po[id][i].r.begin() + a, po[id][i].r.begin() + b + 1);
+				//swap(tmp.r[a], tmp.r[b]);
+				reverse(tmp.r.begin() + a, tmp.r.begin() + b + 1);
+				tmp.calc(dist);
+				if (tmp.c < minv) minv = tmp.c, besti = a, bestj = b;
+				//swap(tmp.r[a], tmp.r[b]);
+				reverse(tmp.r.begin() + a, tmp.r.begin() + b + 1);
 			}
-			po[id][i].calc(dist);
-			if (po[id][i].c < ans.c) ans = po[id][i];
+			reverse(tmp.r.begin() + besti, tmp.r.begin() + bestj + 1);
+			//swap(tmp.r[besti], tmp.r[bestj]);
+			tmp.c = minv;
+			//tmp.calc(dist);
+			if (tmp.c < ans.c) ans = tmp;
+			po[nxt].push_back(tmp);
 		}
 	}
 	int select(int id) {
@@ -137,8 +156,7 @@ public:
 	}
 	void cross(int f1) {
 		int f2 = 1 - f1;
-		po[f2].clear();
-		for (int i = pocnt / 2; i; -- i) {
+		for (int i = (int)(po[f1].size()) / 2; i; -- i) {
 			int x = select(f1), y = select(f1);
 			while (x == y) y = select(f1);
 			double p = 1.0 * rand() / RAND_MAX;
@@ -149,11 +167,6 @@ public:
 		}
 	}
 	void showans() {
-		/*for (int i = 0; i < n; ++ i) vis[i] = false;
-		for (int i = 0; i < n; ++ i) {
-			assert(vis[ans.r[i]] == false);
-			vis[ans.r[i]] = true;
-		}*/
 		printf("%lf\n", ans.c);
 		for (int i = 0; i < n; ++ i) {
 			printf("%d", ans.r[i]);
@@ -161,20 +174,25 @@ public:
 		}
 		puts("");
 	}
+	void update(int id) {
+		for (int i = 0; i < po[1 - id].size(); ++ i) po[id].push_back(po[1 - id][i]);
+		calcfitness(id);
+		sort(po[id].begin(), po[id].end());
+		po[id].erase(po[id].begin() + pocnt, po[id].end());
+	}
 	void work() {
 		srand(time(0));
 		init();
 		int f1 = 0, f2 = 1;
 		for (int i = 0; i < badimax;) {
 			double last = ans.c;
-			calcfitness(f1);
+			po[f2].clear();
 			cross(f1);
-			change(f2);
+			change(f2, f2, pocnt);
+			change(f1, f2, pocnt);
+			update(f2);
 			swap(f1, f2);
-			if (ans.c + 1e-4 < last) {
-				i = 0;
-				printf("%lf\n", ans.c);
-			} else i ++;
+			if (ans.c + 1e-4 < last) i = 0; else i ++;
 		}
 		showans();
 	}
@@ -182,18 +200,18 @@ private:
 };
 GA lqd;
 int main() {
-	freopen("ch130.tsp", "r", stdin);
+	freopen("eil101.tsp", "r", stdin);
 	vector <double> x, y;
 	x.clear(); y.clear();
 	string s;
 	for (int i = 0; i < 6; ++ i) getline(cin, s);
-	for (int i = 0; i < 130; ++ i) {
+	for (int i = 0; i < 101; ++ i) {
 		int u;
 		double a, b;
 		scanf("%d%lf%lf", &u, &a, &b);
 		x.push_back(a); y.push_back(b);
 	}
-	lqd.input(130, x, y);
+	lqd.input(101, x, y);
 	lqd.work();
 	return 0;
 }
