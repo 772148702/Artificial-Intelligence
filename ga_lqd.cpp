@@ -44,7 +44,7 @@ public:
 		//for (int i = 0; i < po[id].size(); ++ i) sum += po[id][i].c;
 		for (int i = 0; i < po[id].size(); ++ i) {
 			po[id][i].v = (po[id][i].c - ans.c) / ans.c;
-			po[id][i].v = 1.0 / (po[id][i].v + 0.001);
+			po[id][i].v = 1.0 / (po[id][i].v + 0.01);
 			//po[id][i].v = sum / po[id][i].c * 10;
 		}
 	}
@@ -75,7 +75,6 @@ public:
 				int a = rand() % n, b = rand() % n;
 				while (a == b) b = rand() % n;
 				if (a > b) swap(a, b);
-				//reverse(po[id][i].r.begin() + a, po[id][i].r.begin() + b + 1);
 				//swap(tmp.r[a], tmp.r[b]);
 				reverse(tmp.r.begin() + a, tmp.r.begin() + b + 1);
 				tmp.calc(dist);
@@ -93,13 +92,13 @@ public:
 	}
 	int select(int id) {
 		double p = 1.0 * rand() / RAND_MAX, sum = 0;
-		for (int i = 0; i < pocnt; ++ i) sum += po[id][i].v;
+		for (int i = 0; i < po[id].size(); ++ i) sum += po[id][i].v;
 		double tmp = 0;
-		for (int i = 0; i < pocnt; ++ i) {
+		for (int i = 0; i < po[id].size(); ++ i) {
 			tmp += po[id][i].v / sum;
 			if (tmp >= p) return i;
 		}
-		return pocnt - 1;
+		return po[id].size() - 1;
 	}
 	void crossover(int f1, int x, int y) {
 		sol tmp;
@@ -178,7 +177,10 @@ public:
 		for (int i = 0; i < po[1 - id].size(); ++ i) po[id].push_back(po[1 - id][i]);
 		calcfitness(id);
 		sort(po[id].begin(), po[id].end());
-		po[id].erase(po[id].begin() + pocnt, po[id].end());
+		//int sz = (1.0 * rand() / RAND_MAX + 1.5) * pocnt;
+		int sz = pocnt;
+		if (sz >= po[id].size()) {} else
+		po[id].erase(po[id].begin() + sz, po[id].end());
 	}
 	void work() {
 		srand(time(0));
@@ -188,8 +190,8 @@ public:
 			double last = ans.c;
 			po[f2].clear();
 			cross(f1);
-			change(f2, f2, pocnt);
-			change(f1, f2, pocnt);
+			change(f2, f2, po[f2].size());
+			change(f1, f2, po[f1].size());
 			update(f2);
 			swap(f1, f2);
 			if (ans.c + 1e-4 < last) i = 0; else i ++;
@@ -200,18 +202,18 @@ private:
 };
 GA lqd;
 int main() {
-	freopen("eil101.tsp", "r", stdin);
+	freopen("ch130.tsp", "r", stdin);
 	vector <double> x, y;
 	x.clear(); y.clear();
 	string s;
 	for (int i = 0; i < 6; ++ i) getline(cin, s);
-	for (int i = 0; i < 101; ++ i) {
+	for (int i = 0; i < 130; ++ i) {
 		int u;
 		double a, b;
 		scanf("%d%lf%lf", &u, &a, &b);
 		x.push_back(a); y.push_back(b);
 	}
-	lqd.input(101, x, y);
+	lqd.input(130, x, y);
 	lqd.work();
 	return 0;
 }
