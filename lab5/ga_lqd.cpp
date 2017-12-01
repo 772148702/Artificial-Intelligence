@@ -29,6 +29,13 @@ public:
 	sol ans;
 	int pocnt, swapcnt, badimax;
 	double p1, p2;
+	vector<int> getAns() {
+		vector<int> tmp = ans.r;
+		for (auto  ss:tmp) {
+			ss++;
+		}
+		return tmp;
+	}
 	void input(int _n, vector <double> _x, vector <double> _y) {
 		X = _x; Y = _y; n = _n;
 		for (int i = 0; i < n; ++ i) 

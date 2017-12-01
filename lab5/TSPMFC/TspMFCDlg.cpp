@@ -57,7 +57,7 @@ CTspMFCDlg::CTspMFCDlg(CWnd* pParent /*=NULL*/)
 	, m_dDet(0.98)
 	, m_iInLoop(1000)
 {
-	GA * gaV1 = new GA;
+	gaV1 = new GA;
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 	
 }
@@ -214,7 +214,7 @@ void CTspMFCDlg::drawEdit(vector<int> tmp, double cur_cost, double temp) {
 	SetDlgItemText(IDC_TEM, str_Temp);
 	
 }
-void CTspMFCDlg::drawEditGa(vector<int> tmp) {
+void CTspMFCDlg::drawEditGa(vector<int> tmp,double cur_cost,int generation) {
 
 	CEdit * pEdit = (CEdit *)GetDlgItem(IDC_Paint3);
 	CRect rect;
@@ -241,6 +241,17 @@ void CTspMFCDlg::drawEditGa(vector<int> tmp) {
 	}
 	pDC->LineTo((int)x[tmp[0]] * stdX_scale, (int)y[tmp[0]] * stdY_scale);
 	ReleaseDC(pDC);
+	double rate = (cur_cost - opt_cost) / opt_cost * 100;
+	CString str_Rate;
+	CString str_Cost;
+	str_Cost.Format(_T("%.2lf"), cur_cost);
+	str_Rate.Format(_T("%.2lf"), rate);
+	str_Rate += "%";
+	CString str_Temp;
+	str_Temp.Format(_T("%d"), generation);
+	SetDlgItemText(IDC_Error_Rate2, str_Rate);
+	SetDlgItemText(IDC_Cur_Cost2, str_Cost);
+	SetDlgItemText(IDC_TEM2, str_Temp);
 
 
 }
@@ -381,8 +392,9 @@ void CTspMFCDlg::OnBnClickedStart()
 		MessageBox(str);*/
 		lqd.init(x, y, m_dDet, m_iInLoop);
 		int n = x.size()-1;
-	
-		gaV1->input(n,x, y);
+		
+		
+		gaV1->input2(n,x, y);
 		/*CString tt;
 		tt.Format(_T("%.2lf"), m_dDet);
 		MessageBox(tt);*/
@@ -430,9 +442,10 @@ void CTspMFCDlg::OnTimer(UINT_PTR nIDEvent)
 	// TODO: 在此添加消息处理程序代码和/或调用默认值
 	if (start && lqd.isEnd == false) {
 		if (nIDEvent == 1) {
+			//其实应该用两个定时器的。
 			if (lqd.isEnd == false) {
 				drawEdit(lqd.getcur(), lqd.get_cost(), lqd.getTem());
-				//drawEditGa(gaV1->getAns());
+				drawEditGa(gaV1->getAns(),gaV1->getCostval(),gaV1->getGeneration());
 			}		
 		}
 	}
@@ -473,6 +486,7 @@ void CTspMFCDlg::OnBnClickedStop()
 	// TODO: 在此添加控件通知处理程序代码
 	KillTimer(1);
 	lqd.isEnd = true;
+	gaV1->isEnd = true;
 	MessageBox(L"已停止程序");
 }
 
@@ -486,7 +500,9 @@ void CTspMFCDlg::OnBnClickedClear()
 	else {
 		CEdit * pEdit1 = (CEdit *)GetDlgItem(IDC_Paint1);
 		CEdit * pEdit2 = (CEdit *)GetDlgItem(IDC_Paint2);
+		CEdit * pEdit3 = (CEdit *)GetDlgItem(IDC_Paint3);
 		pEdit1->Invalidate();
 		pEdit2->Invalidate();
+		pEdit3->Invalidate();
 	}
 }

@@ -69,5 +69,5 @@ public:
 	afx_msg void OnBnClickedStop();
 	int m_iInLoop;
 	afx_msg void OnBnClickedClear();
-	void drawEditGa(vector<int> tmp);
+	void drawEditGa(vector<int> tmp, double curcost, int generation);
 };
