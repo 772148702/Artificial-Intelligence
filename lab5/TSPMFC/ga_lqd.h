@@ -64,7 +64,7 @@ public:
 		p1 = 0.7; p2 = 0.3;
 		generation = 1;
 	}
-	void input2(int k, vector <double> _x, vector <double> _y) {
+	void input2(int k, vector <double> _x, vector <double> _y, double para_p1, double para_p2) {
 		n = k;
 		X.clear();
 		Y.clear();
@@ -79,7 +79,8 @@ public:
 				dist[i][j] = sqrt(dx * dx + dy * dy);
 			}
 		pocnt = 60; swapcnt = n; badimax = 700;
-		p1 = 0.7; p2 = 0.3;
+		p1 = para_p1; 
+		p2 = para_p2;
 	}
 	void calcfitness(int id) {
 		//double sum = 0.0;

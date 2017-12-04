@@ -70,4 +70,6 @@ public:
 	int m_iInLoop;
 	afx_msg void OnBnClickedClear();
 	void drawEditGa(vector<int> tmp, double curcost, int generation);
+	double m_dP1 = 0.7;
+	double m_dP2 = 0.3;
 };

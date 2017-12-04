@@ -56,6 +56,8 @@ CTspMFCDlg::CTspMFCDlg(CWnd* pParent /*=NULL*/)
 	: CDialogEx(IDD_TSPMFC_DIALOG, pParent)
 	, m_dDet(0.98)
 	, m_iInLoop(1000)
+	, m_dP1(0.7)
+	, m_dP2(0.3)
 {
 	gaV1 = new GA;
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
@@ -70,6 +72,8 @@ void CTspMFCDlg::DoDataExchange(CDataExchange* pDX)
 	DDV_MinMaxDouble(pDX, m_dDet, 0.8, 0.9999);
 	DDX_Text(pDX, IDC_Para_InLoop, m_iInLoop);
 	DDV_MinMaxInt(pDX, m_iInLoop, 500, 100000);
+	DDX_Text(pDX, IDC_Para_P1, m_dP1);
+	DDX_Text(pDX, IDC_Para_P2, m_dP2);
 }
 
 BEGIN_MESSAGE_MAP(CTspMFCDlg, CDialogEx)
@@ -122,7 +126,6 @@ SetIcon(m_hIcon, FALSE);		// 设置小图标
 CString warning = L"注意！不支持中文路径";
 SetDlgItemText(IDC_TSP_PATH, warning);
 SetDlgItemText(IDC_OPT_PATH, warning);
-CheckRadioButton(IDC_SA, IDC_LOCAL, IDC_SA);
 return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
 }
 
@@ -286,10 +289,7 @@ void CTspMFCDlg::drawEditOpt(vector<int> tmp) {
 UINT CTspMFCDlg::Thread1(LPVOID  param) {
 	CTspMFCDlg * p = (CTspMFCDlg *)param;
 	p->lqd.isEnd = false;
-	if (((CButton *)(p->GetDlgItem(IDC_SA)))->GetCheck())
-		p->lqd.SA();
-	else if (((CButton *)(p->GetDlgItem(IDC_LOCAL)))->GetCheck())
-		p->lqd.localsearch();
+	p->lqd.SA();
 	return 1;
 }
 
@@ -386,18 +386,12 @@ void CTspMFCDlg::OnBnClickedStart()
 		initOptPath(optPath);
 		initPath(curPath);
 		UpdateData(TRUE);
-		/*
-		CString det_str;
-		GetDlgItem(IDC_Para_Det)->GetWindowText(det_str);
+		/*CString str;
+		str.Format(_T("%lf"), m_dP1);
 		MessageBox(str);*/
 		lqd.init(x, y, m_dDet, m_iInLoop);
-		int n = x.size()-1;
-		
-		
-		gaV1->input2(n,x, y);
-		/*CString tt;
-		tt.Format(_T("%.2lf"), m_dDet);
-		MessageBox(tt);*/
+		int n = x.size()-1;	
+		gaV1->input2(n,x, y, m_dP1, m_dP2);
 		start = true;
 		UpdateData(FALSE);
 		SetTimer(1, 200, NULL);

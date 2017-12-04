@@ -26,15 +26,17 @@
 #define IDC_Cur_Cost                    1014
 #define IDC_Error_Rate2                 1015
 #define IDC_EDIT2                       1016
+#define IDC_Para_Det2                   1016
+#define IDC_Para_P2                     1016
 #define IDC_Para_InLoop                 1017
 #define IDC_EDIT3                       1018
+#define IDC_Para_P1                     1018
 #define IDC_Cur_Cost2                   1019
 #define IDC_TEM                         1020
 #define IDC_TEM2                        1021
 #define IDC_STOP                        1022
 #define IDC_SA                          1023
 #define IDC_RADIO2                      1024
-#define IDC_LOCAL                       1025
 #define IDC_CLEAR                       1026
 #define IDC_Paint3                      1027
 
