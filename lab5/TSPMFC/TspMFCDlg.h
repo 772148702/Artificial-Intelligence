@@ -72,4 +72,5 @@ public:
 	void drawEditGa(vector<int> tmp, double curcost, int generation);
 	double m_dP1 = 0.7;
 	double m_dP2 = 0.3;
+	int m_iSize;
 };

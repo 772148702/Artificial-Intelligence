@@ -58,6 +58,7 @@ CTspMFCDlg::CTspMFCDlg(CWnd* pParent /*=NULL*/)
 	, m_iInLoop(1000)
 	, m_dP1(0.7)
 	, m_dP2(0.3)
+	, m_iSize(60)
 {
 	gaV1 = new GA;
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
@@ -74,6 +75,9 @@ void CTspMFCDlg::DoDataExchange(CDataExchange* pDX)
 	DDV_MinMaxInt(pDX, m_iInLoop, 500, 100000);
 	DDX_Text(pDX, IDC_Para_P1, m_dP1);
 	DDX_Text(pDX, IDC_Para_P2, m_dP2);
+	DDV_MinMaxInt(pDX, m_dP2, 0.05, 0.5);
+	DDX_Text(pDX, IDC_Para_SZ, m_iSize);
+	DDV_MinMaxInt(pDX, m_iSize, 20, 100);
 }
 
 BEGIN_MESSAGE_MAP(CTspMFCDlg, CDialogEx)
@@ -392,7 +396,7 @@ void CTspMFCDlg::OnBnClickedStart()
 		MessageBox(str);*/
 		lqd.init(x, y, m_dDet, m_iInLoop);
 		int n = x.size()-1;	
-		gaV1->input2(n,x, y, m_dP1, m_dP2);
+		gaV1->input2(n,x, y, m_dP1, m_dP2, m_iSize);
 		start = true;
 		UpdateData(FALSE);
 		SetTimer(1, 200, NULL);

@@ -19,6 +19,7 @@
 #define IDC_EDITOPT                     1007
 #define IDC_INPUTOPT                    1008
 #define IDC_EDIT1                       1009
+#define IDC_Para_SZ                     1009
 #define IDC_OPT_PATH                    1010
 #define IDC_Para_Temp                   1011
 #define IDC_Para_Det                    1012

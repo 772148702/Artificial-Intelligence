@@ -72,7 +72,7 @@ public:
 	void setOptcost(double tmp) {
 		optcost = tmp;
 	}
-	void input2(int k, vector <double> _x, vector <double> _y, double para_p1, double para_p2) {
+	void input2(int k, vector <double> _x, vector <double> _y, double para_p1, double para_p2, int para_sz) {
 		n = k;
 		X.clear();
 		Y.clear();
@@ -86,9 +86,10 @@ public:
 				double dx = X[i] - X[j], dy = Y[i] - Y[j];
 				dist[i][j] = sqrt(dx * dx + dy * dy);
 			}
-		pocnt = 60; swapcnt = n; badimax = 700;
+		swapcnt = n; badimax = 700;
 		p1 = para_p1; 
 		p2 = para_p2;
+		pocnt = para_sz;
 	}
 	void calcfitness(int id) {
 		//double sum = 0.0;
