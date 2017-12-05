@@ -11,6 +11,7 @@ public:
 
 class GA {
 public:
+	
 	struct sol {
 		vector <int> r;
 		double c, v;
@@ -232,10 +233,11 @@ public:
 		init();
 		int f1 = 0, f2 = 1;
 		isEnd = false;
-		for (int i = 0; i < badimax;) {
+		int gen = 1;
+		for (int i = 0; i < badimax;gen++) {
 			double last = ans.c;
 			po[f2].clear();
-			generation = i + 1;
+			generation = gen;
 			cross(f1);
 			change(f2, f2, po[f2].size());
 			change(f1, f2, po[f1].size());
@@ -247,5 +249,4 @@ public:
 		isEnd = true;
 		showans();
 	}
-private:
 };

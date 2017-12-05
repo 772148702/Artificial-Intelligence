@@ -26,7 +26,6 @@
 #define IDC_Cur_Cost                    1014
 #define IDC_Error_Rate2                 1015
 #define IDC_EDIT2                       1016
-#define IDC_Para_Det2                   1016
 #define IDC_Para_P2                     1016
 #define IDC_Para_InLoop                 1017
 #define IDC_EDIT3                       1018
