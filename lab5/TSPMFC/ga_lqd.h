@@ -1,6 +1,9 @@
 #pragma once
+#include <iostream>
 #include <vector>
 #include<algorithm>
+#include<fstream> 
+#include<cstdio>
 using namespace std;
 class ga_lqd
 {
@@ -30,6 +33,7 @@ public:
 			return this->v > oth.v;
 		}
 	};
+	double optcost;
 	double dist[300][300];
 	bool vis[300];
 	int n;
@@ -64,6 +68,9 @@ public:
 		pocnt = 60; swapcnt = n; badimax = 700;
 		p1 = 0.7; p2 = 0.3;
 		generation = 1;
+	}
+	void setOptcost(double tmp) {
+		optcost = tmp;
 	}
 	void input2(int k, vector <double> _x, vector <double> _y, double para_p1, double para_p2) {
 		n = k;
@@ -229,12 +236,14 @@ public:
 			po[id].erase(po[id].begin() + sz, po[id].end());
 	}
 	void work() {
+		freopen("result.out", "w", stdout);
 		srand(time(0));
 		init();
 		int f1 = 0, f2 = 1;
 		isEnd = false;
 		int gen = 1;
 		for (int i = 0; i < badimax;gen++) {
+			cout << (po[f1][0].c- optcost )/optcost*100 << endl;
 			double last = ans.c;
 			po[f2].clear();
 			generation = gen;

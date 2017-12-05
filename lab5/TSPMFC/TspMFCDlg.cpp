@@ -350,6 +350,7 @@ void CTspMFCDlg::initOptPath(char * path) {
 	stringstream ssm;
 	ssm << opt_ss;
 	ssm >> opt_cost;
+	gaV1->setOptcost(opt_cost);
 	ssm.clear();
 	getline(cin, ss);
 	getline(cin, ss);
