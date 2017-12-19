@@ -89,7 +89,6 @@ void CEvaluation::AddPoint(const CPoint &pos)
 int CEvaluation::GetRelatePiece(int Map[10][9],CPoint pos)
 {//性能瓶颈！！！！！！
 	BYTE nChessID;
-	BYTE flag;
 	int x,y;
 	CPoint addp;
 	m_nRelatePos=0;

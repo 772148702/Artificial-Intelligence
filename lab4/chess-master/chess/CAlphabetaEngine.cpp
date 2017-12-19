@@ -33,7 +33,7 @@ int CAlphabetaEngine::AlphaBeta(int nDepth, int alpha, int beta)
 		return i;//结束，返回估值*/
 
 				 //叶子节点取估值
-	if (nDepth <= 0)
+	if (nDepth == 0)
 		return m_pEval->Evaluate(CurMap, (m_nMaxDepth - nDepth) % 2);
 
 	//此函数找出当前局面所有可能的走法，然后放进m_pMG ->m_MoveList当中
@@ -52,6 +52,9 @@ int CAlphabetaEngine::AlphaBeta(int nDepth, int alpha, int beta)
 		type = MakeMove(&(m_pMG->MoveList[nDepth][i]));  //将当前局面应用此走法，变为子节点的局面
 		score = -AlphaBeta(nDepth - 1, -beta, -alpha);       //递归搜索子节点
 		UnMakeMove(&(m_pMG->MoveList[nDepth][i]), type);//将此节点的局面恢复为当前节点
+		if (score >= beta) {
+			return beta;
+		}
 		if (score > alpha)
 		{
 			alpha = score;//保留极大值
@@ -59,8 +62,8 @@ int CAlphabetaEngine::AlphaBeta(int nDepth, int alpha, int beta)
 			if (nDepth == m_nMaxDepth)
 				m_cmBestMove = m_pMG->MoveList[nDepth][i];
 		}
-		if (alpha >= beta)
-			break;//剪枝，放弃搜索剩下的节点
+		/*if (alpha >= beta)
+			break;//剪枝，放弃搜索剩下的节点*/
 	}
 	return alpha;//返回极大值
 }
@@ -69,3 +72,5 @@ int CAlphabetaEngine::GetAlpha()
 {
 	return curAlpha;
 }
+
+

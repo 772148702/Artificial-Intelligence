@@ -12,6 +12,15 @@ using namespace std;
 #define BASEVALUE_CAR 1000
 #define BASEVALUE_KING 10000
 
+#define FLEXIBILITY_PAWN 2
+#define FLEXIBILITY_BISHOP 3
+#define FLEXIBILITY_ELEPHANT 5
+#define FLEXIBILITY_CAR 15
+#define FLEXIBILITY_HORSE 10
+#define FLEXIBILITY_CANON 20
+#define FLEXIBILITY_KING 1
+
+/*	
 #define FLEXIBILITY_PAWN 15
 #define FLEXIBILITY_BISHOP 1
 #define FLEXIBILITY_ELEPHANT 1
@@ -19,6 +28,7 @@ using namespace std;
 #define FLEXIBILITY_HORSE 12
 #define FLEXIBILITY_CANON 6
 #define FLEXIBILITY_KING 0
+*/
 
 class CEvaluation
 {

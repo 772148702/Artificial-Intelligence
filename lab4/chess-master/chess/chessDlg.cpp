@@ -292,6 +292,7 @@ void CchessDlg::OnBnClickedRegret()
 	}
 	pVertProg->SetPos(0);
 	m_iAlpha = 0;
+	GetDlgItem(IDC_USED_TIME)->SetWindowText(_T(""));
 	UpdateData(false);
 	InvalidateRect(NULL, FALSE);
 	UpdateWindow();
