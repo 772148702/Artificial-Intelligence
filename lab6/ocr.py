@@ -62,7 +62,6 @@ class OCRNeuralNetwork:
             y2 = np.dot(np.array(self.theta2), y1)
             y2 = np.add(y2, self.hidden_layer_bias)
             y2 = self.sigmoid(y2)
-
             # 后向传播得到误差向量
             actual_vals = [0] * 10
             actual_vals[data.label] = 1

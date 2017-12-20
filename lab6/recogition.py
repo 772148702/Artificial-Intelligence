@@ -4,7 +4,7 @@ from scipy import io as spio
 from matplotlib import pyplot as plt
 from scipy import optimize
 from matplotlib.font_manager import FontProperties
-
+import json
 font = FontProperties(fname=r"c:\windows\fonts\simsun.ttc", size=14)  # 解决windows环境下画图汉字乱码问题
 
 from sklearn import datasets
@@ -33,7 +33,7 @@ def neuralNetwork(input_layer_size, hidden_layer_size, out_put_layer):
 
     ##　随机显示几行数据
     rand_indices = [t for t in [np.random.randint(x - x, m) for x in range(100)]]  # 生成100个0-m的随机数
-    display_data(X[rand_indices, :])  # 显示100个数字
+    #display_data(X[rand_indices, :])  # 显示100个数字
 
     # nn_params = np.vstack((Theta1.reshape(-1,1),Theta2.reshape(-1,1)))
 
@@ -41,7 +41,7 @@ def neuralNetwork(input_layer_size, hidden_layer_size, out_put_layer):
 
     initial_Theta1 = randInitializeWeights(input_layer_size, hidden_layer_size);
     initial_Theta2 = randInitializeWeights(hidden_layer_size, out_put_layer)
-
+    #
     initial_nn_params = np.vstack((initial_Theta1.reshape(-1, 1), initial_Theta2.reshape(-1, 1)))  # 展开theta
     # np.savetxt("testTheta.csv",initial_nn_params,delimiter=",")
     start = time.time()
@@ -52,13 +52,15 @@ def neuralNetwork(input_layer_size, hidden_layer_size, out_put_layer):
     global Theta1,Theta2
     Theta1 = result[0:hidden_layer_size * (input_layer_size + 1)].reshape(hidden_layer_size, input_layer_size + 1)
     Theta2 = result[hidden_layer_size * (input_layer_size + 1):length].reshape(out_put_layer, hidden_layer_size + 1)
-    display_data(Theta1[:, 1:length])
-    display_data(Theta2[:, 1:length])
+    np.savetxt("Theta1.csv",Theta1,delimiter=',')
+    np.savetxt("Theta2.csv",Theta2,delimiter=',')
+    #display_data(Theta1[:, 1:length])
+    #display_data(Theta2[:, 1:length])
     '''预测'''
-    p = predict(Theta1, Theta2, X)
-    print(u"预测准确度为：%f%%" % np.mean(np.float64(p == y.reshape(-1, 1)) * 100))
-    res = np.hstack((p, y.reshape(-1, 1)))
-    np.savetxt("predict.csv", res, delimiter=',')
+    #p = predict(Theta1, Theta2, X)
+    #print(u"预测准确度为：%f%%" % np.mean(np.float64(p == y.reshape(-1, 1)) * 100))
+    #res = np.hstack((p, y.reshape(-1, 1)))
+    #p.savetxt("predict.csv", res, delimiter=',')
 
 
 # 加载mat文件
@@ -97,7 +99,12 @@ def display_data(imgData):
     plt.axis('off')
     plt.show()
 
-
+def load_Theta():
+    #my_matrix = numpy.loadtxt(open("c:\\1.csv", "rb"), delimiter=",", skiprows=0)
+    global Theta1,Theta2
+    Theta1 = np.loadtxt(open("Theta1.csv","rb"),delimiter=",", skiprows=0)
+    Theta2 = np.loadtxt(open("Theta2.csv", "rb"), delimiter=",", skiprows=0)
+    print "load finish"
 # 代价函数
 def nnCostFunction(nn_params, input_layer_size, hidden_layer_size, num_labels, X, y, Lambda):
     length = nn_params.shape[0]  # theta的中长度
@@ -255,6 +262,29 @@ def debugInitializeWeights(fan_in, fan_out):
 
 
 # 预测
+def singPredict(X):
+    global  Theta1,Theta2
+    X = np.mat(X).T
+    X = X.reshape(1,-1)
+    m = X.shape[0]
+    num_labels = Theta2.shape[0]
+    # p = np.zeros((m,1))
+    '''正向传播，预测结果'''
+    X = np.hstack((np.ones((m, 1)), X))
+    h1 = sigmoid(np.dot(X, np.transpose(Theta1)))
+    h1 = np.hstack((np.ones((m, 1)), h1))
+    h2 = sigmoid(np.dot(h1, np.transpose(Theta2)))
+    p = np.array(np.where(h2[0, :] == np.max(h2, axis=1)[0]))
+    ans = -1
+    val = -1
+    for i in range(0,10):
+        if  h2[0,i]>val:
+            val = h2[0,i]
+            ans = i
+
+    print ans
+    return ans
+
 def predict(X):
     global Theta1,Theta2
     m = X.shape[0]
@@ -280,5 +310,9 @@ def predict(X):
 
 
 if __name__ == "__main__":
-    checkGradient()
-    neuralNetwork(400, 25, 10)
+    #checkGradient()
+    neuralNetwork(400, 100, 10)
+    #a = loadmat_data("Theta1.txt")
+    load_Theta()
+    print Theta1.shape
+    print Theta2.shape
