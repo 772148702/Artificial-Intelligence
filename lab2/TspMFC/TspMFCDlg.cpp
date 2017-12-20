@@ -349,7 +349,7 @@ void CTspMFCDlg::OnBnClickedStart()
 		MessageBox(tt);*/
 		start = true;
 		UpdateData(FALSE);
-		SetTimer(1, 200, NULL);
+		SetTimer(1, 300, NULL);
 		CTspMFCDlg * a = this;
 		hThread1 = AfxBeginThread(Thread1, a);
 		drawEditOpt(bt);

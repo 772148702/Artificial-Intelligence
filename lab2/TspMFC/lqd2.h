@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include <iostream>
+#include <assert.h>
 using namespace std;
 #define maxn 300
 
@@ -73,14 +74,19 @@ public:
 		}
 	};
 	sol s, s1, s2, s3, bests, cur;
-	void op1(sol &a, sol &b, int p) {
+	void op1(sol &a, sol &b, int p, int mode) {
 		static double mincost;
 		static int besti, bestj;
 		mincost = 1e9; besti = bestj = 0;
 		b = a;
 		for (int i = 0; i < n; ++i)
 			for (int j = i + 1; j < n; ++j) {
-				if (!randtest(0.01 * (50000 - p) / 50000)) continue;
+				if (mode == 0) {
+					if (!randtest(0.04 * (50000 - p) / 50000)) continue;
+				}
+				if (mode == 1) {
+					if (!randtest(0.04)) continue;
+				}
 				a.change(i, j,dist);
 				if (dcmp(a.cost - mincost) < 0) {
 					mincost = a.cost; besti = i, bestj = j;
@@ -89,7 +95,7 @@ public:
 			}
 		if (mincost < 5e8) b.change(besti, bestj, dist);
 	}
-	void op2(sol &a, sol &b, int p) {
+	void op2(sol &a, sol &b, int p, int mode) {
 		static double mincost;
 		static int besti, bestj;
 		mincost = 1e9; besti = bestj = 0;
@@ -98,7 +104,12 @@ public:
 			int u = a.del(i, dist);
 			for (int j = 0; j < a.r.size(); ++j) {
 				if (i == j) continue;
-				if (!randtest(0.01 * (50000 - p) / 50000)) continue;
+				if (mode == 0) {
+					if (!randtest(0.02 * (50000 - p) / 50000)) continue;
+				}
+				if (mode == 1) {
+					if (!randtest(0.02)) continue;
+				}
 				a.ins(j, u, dist);
 				if (dcmp(a.cost - mincost) < 0) {
 					mincost = a.cost, besti = i, bestj = j;
@@ -108,7 +119,8 @@ public:
 			a.ins(i, u, dist);
 		}
 		if (mincost < 5e8) {
-			int u = b.del(besti, dist); b.ins(bestj, u, dist);
+			int u = b.del(besti, dist);
+			b.ins(bestj, u, dist);
 		}
 	}
 	void op3(sol &a, sol &b, int p) {
@@ -163,8 +175,8 @@ public:
 		bests = s;
 		tem = 0;
 		for (int iteration = 50000, baditeration = 0; iteration; --iteration) {
-			op1(s, s1, iteration);
-			op2(s, s2, iteration);
+			op1(s, s1, iteration, 0);
+			op2(s, s2, iteration, 0);
 			//op3(s, s3);
 			if (dcmp(s2.cost - s1.cost) < 0) s1 = s2;
 			//if (dcmp(s3.cost - s1.cost) < 0) s1 = s3;
@@ -194,8 +206,8 @@ public:
 		tem = T;
 		for (int iteration = 1; iteration <= 350 && dcmp(T) > 0; iteration++, T *= alpha, tem = T) {
 			for (int i = 1; i <= InLoop; ++i) {
-				op1(s, s1, i);
-				op2(s, s2, i);
+				op1(s, s1, i, 1);
+				op2(s, s2, i, 1);
 				//op3(s, s3, i);
 				if (dcmp(s2.cost - s1.cost) < 0) s1 = s2;
 				//if (dcmp(s3.cost - s1.cost) < 0) s1 = s3;
