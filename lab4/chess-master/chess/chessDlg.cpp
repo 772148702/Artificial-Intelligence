@@ -191,6 +191,7 @@ void CchessDlg::OnPaint()
 	memDC.SelectObject(&old);
 	memDC.DeleteDC();
 	m_chessboard.DeleteObject();
+	ReleaseDC(pDC);
 }
 
 //当用户拖动最小化窗口时系统调用此函数取得光标
@@ -351,7 +352,7 @@ void CchessDlg::AIgo()
 			player_lose = false;
 			InvalidateRect(NULL, FALSE);
 			UpdateWindow();
-			CchessDlg::OnBnClickedRegret();
+			OnBnClickedRegret();
 			MessageBox(L"退回上一步");
 		}
 	}
