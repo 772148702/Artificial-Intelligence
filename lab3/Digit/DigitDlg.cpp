@@ -173,13 +173,18 @@ void CDigitDlg::show(state tmp) {
 	}*/
 }
 void CDigitDlg::showState1() {
-	//freopen("out1.out", "w", stdout);
-	for (auto re:al1.record) {
+
+	int dp = al1.record.size() / 1000;
+	int i = 0;
+	for (; i < al1.record.size();i=i+dp) {
+		Record re = al1.record[i];
 		CString c;
-		c.Format(L"第%d个当前节点\n", cnt1);
+		c.Format(L"------------------");
+		listbox1.AddString(c);
+		c.Format(L"第%d个当前节点\n", i);
 
 		listbox1.AddString(c);
-		Record re = al1.record.front();
+		
 	
 
 		c.Format(L"open 表当中有%d个节点\n", re.opensize);
@@ -200,14 +205,16 @@ void CDigitDlg::showState1() {
 			listbox1.AddString(c);
 		
 		}
-		cnt1++;
+		
 	}
 	
 }
 void CDigitDlg::showState2() {
-	
+
 	for (auto re : al2.record) {
 		CString c;
+		c.Format(L"------------------");
+		listbox2.AddString(c);
 		c.Format(L"第%d个当前节点\n", cnt2);
 		listbox2.AddString(c);
 	
@@ -249,10 +256,15 @@ void CDigitDlg::OnBnClickedBntStart()
 	   al2.init2(v);
 		CDigitDlg * a = this;
 		//listbox.AddString(L"错位启发函数");
+		listboxMethod.ResetContent();
+		ListBoxMethod2.ResetContent();
+		listbox2.ResetContent();
+		listbox1.ResetContent();
 	
-	
+		
 
-		AfxBeginThread(Thread1, a);
+
+	     h1 = AfxBeginThread(Thread1, a);
 	
 	
 		//listbox2.AddString(L"距离启发函数");
@@ -265,6 +277,7 @@ void CDigitDlg::OnBnClickedBntStart()
 
 }
 void  CDigitDlg::showMethod() {
+
 	   CString c;
 	   int i = 1;
 	   c.Format(L"启发式一的结果");
@@ -286,6 +299,7 @@ void  CDigitDlg::showMethod() {
 	listboxMethod.AddString(c);
 }
 void  CDigitDlg::showMethod2() {
+	
 	CString c;
 	int i = 1;
 	c.Format(L"启发式二的结果");

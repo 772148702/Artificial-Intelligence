@@ -33,6 +33,7 @@ void algorithm::init2(vector<int> a) {
 	record.clear();
 
 }
+//康托展开的辅助数组
 int factory[] = { 1, 1, 2, 6, 24, 120, 720, 5040, 40320 };
 int Cantor(vector<int> r)
 {
@@ -86,7 +87,7 @@ bool algorithm::run1() {  //以update1来计算法
 		Record re(cur, open.size(), cntCantor);
 		record.push_back(re);
 		
-
+		//达到最终的状态
 		if (cur.hn == 0) {
 			method.push(cur);
 			state  tmp = close[cur.pre];

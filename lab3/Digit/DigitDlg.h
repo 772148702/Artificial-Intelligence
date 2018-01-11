@@ -57,4 +57,5 @@ public:
 	afx_msg void OnLbnSelchangeListMethod();
 	CListBox listbox1;
 	CListBox listbox2;
+	CWinThread* h1;
 };
