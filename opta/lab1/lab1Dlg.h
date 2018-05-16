@@ -49,10 +49,11 @@ public:
 	afx_msg void OnTimer(UINT_PTR nIDEvent);
 	HANDLE thread1;
 	HANDLE thread2;
-	int cnt;
+	int cnt,cnt1;
 	vector<double> vde;
 	vector<double> vpso;
 	CTchart1 m_chart2;
 
 	afx_msg void OnBnClickedButton2();
+	//CComboBox m_listbox1;
 };

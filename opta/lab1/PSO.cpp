@@ -49,6 +49,7 @@ void  pso_work(int id,vector<double>& ans) {
 				+ c2 * pso_randf() * (gbestx[j] - p->x[j]);
 			TestFunc().cec17_test_func(p->x, pso_f, pso_D, 1, id);
 			p->f = pso_f[0];
+			if (i == 0) flag = p->f;
 			if (p->f < p->bestf) {
 				for (int j = 0; j < pso_D; ++j) p->bestx[j] = p->x[j];
 				p->bestf = p->f;

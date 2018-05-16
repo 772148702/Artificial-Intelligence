@@ -187,7 +187,9 @@ void Clab1Dlg::OnBnClickedStart()
 	if (id > 0 && id <= 30) {
 		Clab1Dlg * a = this;
 		SetTimer(0, 1000, NULL);
+		SetTimer(1, 1000, NULL);
 		cnt = 0;
+		cnt1 = 0;
 		thread1 = AfxBeginThread(Thread1, a);
 		thread2 = AfxBeginThread(Thread2, a);
 	}
@@ -231,23 +233,27 @@ void Clab1Dlg::OnTimer(UINT_PTR nIDEvent)
 		for (int i = 0; i <cnt*30&&i<de.getResult().size() ; i++)
 
 		{
-
+			if(de.getResult()[i]>0)
 			lineSeries.AddXY(i, de.getResult()[i], NULL, NULL);
 
 		}
 
-		 lineSeries = (CSeries)m_chart2.Series(0);
+
+	}
+	else {
+		cnt1++;
+		CSeries lineSeries = (CSeries)m_chart2.Series(0);
 
 		lineSeries.Clear();
 
 		//lineSeries.
-		for (int i = 0; i <cnt * 30 && i<pso.getResult().size(); i++)
+		for (int i = 0; i < cnt * 30 && i < pso.getResult().size(); i++)
 
 		{
-
-			lineSeries.AddXY(i, pso.getResult()[i], NULL, NULL);
-
+			if (pso.getResult()[i] > 0)
+				lineSeries.AddXY(i, pso.getResult()[i], NULL, NULL);
 		}
+		
 	}
 	CDialogEx::OnTimer(nIDEvent);
 }

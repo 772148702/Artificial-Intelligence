@@ -45,12 +45,14 @@ void work(int id,vector<double>& ans) {
 			while (b == a) b = randint(m);
 			while (c == a || c == b) c = randint(m);
 			int j = randint(D);
+			
 			for (int k = 1; k <= D; ++k, j = (j + 1) % D)
 				if (randf() < CR || k == D) trail[j] = x[c][j] + F * (x[a][j] - x[b][j]);
 				else trail[j] = x[i][j];
 				for (int k = 0; k < D; ++k) X[k] = trail[k];
 				TestFunc().cec17_test_func(X, f, D, 1, id);
 				double score = f[0];
+				if (i == 0) flag = score;
 				if (score <= cost[i]) {
 					for (int k = 0; k < D; ++k) xx[i][k] = trail[k];
 					cost[i] = score;
