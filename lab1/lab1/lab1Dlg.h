@@ -42,8 +42,7 @@ public:
 	DE  de;
 	PSO pso;
 	afx_msg void OnBnClickedStart();
-	CTchart1 chart1;
-	int id;
+	int id = 3;
 	CTchart1 m_chart;
 
 	afx_msg void OnTimer(UINT_PTR nIDEvent);

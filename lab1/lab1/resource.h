@@ -8,6 +8,7 @@
 #define IDD_LAB1_DIALOG                 102
 #define IDR_MAINFRAME                   128
 #define IDC_EDIT1                       1000
+#define IDC_EDIT_FUN                    1000
 #define IDC_LIST1                       1001
 #define IDC_LIST2                       1002
 #define IDC_BUTTON1                     1003

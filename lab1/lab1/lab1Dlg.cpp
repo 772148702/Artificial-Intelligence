@@ -181,9 +181,13 @@ void Clab1Dlg::OnBnClickedStart()
 {
 	// TODO: 在此添加控件通知处理程序代码
 	CString str;
-	GetDlgItemText(IDC_EDIT1, str);
+	GetDlgItemText(IDC_EDIT_FUN, str);
 	id = _ttoi(str);
-
+	if (id == 2) {
+		MessageBox(L"注意！测试函数源码中实际不包含第二个函数，所以选择2默认使用函数1");
+		id = 1;
+		SetDlgItemText(IDC_EDIT_FUN, L"1");
+	}
 	if (id > 0 && id <= 30) {
 		Clab1Dlg * a = this;
 		SetTimer(0, 1000, NULL);
