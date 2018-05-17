@@ -43,9 +43,10 @@ public:
 	PSO pso;
 	afx_msg void OnBnClickedStart();
 	CTchart1 chart1;
-	int id;
+	int id = 3;
 	CTchart1 m_chart;
-
+	int it_de = 1000;
+	int it_pso = 3000;
 	afx_msg void OnTimer(UINT_PTR nIDEvent);
 	HANDLE thread1;
 	HANDLE thread2;
@@ -54,6 +55,8 @@ public:
 	vector<double> vpso;
 	CTchart1 m_chart2;
 
-	afx_msg void OnBnClickedButton2();
 	//CComboBox m_listbox1;
+	afx_msg void OnBnClickedClear();
+	CComboBox m_cbxDE;
+	CComboBox m_cbxPSO;
 };

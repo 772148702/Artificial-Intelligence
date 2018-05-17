@@ -30,7 +30,7 @@ double F = 0.5;//缩放因子
 double CR = 0.3;//交叉概率
 double x[750][120], xx[750][120], X[120], trail[120], cost[750];
 
-void work(int id,vector<double>& ans) {
+void work(int id, vector<double>& ans, int iteration = 1000) {
 	for (int i = 0; i < m; ++i) {
 		for (int j = 0; j < D; ++j) x[i][j] = randf() * (xmax - xmin) + xmin;
 		for (int j = 0; j < D; ++j) X[j] = x[i][j];
@@ -38,7 +38,7 @@ void work(int id,vector<double>& ans) {
 	}
 	
 	double flag = DBL_MAX;
-	for (int iter = 0; iter < 1000; ++iter) {
+	for (int iter = 0; iter < iteration; ++iter) {
 		flag = DBL_MAX;
 		for (int i = 0; i < m; ++i) {
 			int a = randint(m), b = randint(m), c = randint(m);
@@ -80,9 +80,9 @@ void work(int id,vector<double>& ans) {
 
 }
 
-void DE::run(int _id) {
+void DE::run(int _id, int _it) {
 	ans.resize(0);
-	work(_id, ans);
+	work(_id, ans, _it);
 }
 vector<double> DE::getResult() {
 	

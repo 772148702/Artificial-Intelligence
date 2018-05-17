@@ -65,6 +65,8 @@ void Clab1Dlg::DoDataExchange(CDataExchange* pDX)
 
 	DDX_Control(pDX, IDC_TCHART4, m_chart);
 	DDX_Control(pDX, IDC_TCHART5, m_chart2);
+	DDX_Control(pDX, IDC_IT_DE, m_cbxDE);
+	DDX_Control(pDX, IDC_IT_PSO, m_cbxPSO);
 }
 
 BEGIN_MESSAGE_MAP(Clab1Dlg, CDialogEx)
@@ -75,8 +77,7 @@ BEGIN_MESSAGE_MAP(Clab1Dlg, CDialogEx)
 	ON_BN_CLICKED(IDC_START, &Clab1Dlg::OnBnClickedStart)
 
 	ON_WM_TIMER()
-
-	ON_BN_CLICKED(IDC_BUTTON2, &Clab1Dlg::OnBnClickedButton2)
+	ON_BN_CLICKED(IDC_CLEAR, &Clab1Dlg::OnBnClickedClear)
 END_MESSAGE_MAP()
 
 
@@ -112,7 +113,8 @@ BOOL Clab1Dlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// 设置小图标
 
 	// TODO: 在此添加额外的初始化代码
-
+	m_cbxDE.SetCurSel(0);
+	m_cbxPSO.SetCurSel(2);
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
 }
 
@@ -181,9 +183,21 @@ void Clab1Dlg::OnBnClickedStart()
 {
 	// TODO: 在此添加控件通知处理程序代码
 	CString str;
-	GetDlgItemText(IDC_EDIT1, str);
+	GetDlgItemText(IDC_FUN, str);
 	id = _ttoi(str);
-
+	if (id == 2) {
+		MessageBox(_T("原测试函数文件不包含函数2，所以选择2默认为函数3"));
+		id = 3;
+	}
+	int nIndex = m_cbxDE.GetCurSel();
+	CString strDE;
+	m_cbxDE.GetLBText(nIndex, strDE);
+	nIndex = m_cbxPSO.GetCurSel();
+	CString strPSO;
+	m_cbxPSO.GetLBText(nIndex, strPSO);
+	it_de = _ttoi(strDE);
+	it_pso = _ttoi(strPSO);
+	UpdateData(FALSE);
 	if (id > 0 && id <= 30) {
 		Clab1Dlg * a = this;
 		SetTimer(0, 1000, NULL);
@@ -203,14 +217,15 @@ void Clab1Dlg::OnBnClickedStart()
 UINT Clab1Dlg::Thread1(LPVOID  param) {
 	
 	Clab1Dlg * p = (Clab1Dlg *)param;
-	p->de.run(p->id);
+
+	p->de.run(p->id, p->it_de);
 	return 0;
 }
 
 UINT Clab1Dlg::Thread2(LPVOID  param) {
 
 	Clab1Dlg * p = (Clab1Dlg *)param;
-	p->pso.run(p->id);
+	p->pso.run(p->id, p->it_pso);
 	return 0;
 }
 
@@ -261,7 +276,9 @@ void Clab1Dlg::OnTimer(UINT_PTR nIDEvent)
 
 
 
-void Clab1Dlg::OnBnClickedButton2()
+
+
+void Clab1Dlg::OnBnClickedClear()
 {
 	// TODO: 在此添加控件通知处理程序代码
 	/*CloseHandle(thread1);
