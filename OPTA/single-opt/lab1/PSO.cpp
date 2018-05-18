@@ -44,14 +44,14 @@ void  pso_work(int id, vector<double>& ans, int iteration = 3000) {
 	}
 
 	for (int iter = 0; iter < iteration; ++iter) {
-		flag = DBL_MAX;
+		flag = 1e20;
 		for (int i = 0; i < N; ++i) {
 			particle* p = &swarm[i];
 			for (int j = 0; j < pso_D; ++j) p->x[j] += c1 * pso_randf() * (p->bestx[j] - p->x[j])
 				+ c2 * pso_randf() * (gbestx[j] - p->x[j]);
 			TestFunc().cec17_test_func(p->x, pso_f, pso_D, 1, id);
 			p->f = pso_f[0];
-			if (i == 0) flag = p->f;
+			
 			if (p->f < p->bestf) {
 				for (int j = 0; j < pso_D; ++j) p->bestx[j] = p->x[j];
 				p->bestf = p->f;
@@ -61,9 +61,10 @@ void  pso_work(int id, vector<double>& ans, int iteration = 3000) {
 				for (int j = 0; j < pso_D; ++j) p->x[j] = pso_randf() * (pso_xmax - pso_xmin) + pso_xmin;
 				gbestf = p->f;
 			}
-			if (flag > pso_f[0]) flag = pso_f[0];
+		
 		}
-		ans.push_back(flag);
+		
+		ans.push_back(gbestf);
 	}
 
 	printf("%lf\n", gbestf);

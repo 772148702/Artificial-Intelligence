@@ -262,7 +262,7 @@ void Clab1Dlg::OnTimer(UINT_PTR nIDEvent)
 		lineSeries.Clear();
 
 		//lineSeries.
-		for (int i = 0; i < cnt * 30 && i < pso.getResult().size(); i++)
+		for (int i = 0; i < cnt1 * 30 && i < pso.getResult().size(); i++)
 
 		{
 			if (pso.getResult()[i] > 0)

@@ -54,7 +54,7 @@ public:
 	vector<double> vde;
 	vector<double> vpso;
 	CTchart1 m_chart2;
-
+	int turn = 0;
 	//CComboBox m_listbox1;
 	afx_msg void OnBnClickedClear();
 	CComboBox m_cbxDE;
