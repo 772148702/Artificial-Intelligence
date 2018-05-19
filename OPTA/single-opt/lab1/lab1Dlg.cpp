@@ -115,6 +115,9 @@ BOOL Clab1Dlg::OnInitDialog()
 	// TODO: 在此添加额外的初始化代码
 	m_cbxDE.SetCurSel(0);
 	m_cbxPSO.SetCurSel(2);
+	for (int i = 0; i < 30; i++) {
+		opt[i] = (i + 1) * 100;
+	}
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
 }
 
@@ -189,6 +192,9 @@ void Clab1Dlg::OnBnClickedStart()
 		MessageBox(_T("原测试函数文件不包含函数2，所以选择2默认为函数3"));
 		id = 3;
 	}
+	CString opt_str;
+	opt_str.Format(_T("%d"), opt[id - 1]),
+	SetDlgItemText(IDC_OPT, opt_str);
 	int nIndex = m_cbxDE.GetCurSel();
 	CString strDE;
 	m_cbxDE.GetLBText(nIndex, strDE);

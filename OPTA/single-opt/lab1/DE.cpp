@@ -23,7 +23,6 @@ int ini_flag = 0, n_flag, func_flag, *SS;
 
 int D = 10;//函数维度 
 double xmin = -100.0, xmax = 100.0;
-int funcnum[4] = { 1, 4, 11, 21 };//测试函数编号 
 
 int m = (int)(D * 7.5);//种群规模
 double F = 0.5;//缩放因子

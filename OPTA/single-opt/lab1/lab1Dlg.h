@@ -59,4 +59,5 @@ public:
 	afx_msg void OnBnClickedClear();
 	CComboBox m_cbxDE;
 	CComboBox m_cbxPSO;
+	int * opt = new int[30];
 };
