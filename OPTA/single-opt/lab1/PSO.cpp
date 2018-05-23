@@ -43,7 +43,7 @@ void  pso_work(int id, vector<double>& ans, int iteration = 3000) {
 		p->f = p->bestf = pso_f[0];
 	}
 
-	for (int iter = 0; iter < iteration; ++iter) {
+	for (int iter = 0; iter <= iteration; ++iter) {
 		flag = 1e20;
 		for (int i = 0; i < N; ++i) {
 			particle* p = &swarm[i];

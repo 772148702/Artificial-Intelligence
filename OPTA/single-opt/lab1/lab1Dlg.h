@@ -1,6 +1,5 @@
 
 // lab1Dlg.h : м╥нд╪Ч
-//
 
 #pragma once
 #include "afxwin.h"

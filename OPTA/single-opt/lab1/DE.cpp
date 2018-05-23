@@ -37,7 +37,7 @@ void work(int id, vector<double>& ans, int iteration = 1000) {
 	}
 	
 	double flag = DBL_MAX;
-	for (int iter = 0; iter < iteration; ++iter) {
+	for (int iter = 0; iter <= iteration; ++iter) {
 		flag = DBL_MAX;
 		for (int i = 0; i < m; ++i) {
 			int a = randint(m), b = randint(m), c = randint(m);

@@ -113,8 +113,8 @@ BOOL Clab1Dlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// 设置小图标
 
 	// TODO: 在此添加额外的初始化代码
-	m_cbxDE.SetCurSel(0);
-	m_cbxPSO.SetCurSel(2);
+	m_cbxDE.SetCurSel(2);
+	m_cbxPSO.SetCurSel(4);
 	for (int i = 0; i < 30; i++) {
 		opt[i] = (i + 1) * 100;
 	}
