@@ -191,6 +191,7 @@ void Clab1Dlg::OnBnClickedStart()
 	if (id == 2) {
 		MessageBox(_T("原测试函数文件不包含函数2，所以选择2默认为函数3"));
 		id = 3;
+		SetDlgItemText(IDC_FUN, L"3");
 	}
 	CString opt_str;
 	opt_str.Format(_T("%d"), opt[id - 1]),
