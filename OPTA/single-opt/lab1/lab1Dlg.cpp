@@ -188,6 +188,7 @@ void Clab1Dlg::OnBnClickedStart()
 	CString str;
 	GetDlgItemText(IDC_FUN, str);
 	id = _ttoi(str);
+	running = true;
 	if (id == 2) {
 		MessageBox(_T("原测试函数文件不包含函数2，所以选择2默认为函数3"));
 		id = 3;
@@ -225,14 +226,14 @@ UINT Clab1Dlg::Thread1(LPVOID  param) {
 	
 	Clab1Dlg * p = (Clab1Dlg *)param;
 
-	p->de.run(p->id, p->it_de);
+	p->de.run(p->id, p->it_de, p->running);
 	return 0;
 }
 
 UINT Clab1Dlg::Thread2(LPVOID  param) {
 
 	Clab1Dlg * p = (Clab1Dlg *)param;
-	p->pso.run(p->id, p->it_pso);
+	p->pso.run(p->id, p->it_pso, p->running);
 	return 0;
 }
 
@@ -288,8 +289,15 @@ void Clab1Dlg::OnTimer(UINT_PTR nIDEvent)
 void Clab1Dlg::OnBnClickedClear()
 {
 	// TODO: 在此添加控件通知处理程序代码
-	/*CloseHandle(thread1);
-	CloseHandle(thread2);
+	running = false;
+
+	CSeries lineSeries = (CSeries)m_chart.Series(0);
+	CSeries lineSeries2 = (CSeries)m_chart2.Series(0);
 	KillTimer(0);
-	cnt = 0;*/
+	KillTimer(1);
+	lineSeries.Clear();
+	lineSeries2.Clear();
+	de.Clear_ans();
+	pso.Clear_ans();
+	cnt = 0;
 }

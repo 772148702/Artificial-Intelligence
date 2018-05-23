@@ -37,7 +37,7 @@ protected:
 	DECLARE_MESSAGE_MAP()
 public:
 	afx_msg void OnBnClickedOk();
-
+	bool running;
 	DE  de;
 	PSO pso;
 	afx_msg void OnBnClickedStart();

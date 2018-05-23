@@ -8,7 +8,8 @@ public:
 	DE();
 	~DE();
 	vector<double> ans;
-	void run(int _id, int _it);
+	void run(int _id, int _it,bool running);
 	vector<double> getResult();
+	void Clear_ans();
 };
 

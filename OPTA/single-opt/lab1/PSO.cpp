@@ -29,12 +29,11 @@ struct particle {
 }swarm[50];
 
 
-void  pso_work(int id, vector<double>& ans, int iteration = 3000) {
+void  pso_work(int id, vector<double>& ans, bool running, int iteration = 3000) {
 	for (int i = 0; i < pso_D; ++i) gbestx[i] = pso_randf() * (pso_xmax - pso_xmin) + pso_xmin;
 	TestFunc().cec17_test_func(gbestx, pso_f, pso_D, 1, id);
 	gbestf = pso_f[0];
 
-	double flag = DBL_MAX;
 
 	for (int i = 0; i < N; ++i) {
 		particle* p = &swarm[i];
@@ -44,8 +43,8 @@ void  pso_work(int id, vector<double>& ans, int iteration = 3000) {
 	}
 
 	for (int iter = 0; iter <= iteration; ++iter) {
-		flag = 1e20;
 		for (int i = 0; i < N; ++i) {
+			if (!running) return;
 			particle* p = &swarm[i];
 			for (int j = 0; j < pso_D; ++j) p->x[j] += c1 * pso_randf() * (p->bestx[j] - p->x[j])
 				+ c2 * pso_randf() * (gbestx[j] - p->x[j]);
@@ -62,21 +61,21 @@ void  pso_work(int id, vector<double>& ans, int iteration = 3000) {
 				gbestf = p->f;
 			}
 		
-		}
-		
+		}		
 		ans.push_back(gbestf);
 	}
 
-	printf("%lf\n", gbestf);
-	printf("x[] = ");
-	for (int i = 0; i < pso_D; ++i) printf(" %.2lf", gbestx[i]); puts("");
+}
+void PSO::Clear_ans()
+{
+	ans.clear();
 }
 PSO::PSO()
 {
 }
-void  PSO::run(int _id, int _it) {
+void  PSO::run(int _id, int _it,bool running) {
 	ans.resize(0);
-	pso_work(_id, ans, _it);
+	pso_work(_id, ans,running, _it);
 }
 vector<double> PSO::getResult() {
 	return ans;
