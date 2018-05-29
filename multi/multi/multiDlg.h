@@ -3,8 +3,11 @@
 //
 
 #pragma once
+#include "CTChart.h"
+#include "CSeries.h"
+#include "CPoint3DSeries.h"
 
-
+#include "CAspect.h"
 // CmultiDlg ¶Ô»°¿ò
 class CmultiDlg : public CDialogEx
 {
@@ -33,5 +36,13 @@ protected:
 	DECLARE_MESSAGE_MAP();
 public:
 	afx_msg void OnBnClickedStart();
+	static UINT Thread1(LPVOID  param);
+	static UINT Thread2(LPVOID  param);
+	HANDLE thread1;
+	HANDLE thread2;
+	void drawdmoea(int i);
+	int cnt;
+	afx_msg void OnTimer(UINT_PTR nIDEvent);
 
+	CTChart chart1;
 };

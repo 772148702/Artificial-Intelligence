@@ -60,6 +60,18 @@
     <ClInclude Include="nsga.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="CTChart.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="CSeries.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="CAspect.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="CPoint3DSeries.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="multi.cpp">
@@ -69,6 +81,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="stdafx.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="CTChart.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

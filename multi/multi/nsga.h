@@ -32,7 +32,7 @@ const double d1 = 1e-8, d2 = 1.0 - 1e-8;
 const int D = 30;
 const int popsize = 200; //种群大小
 const int iteration = 1000; //迭代次数
-double v2[iteration][popsize][3];
+
 
 struct one {
 	double v[D];
@@ -42,28 +42,26 @@ struct one {
 	void init() {
 		for (int i = 0; i < D; ++i) v[i] = randdouble();
 		sp.clear();
-	//	dtlz1(); //这个程序针对计算DTLZ1函数 
+		//	dtlz1(); //这个程序针对计算DTLZ1函数 
 	}
 	void cacul(int id, int demension) {
-		if (id == 0) dtlz1(demension);
-		if (id == 1) dtlz2(demension);
-		if (id == 2) dtlz3(demension);
+
 	}
-	inline void dtlz1(int demension) {
+	inline void dtlz1() {
 		f[0] = v[0];
 		double g = 0.0;
 		for (int i = 1; i < D; ++i) g += v[i];
 		g /= D - 1; g = 9.0 * g + 1;
 		f[1] = g * (1 - sqrt(v[0] / g));
 	}
-	inline void dtlz2(int demension) {
+	inline void dtlz2() {
 		f[0] = v[0];
 		double g = 0.0;
 		for (int i = 1; i < D; ++i) g += v[i];
 		g /= D - 1; g = 9.0 * g + 1;
 		f[1] = g * (1 - (v[0] / g) * (v[0] / g));
 	}
-	inline void dtlz3(int demension) {
+	inline void dtlz3() {
 		f[0] = v[0];
 		double g = 0.0;
 		for (int i = 1; i < D; ++i) g += v[i];
@@ -92,7 +90,7 @@ inline bool isdominated(const one &i, const one &j) {
 		if (dcmp(i.f[0] - j.f[0]) < 0 || dcmp(i.f[1] - j.f[1]) < 0) return true;
 	return false;
 }
-void generate(int id, int demension) {
+void generate() {
 	static bool mark[1005]; //popsize
 	static int temp[1005];
 	memset(mark, false, sizeof(mark));
@@ -229,20 +227,17 @@ struct point {
 inline bool operator < (const point &i, const point &j) {
 	return i.x < j.x;
 }
-void work(int id ,int demension) {
+void work() {
 	//store.clear();
 	freopen("output.txt", "w", stdout);
 	srand(time(0));
 	popinit();
 	for (int iter = 0; iter < iteration; ++iter) {
-		generate(int id, int demension);
+		generate();
 		toposort();
 		select();
-	//	vector<TIndividual> kk;
-		for (int i = 0; i < popsize; i++) {
-			for (int j = 0; j < demension; j++)
-				v2[iter][i][j] = P[i].f[j];
-		}
+		//	vector<TIndividual> kk;
+
 		//store.push_back(kk);
 	}
 	static vector <point> result;
@@ -254,7 +249,7 @@ void work(int id ,int demension) {
 	for (int i = 0; i < D; ++i) printf("x[%d]=%.6lf\n", i, R[j].v[i]);
 }
 /*int main() {
-	
-	work();
-	return 0;
+
+work();
+return 0;
 }*/

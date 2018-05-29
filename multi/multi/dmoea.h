@@ -23,7 +23,7 @@ public:
 	void update_reference(TIndividual &ind);           // update the approximation of ideal point
 	void update_problem(TIndividual &child, int id);   // compare and update the neighboring solutions
 	void evolution();                                  // mating restriction, recombination, mutation, update
-	void run(int sd, int nc, int mg, int rn);          // execute MOEAD
+	void run(int sd, int nc, int mg, int rn, vector<vector <TSOP>>& tmp);          // execute MOEAD
 	void save_front(char savefilename[1024]);          // save the pareto front into files
 
 	vector <TSOP>  population;  // current population         
@@ -214,17 +214,21 @@ void TMOEAD::evolution()
 
 
 
-void TMOEAD::run(int sd, int nc, int mg, int rn)
+void TMOEAD::run(int sd, int nc, int mg, int rn, vector<vector <TSOP>>& tmp)
 {
 
 	// sd: integer number for generating weight vectors
 	// nc: size of neighborhood
 	// mg: maximal number of generations 
+	tmp.clear();
 	niche = nc;
 	init_uniformweight(sd);
 	init_neighbourhood();
 	init_population();
-	for (int gen = 2; gen <= mg; gen++)   evolution();
+	for (int gen = 2; gen <= mg; gen++) {
+		evolution();
+		tmp.push_back(population);
+	}
 	char savefilename[1024];
 	sprintf(savefilename, "ParetoFront/DMOEA_%s_R%d.dat", strTestInstance, rn);
 	save_front(savefilename);

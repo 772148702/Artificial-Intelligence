@@ -14,7 +14,7 @@
 #define new DEBUG_NEW
 #endif
 
-
+vector<vector<TSOP>> vde;
 // 用于应用程序“关于”菜单项的 CAboutDlg 对话框
 
 class CAboutDlg : public CDialogEx
@@ -22,15 +22,15 @@ class CAboutDlg : public CDialogEx
 public:
 	CAboutDlg();
 
-// 对话框数据
+	// 对话框数据
 #ifdef AFX_DESIGN_TIME
 	enum { IDD = IDD_ABOUTBOX };
 #endif
 
-	protected:
+protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV 支持
 
-// 实现
+														// 实现
 protected:
 	DECLARE_MESSAGE_MAP()
 };
@@ -54,6 +54,7 @@ END_MESSAGE_MAP()
 
 CmultiDlg::CmultiDlg(CWnd* pParent /*=NULL*/)
 	: CDialogEx(IDD_MULTI_DIALOG, pParent)
+
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
@@ -61,6 +62,8 @@ CmultiDlg::CmultiDlg(CWnd* pParent /*=NULL*/)
 void CmultiDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
+
+	DDX_Control(pDX, IDC_TCHART1, chart1);
 }
 
 BEGIN_MESSAGE_MAP(CmultiDlg, CDialogEx)
@@ -68,6 +71,7 @@ BEGIN_MESSAGE_MAP(CmultiDlg, CDialogEx)
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
 	ON_BN_CLICKED(IDC_START, &CmultiDlg::OnBnClickedStart)
+	ON_WM_TIMER()
 END_MESSAGE_MAP()
 
 
@@ -102,7 +106,7 @@ BOOL CmultiDlg::OnInitDialog()
 	SetIcon(m_hIcon, TRUE);			// 设置大图标
 	SetIcon(m_hIcon, FALSE);		// 设置小图标
 
-	// TODO: 在此添加额外的初始化代码
+									// TODO: 在此添加额外的初始化代码
 
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
 }
@@ -156,7 +160,7 @@ HCURSOR CmultiDlg::OnQueryDragIcon()
 	return static_cast<HCURSOR>(m_hIcon);
 }
 
-void de_work(int id, int demension) {
+void de_work(int id, int demension, vector<vector<TSOP>>& vde) {
 	strcpy(strFunctionType, "_TCH1");
 
 	int  total_run = 1;         // totoal number of runs
@@ -182,14 +186,14 @@ void de_work(int id, int demension) {
 
 	for (int run = 1; run <= total_run; run++)
 	{
-
+		vde.clear();
 		seed = (seed + 111) % 1235;
 		rnd_uni_init = -(long)seed;
 		TMOEAD  MOEAD;
 
-		if (numObjectives == 3)  MOEAD.run(23, niche, max_gen, run);  //23 -3  popsize 300
+		if (numObjectives == 3)  MOEAD.run(23, niche, max_gen, run, vde);  //23 -3  popsize 300
 
-		if (numObjectives == 2)  MOEAD.run(99, niche, max_gen, run);  //99 -2  popsize 100
+		if (numObjectives == 2)  MOEAD.run(99, niche, max_gen, run, vde);  //99 -2  popsize 100
 
 	}
 
@@ -199,8 +203,64 @@ void de_work(int id, int demension) {
 
 void CmultiDlg::OnBnClickedStart()
 {
-	de_work(0, 2);
-	work();
+	cnt = 0;
+	CmultiDlg * a = this;
+	SetTimer(0, 1000, NULL);
+	thread1 = AfxBeginThread(Thread1, a);
 	// TODO: 在此添加控件通知处理程序代码
 }
 
+UINT CmultiDlg::Thread1(LPVOID  param) {
+
+	CmultiDlg * p = (CmultiDlg *)param;
+
+	de_work(0, 2, vde);
+
+	return 0;
+}
+
+UINT CmultiDlg::Thread2(LPVOID  param) {
+
+
+	CmultiDlg * p = (CmultiDlg *)param;
+
+	return 0;
+}
+void CmultiDlg::drawdmoea(int i) {
+	
+
+	
+	int len = vde[i].size();
+	CSeries lineSeries = (CSeries)chart1.Series(0);
+	lineSeries.Clear();
+	for (int j = 0; j < len; j++) {
+
+
+		if (numObjectives == 3){
+
+			CPoint3DSeries lineSeries = (CPoint3DSeries)chart1.Series(0);
+	       }
+		//lineSeries.AddXYZ(vde[i][j].indiv.y_obj[0], vde[i][j].indiv.y_obj[1], vde[i][j].indiv.y_obj[2], NULL, RGB(0, 0, 255));
+		else {
+
+		
+			lineSeries.AddXY(vde[i][j].indiv.y_obj[0], vde[i][j].indiv.y_obj[1], NULL, RGB(0, 0, 255));
+		}
+		//lineSeries.AddXYZ(vde[i][j].indiv.y_obj[0], vde[i][j].indiv.y_obj[1], 0, NULL, RGB(0, 0, 255));
+	}
+
+}
+
+void CmultiDlg::OnTimer(UINT_PTR nIDEvent)
+{
+	// TODO: 在此添加消息处理程序代码和/或调用默认值
+	
+	if (cnt < vde.size()) {
+		drawdmoea(cnt);
+	}
+	else {
+		KillTimer(1);
+	}
+	cnt = (cnt + 1);
+	CDialogEx::OnTimer(nIDEvent);
+}

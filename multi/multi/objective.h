@@ -108,14 +108,23 @@ void objectives(vector<double> x_var, vector <double> &y_obj)
 	if (!strcmp(strTestInstance, "DTLZ1"))
 	{
 
-		double g = 0;
+		/*double g = 0;
 		for (int n = 2; n<numVariables; n++)
 			g = g + pow(x_var[n] - 0.5, 2) - cos(20 * pi*(x_var[n] - 0.5));
 		g = 100 * (numVariables - 2 + g);
 		y_obj[0] = (1 + g)*x_var[0] * x_var[1];
 		y_obj[1] = (1 + g)*x_var[0] * (1 - x_var[1]);
 		if(numObjectives==3)
-		y_obj[2] = (1 + g)*(1 - x_var[0]);
+		y_obj[2] = (1 + g)*(1 - x_var[0]); */
+
+		/*	y_obj[0] = x_var[0];
+		double g = 0.0;
+		for (int i = 1; i < numVariables; ++i) g += x_var[0];
+		g /= numVariables - 1; g = 9.0 * g + 1;
+		y_obj[1] = g * (1 - sqrt(x_var[0] / g)); */
+		//test
+		y_obj[0] = (0.5 - y_obj[0])*(0.5 - y_obj[0]);
+		y_obj[1] = (0.4 - y_obj[1])*(0.4 - y_obj[1]);
 
 	}
 

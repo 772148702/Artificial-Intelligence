@@ -5,6 +5,7 @@
 #include "stdafx.h"
 #include "multi.h"
 #include "multiDlg.h"
+#include "CTChart.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW

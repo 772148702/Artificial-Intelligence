@@ -182,7 +182,11 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CAspect.h" />
     <ClInclude Include="common.h" />
+    <ClInclude Include="CPoint3DSeries.h" />
+    <ClInclude Include="CSeries.h" />
+    <ClInclude Include="CTChart.h" />
     <ClInclude Include="dmoea.h" />
     <ClInclude Include="global.h" />
     <ClInclude Include="individual.h" />
@@ -198,6 +202,7 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="CTChart.cpp" />
     <ClCompile Include="multi.cpp" />
     <ClCompile Include="multiDlg.cpp" />
     <ClCompile Include="stdafx.cpp">
@@ -219,4 +224,9 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
+  <ProjectExtensions>
+    <VisualStudio>
+      <UserProperties _x007B_B6C10489-FB89-11D4-93C9-006008A7EED4_x007D_="CTChart" />
+    </VisualStudio>
+  </ProjectExtensions>
 </Project>
