@@ -69,6 +69,8 @@ void CMFCTeeChartDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_TCHART1, m_TChart);
+	DDX_Control(pDX, IDC_COMBO_FUN, m_cbxFUN);
+	DDX_Control(pDX, IDC_COMBO_DIM, m_cbxDIM);
 }
 
 BEGIN_MESSAGE_MAP(CMFCTeeChartDlg, CDialogEx)
@@ -184,6 +186,26 @@ UINT CMFCTeeChartDlg::Thread2(LPVOID  param) {
 
 	return 0;
 }
+
+//界面接口函数
+void CMFCTeeChartDlg::Get_Config() {  //取得函数，维数，代数
+	int nIndex = m_cbxFUN.GetCurSel();
+	CString strFUN;
+	m_cbxFUN.GetLBText(nIndex, strFUN);
+	CString strDIM;
+	nIndex = m_cbxDIM.GetCurSel();
+	m_cbxDIM.GetLBText(nIndex, strDIM);
+	fun_id = _ttoi(strFUN);  //函数id
+	dim = _ttoi(strDIM);  //维数
+	MessageBox(strDIM);
+	MessageBox(strFUN);
+	CString strIT;
+	GetDlgItemText(IDC_IT, strIT);
+	SetDlgItemText(IDC_IT, strIT);
+	iteration = _ttoi(strIT);  //代数
+	UpdateData(FALSE);
+}
+
 void CMFCTeeChartDlg::drawdmoea(int i) {
 	int len = vde[i].size();
 	//lineSeries.Clear();
@@ -227,8 +249,7 @@ void de_work(int id, int demension, vector<vector<TSOP>>& vde) {
 	int  niche = 20;        // neighborhood size
 
 	char *instances[] = {
-		//"ZDT1","ZDT2","ZDT3","ZDT4","ZDT6","DTLZ1","DTLZ2"
-		"DTLZ1","DTLZ2","DTLZ3"
+		"DTLZ1","DTLZ2","DTLZ3", "DTLZ4"
 	}; // names of test instances
 	int  nvars[] = {
 		10,10,10,10
@@ -261,9 +282,11 @@ void de_work(int id, int demension, vector<vector<TSOP>>& vde) {
 }
 void CMFCTeeChartDlg::OnClickedDraw()
 {
+	Get_Config();
+
 	cnt = 0;
 	CMFCTeeChartDlg * a = this;
-
+	//Get_Config();
 
 	SetTimer(0, 1000, NULL);
 	thread1 = AfxBeginThread(Thread1, a);

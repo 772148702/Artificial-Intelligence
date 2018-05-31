@@ -5,6 +5,7 @@
 #pragma once
 //#include "tchart1.h"
 #include "TeeChar\tchart.h"
+#include "afxwin.h"
 
 // CMFCTeeChartDlg ¶Ô»°¿ò
 class CMFCTeeChartDlg : public CDialogEx
@@ -37,10 +38,16 @@ public:
 	VARIANT SeriesIndex;
 	static UINT Thread1(LPVOID  param);
 	static UINT Thread2(LPVOID  param);
+	void Get_Config();
 	HANDLE thread1;
 	HANDLE thread2;
 	void drawdmoea(int i);
 	int cnt;
 	
 	afx_msg void OnTimer(UINT_PTR nIDEvent);
+	CComboBox m_cbxFUN;
+	CComboBox m_cbxDIM;
+	int fun_id = 0;
+	int dim = 0;
+	int iteration = 1000;
 };
