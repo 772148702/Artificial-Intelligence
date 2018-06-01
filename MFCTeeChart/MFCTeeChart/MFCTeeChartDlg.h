@@ -42,12 +42,17 @@ public:
 	HANDLE thread1;
 	HANDLE thread2;
 	void drawdmoea(int i);
+	void  drawnsga(int i);
 	int cnt;
 	
 	afx_msg void OnTimer(UINT_PTR nIDEvent);
 	CComboBox m_cbxFUN;
 	CComboBox m_cbxDIM;
-	int fun_id = 0;
-	int dim = 0;
-	int iteration = 1000;
+	 int fun_id ;
+	 int dim ;
+	 int iteration ;
+	 int algoid;
+	afx_msg void OnBnClickedCle();
+
+	CComboBox algo;
 };

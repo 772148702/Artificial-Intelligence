@@ -71,6 +71,7 @@ void CMFCTeeChartDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_TCHART1, m_TChart);
 	DDX_Control(pDX, IDC_COMBO_FUN, m_cbxFUN);
 	DDX_Control(pDX, IDC_COMBO_DIM, m_cbxDIM);
+	DDX_Control(pDX, IDC_COMBO2, algo);
 }
 
 BEGIN_MESSAGE_MAP(CMFCTeeChartDlg, CDialogEx)
@@ -79,6 +80,8 @@ BEGIN_MESSAGE_MAP(CMFCTeeChartDlg, CDialogEx)
 	ON_WM_QUERYDRAGICON()
 	ON_BN_CLICKED(IDC_DRAW, &CMFCTeeChartDlg::OnClickedDraw)
 	ON_WM_TIMER()
+	ON_BN_CLICKED(IDC_CLE, &CMFCTeeChartDlg::OnBnClickedCle)
+	
 END_MESSAGE_MAP()
 
 
@@ -173,8 +176,11 @@ HCURSOR CMFCTeeChartDlg::OnQueryDragIcon()
 UINT CMFCTeeChartDlg::Thread1(LPVOID  param) {
 
 	CMFCTeeChartDlg * p = (CMFCTeeChartDlg *)param;
-
-	de_work(0, 3, vde);
+	
+	if (p->algoid == 0)
+		de_work(p->fun_id, p->dim, vde);
+	else
+		work(p->fun_id, p->dim, vsga);
 
 	return 0;
 }
@@ -193,12 +199,16 @@ void CMFCTeeChartDlg::Get_Config() {  //取得函数，维数，代数
 	CString strFUN;
 	m_cbxFUN.GetLBText(nIndex, strFUN);
 	CString strDIM;
-	nIndex = m_cbxDIM.GetCurSel();
-	m_cbxDIM.GetLBText(nIndex, strDIM);
-	fun_id = _ttoi(strFUN);  //函数id
-	dim = _ttoi(strDIM);  //维数
-	MessageBox(strDIM);
-	MessageBox(strFUN);
+	dim = m_cbxDIM.GetCurSel()+2;
+
+	fun_id = nIndex;
+	//fun_id = _ttoi(strFUN);  //函数id
+	//dim = _ttoi(strDIM);  //维数
+	numObjectives = dim;
+	//MessageBox(strDIM);
+	//MessageBox(strFUN);
+
+	algoid = algo.GetCurSel();
 	CString strIT;
 	GetDlgItemText(IDC_IT, strIT);
 	SetDlgItemText(IDC_IT, strIT);
@@ -262,7 +272,7 @@ void de_work(int id, int demension, vector<vector<TSOP>>& vde) {
 
 	strcpy(strTestInstance, instances[id]);
 	numVariables = nvars[id];
-	numObjectives = demension;
+	
 
 	for (int run = 1; run <= total_run; run++)
 	{
@@ -282,33 +292,98 @@ void de_work(int id, int demension, vector<vector<TSOP>>& vde) {
 }
 void CMFCTeeChartDlg::OnClickedDraw()
 {
-	Get_Config();
+	//Get_Config();
 
 	cnt = 0;
 	CMFCTeeChartDlg * a = this;
-	//Get_Config();
+	numObjectives = 3;
+	fun_id = 2;
+	algoid = 1;
+	Get_Config();
 
-	SetTimer(0, 1000, NULL);
 	thread1 = AfxBeginThread(Thread1, a);
-	// TODO: 在此添加控件通知处理程序代码
-	// TODO: 在此添加控件通知处理程序代码
+
+	SetTimer(0, 50, NULL);
 	
+	// TODO: 在此添加控件通知处理程序代码
+	// TODO: 在此添加控件通知处理程序代码
+
 
 }
+void  CMFCTeeChartDlg::drawnsga(int i) {
+	int len = vsga[i].size();
+	//lineSeries.Clear();
+	SeriesIndex.vt = VT_INT;
+	m_TChart.Series(0).Clear();
 
+
+
+	if (numObjectives == 3) {
+		m_TChart.GetAspect().SetView3D(TRUE);
+		for (int j = 0; j < len; j++)
+			m_TChart.Series(0).GetAsPoint3D().AddXYZ((vsga[i][j].f[0]), vsga[i][j].f[1], vsga[i][j].f[2], NULL, RGB(255, 255, 255));
+		//最优解还没找到数据
+		//for (int i = 0; i < 10; i++)
+		//m_TChart.Series(1).GetAsPoint3D().AddXYZ(i + 2, i, i, NULL, RGB(255, 255, 255));
+
+		//	CAspect  tmp = chart1.get_Aspect();
+		//	tmp.put_View3D(TRUE);
+
+		//	CPoint3DSeries0  tt(chart1.Series(0));
+		//chart1.AddSeries((long)tt);
+		//	tt.AddXYZ((vde[i][j].indiv.y_obj[0]),( vde[i][j].indiv.y_obj[1]), (vde[i][j].indiv.y_obj[2]), NULL, RGB(255, 255, 0));
+		//lineSeries.AddXYZ(vde[i][j].indiv.y_obj[0], vde[i][j].indiv.y_obj[1], vde[i][j].indiv.y_obj[2], NULL, RGB(0, 0, 255));
+	}
+
+	else {
+		m_TChart.GetAspect().SetView3D(FALSE);
+		for (int j = 0; j < len; j++)
+			m_TChart.Series(0).AddXY((vsga[i][j].f[0]), vsga[i][j].f[1], NULL, RGB(255, 255, 255));
+
+	}
+}
 
 
 
 void CMFCTeeChartDlg::OnTimer(UINT_PTR nIDEvent)
 {
 	// TODO: 在此添加消息处理程序代码和/或调用默认值
-	if (cnt < vde.size()) {
-		drawdmoea(cnt);
+
+	if (algoid == 0) {
+		if (cnt < vde.size()) {
+			drawdmoea(cnt);
+			cnt = (cnt + 10);
+		}
+
+		else {
+			KillTimer(0);
+		}
 	}
 	else {
-		KillTimer(1);
+		if (cnt < vsga.size()) {
+			drawnsga(cnt);
+			cnt = (cnt + 10);
+       }
+
+		else {
+			if(isNsgaEnd)
+			KillTimer(0);
+		}
 	}
-	cnt = (cnt + 10);
+
+	
 	CDialogEx::OnTimer(nIDEvent);
 	
 }
+
+
+void CMFCTeeChartDlg::OnBnClickedCle()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	m_TChart.Series(0).Clear();
+	m_TChart.Series(1).Clear();
+	KillTimer(0);
+}
+
+
+

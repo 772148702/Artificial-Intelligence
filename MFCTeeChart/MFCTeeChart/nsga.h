@@ -29,6 +29,7 @@ const double d1 = 1e-8, d2 = 1.0 - 1e-8;
 const int D = 30;
 int popsize = 200; //种群大小
 int iteration = 1000; //迭代次数
+bool isNsgaEnd = false;
 
 struct one {
 	double v[D];
@@ -41,14 +42,103 @@ struct one {
 		calcf(id, demension); //这个程序针对计算DTLZ1函数 
 	}
 	inline void calcf(int id, int demension) {
-		if (id == 1) {
-		}
-		else
-			if (id == 2) {
+		if (id == 0) {
+			if (demension == 3) {
+				double g = 0;
+				for (int n = 2; n < D; n++)
+					g = g + pow(v[n] - 0.5, 2) - cos(20 * pi*(v[n] - 0.5));
+				g = 100 * (D - 2 + g);
+				f[0] = 0.5*(1 + g)*v[0] * v[1];
+				f[1] = 0.5*(1 + g)*v[0] * (1 - v[1]);
+
+				f[2] = 0.5*(1 + g)*(1 - v[0]);
 			}
-			else
-				if (id == 3) {
+			else {
+				double g = 0;
+				for (int n = 1; n < D; n++)
+					g = g + pow(v[n] - 0.5, 2) - cos(20 * pi*(v[n] - 0.5));
+				g = 100 * (D - 1 + g);
+				f[0] = 0.5*(1 + g)*v[0];
+				f[1] = 0.5*(1 + g)* (1 - v[0]);
+
+
+			}
+		}
+		if (id == 1) {
+			if (demension == 3) {
+				double g = 0;
+
+				for (int n = 2; n < D; n++)
+				{
+					double x = (v[n] - 0.5);
+					g = g + x*x;;
 				}
+				f[0] = (1 + g)*cos(v[0] * pi / 2)*cos(v[1] * pi / 2);
+				f[1] = (1 + g)*cos(v[0] * pi / 2)*sin(v[1] * pi / 2);
+				f[2] = (1 + g)*sin(v[0] * pi / 2);
+			}
+			else {
+				double g = 0;
+
+				for (int n = 1; n < D; n++)
+				{
+					double x = (v[n] - 0.5);
+					g = g + x*x;;
+				}
+				f[0] = (1 + g)*cos(v[0] * pi / 2);
+				f[1] = (1 + g)*sin(v[0] * pi / 2);
+
+			}
+		}
+		if (id == 2) {
+			if (demension == 3) {
+				double g = 0;
+				for (int n = 2; n < D; n++)
+					g = g + pow(v[n] - 0.5, 2) - cos(20 * pi*(v[n] - 0.5));
+				g = 100 * (D - 2 + g);
+				f[0] = (1 + g)*cos(v[0] * pi / 2)*cos(v[1] * pi / 2);
+				f[1] = (1 + g)*cos(v[0] * pi / 2)*sin(v[1] * pi / 2);
+
+				f[2] = (1 + g)*sin(v[0] * pi / 2);
+			}
+			else {
+				double g = 0;
+				for (int n = 1; n < D; n++)
+					g = g + pow(v[n] - 0.5, 2) - cos(20 * pi*(v[n] - 0.5));
+				g = 100 * (D - 1 + g);
+				f[0] = (1 + g)*cos(v[0] * pi / 2);
+				f[1] = (1 + g)*sin(v[0] * pi / 2);
+
+
+			}
+		}
+		if (id == 3) {
+			if (demension == 3) {
+				double g = 0;
+				double xx = (v[0] + v[1]) / 2.0;
+				for (int n = 2; n < D; n++)
+				{
+					double x = (v[n] - 0.5);
+					g = g + x*x;;
+				}
+				f[0] = (1 + g)*cos(pow(v[0], pi) * pi / 2)*cos(pow(v[1], pi) * pi / 2);
+				f[1] = (1 + g)*cos(pow(v[0], pi) * pi / 2)*sin(pow(v[1], pi) * pi / 2);
+
+				f[2] = (1 + g)*sin(pow(v[0], pi) * pi / 2);
+			}
+			else {
+				double g = 0;
+				double xx = (v[0] + v[1]) / 2.0;
+				for (int n = 1; n < D; n++)
+				{
+					double x = (v[n] - 0.5);
+					g = g + x*x;;
+				}
+				f[0] = (1 + g)*cos(pow(v[0], pi) * pi / 2);
+				f[1] = (1 + g)*sin(pow(v[0], pi) * pi / 2);
+
+			}
+		}
 	}
 };
 
@@ -217,15 +307,16 @@ void select(int demension) {
 void work(int id, int demension,vector<vector<one>>& vsga) {
 	srand(time(0));
 	vsga.clear();
+	isNsgaEnd = false;
 	popinit(id, demension);
 	for (int iter = 0; iter < iteration; ++iter) {
 		generate(id, demension);
 		toposort(demension);
 		select(demension);
-		vector<one> tmp;
-		for (int i = 0; i < popsize; i++) tmp.push_back(P[i]);
-		vsga.push_back(tmp);
+
+		vsga.push_back(P);
 	}
+	isNsgaEnd = true;
 }
 int main() {
 	freopen("output.txt", "w", stdout);
