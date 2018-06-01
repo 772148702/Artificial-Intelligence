@@ -26,7 +26,7 @@ inline int randint(const int &a, const int &b) {
 	return ret;
 }
 const double d1 = 1e-8, d2 = 1.0 - 1e-8;
-const int D = 30;
+const int D = 10;
 int popsize = 200; //种群大小
 int iteration = 1000; //迭代次数
 bool isNsgaEnd = false;
@@ -307,7 +307,7 @@ void select(int demension) {
 void work(int id, int demension,vector<vector<one>>& vsga) {
 	srand(time(0));
 	vsga.clear();
-	isNsgaEnd = false;
+	
 	popinit(id, demension);
 	for (int iter = 0; iter < iteration; ++iter) {
 		generate(id, demension);
@@ -316,7 +316,7 @@ void work(int id, int demension,vector<vector<one>>& vsga) {
 
 		vsga.push_back(P);
 	}
-	isNsgaEnd = true;
+
 }
 int main() {
 	freopen("output.txt", "w", stdout);

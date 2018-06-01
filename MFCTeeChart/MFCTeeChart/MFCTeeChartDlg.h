@@ -55,4 +55,5 @@ public:
 	afx_msg void OnBnClickedCle();
 
 	CComboBox algo;
+	CComboBox Speed;
 };

@@ -72,6 +72,7 @@ void CMFCTeeChartDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_COMBO_FUN, m_cbxFUN);
 	DDX_Control(pDX, IDC_COMBO_DIM, m_cbxDIM);
 	DDX_Control(pDX, IDC_COMBO2, algo);
+	DDX_Control(pDX, IDC_SPEED, Speed);
 }
 
 BEGIN_MESSAGE_MAP(CMFCTeeChartDlg, CDialogEx)
@@ -255,7 +256,7 @@ void de_work(int id, int demension, vector<vector<TSOP>>& vde) {
 	strcpy(strFunctionType, "_TCH1");
 
 	int  total_run = 1;         // totoal number of runs
-	int  max_gen = 250;       // maximal number of generations
+	int  max_gen = 1000;       // maximal number of generations
 	int  niche = 20;        // neighborhood size
 
 	char *instances[] = {
@@ -302,8 +303,18 @@ void CMFCTeeChartDlg::OnClickedDraw()
 	Get_Config();
 
 	thread1 = AfxBeginThread(Thread1, a);
-
-	SetTimer(0, 50, NULL);
+	int speed;
+	int lo = Speed.GetCurSel();
+	if (lo == 1) {
+		speed = 400;
+	} 
+	if (lo == 2) {
+		speed = 300;
+	}
+	if (lo == 3) {
+		speed = 200;
+	}
+	SetTimer(0, speed, NULL);
 	
 	// TODO: 在此添加控件通知处理程序代码
 	// TODO: 在此添加控件通知处理程序代码
@@ -366,7 +377,7 @@ void CMFCTeeChartDlg::OnTimer(UINT_PTR nIDEvent)
        }
 
 		else {
-			if(isNsgaEnd)
+		
 			KillTimer(0);
 		}
 	}
