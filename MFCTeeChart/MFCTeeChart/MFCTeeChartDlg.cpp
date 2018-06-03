@@ -264,7 +264,7 @@ void de_work(int id, int demension, vector<vector<TSOP>>& vde) {
 	strcpy(strFunctionType, "_TCH1");
 
 	int  total_run = 1;         // totoal number of runs
-	int  max_gen = 1000;       // maximal number of generations
+	int  max_gen = 3000;       // maximal number of generations
 	int  niche = 20;        // neighborhood size
 
 	char *instances[] = {

@@ -27,8 +27,8 @@ inline int randint(const int &a, const int &b) {
 }
 const double d1 = 1e-8, d2 = 1.0 - 1e-8;
 const int D = 10;
-int popsize = 200; //种群大小
-int iteration = 1000; //迭代次数
+int popsize = 500; //种群大小
+int iteration = 3000; //迭代次数
 bool isNsgaEnd = false;
 
 struct one {
@@ -317,8 +317,12 @@ void work(int id, int demension,vector<vector<one>>& vsga) {
 		generate(id, demension);
 		toposort(demension);
 		select(demension);
-
-		vsga.push_back(P);
+		vector<one> tmp;
+		int len = F[0].size();
+		for (int i = 0; i < len; i++) {
+			tmp.push_back(R[F[0][i]]);
+		}
+		vsga.push_back(tmp);
 	}
 
 }
