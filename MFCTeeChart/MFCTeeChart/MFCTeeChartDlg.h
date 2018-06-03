@@ -6,6 +6,7 @@
 //#include "tchart1.h"
 #include "TeeChar\tchart.h"
 #include "afxwin.h"
+#include "tchart1.h"
 
 // CMFCTeeChartDlg ¶Ô»°¿ò
 class CMFCTeeChartDlg : public CDialogEx
@@ -44,6 +45,7 @@ public:
 	void drawdmoea(int i);
 	void  drawnsga(int i);
 	int cnt;
+	void drawans();
 	
 	afx_msg void OnTimer(UINT_PTR nIDEvent);
 	CComboBox m_cbxFUN;
@@ -56,4 +58,5 @@ public:
 
 	CComboBox algo;
 	CComboBox Speed;
+	CTChart chart2;
 };

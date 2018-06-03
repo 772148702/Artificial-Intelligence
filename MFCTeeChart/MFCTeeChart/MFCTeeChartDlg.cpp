@@ -12,6 +12,7 @@
 #include "TeeChar\series.h"
 #include "TeeChar\point3dseries.h"
 #include "TeeChar\pointseries.h"
+#include "TeeChar\surfaceseries.h"
 #include "global.h"
 #include "dmoea.h"
 #include "nsga.h"
@@ -61,6 +62,7 @@ END_MESSAGE_MAP()
 CMFCTeeChartDlg::CMFCTeeChartDlg(CWnd* pParent /*=NULL*/)
 	: CDialogEx(CMFCTeeChartDlg::IDD, pParent)
 //	, m_TChart(0)
+
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
@@ -73,6 +75,7 @@ void CMFCTeeChartDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_COMBO_DIM, m_cbxDIM);
 	DDX_Control(pDX, IDC_COMBO2, algo);
 	DDX_Control(pDX, IDC_SPEED, Speed);
+	DDX_Control(pDX, IDC_TCHART2, chart2);
 }
 
 BEGIN_MESSAGE_MAP(CMFCTeeChartDlg, CDialogEx)
@@ -178,10 +181,15 @@ UINT CMFCTeeChartDlg::Thread1(LPVOID  param) {
 
 	CMFCTeeChartDlg * p = (CMFCTeeChartDlg *)param;
 	
-	if (p->algoid == 0)
+	if (p->algoid == 0) {
+		vde.clear();
 		de_work(p->fun_id, p->dim, vde);
-	else
+	}
+	else {
+		vsga.clear();
+		isNsgaEnd = false;
 		work(p->fun_id, p->dim, vsga);
+	}
 
 	return 0;
 }
@@ -190,7 +198,7 @@ UINT CMFCTeeChartDlg::Thread2(LPVOID  param) {
 
 
 	CMFCTeeChartDlg * p = (CMFCTeeChartDlg *)param;
-
+	p->drawans();
 	return 0;
 }
 
@@ -301,9 +309,12 @@ void CMFCTeeChartDlg::OnClickedDraw()
 	fun_id = 2;
 	algoid = 1;
 	Get_Config();
-
+	vsga.clear();
+	vde.clear();
 	thread1 = AfxBeginThread(Thread1, a);
-	int speed;
+	thread1 = AfxBeginThread(Thread2, a);
+	int speed=200;
+	isNsgaEnd = false;
 	int lo = Speed.GetCurSel();
 	if (lo == 1) {
 		speed = 400;
@@ -315,19 +326,73 @@ void CMFCTeeChartDlg::OnClickedDraw()
 		speed = 200;
 	}
 	SetTimer(0, speed, NULL);
+
 	
 	// TODO: 在此添加控件通知处理程序代码
 	// TODO: 在此添加控件通知处理程序代码
 
 
 }
+
+void CMFCTeeChartDlg::drawans() {
+	chart2.Series(0).Clear();
+	chart2.Series(1).Clear();
+	if (numObjectives == 3) {
+		chart2.GetAspect().SetView3D(TRUE);
+		if (fun_id == 0) {
+			int nummm = 200;
+			double en = 0.5 / nummm;
+			for (int t = 0; t <= nummm; t++) {
+				for (int k = 0; k <= nummm; k++) {
+					
+					double x = 0 + en*t;
+					double y = 0 + en*k;
+					if(0.5 - x - y>=0&& 0.5 - x - y<=0.5)
+					chart2.Series(1).GetAsPoint3D().AddXYZ(x, y, 0.5 - x - y,NULL,RGB(255,255,255));
+				}
+			}
+		}
+		else {
+			int nummm = 200;
+			for (int t = 0; t < nummm; t++) {
+				for (int k = 0; k < nummm; k++) {
+			
+					double en = pi/2 / nummm;
+					double x = 0 + en*t;
+					double y = 0 + en*k;
+					chart2.Series(1).GetAsPoint3D().AddXYZ(cos(x)*cos(y), sin(x)*cos(y), sin(y),NULL, RGB(255, 255, 255));
+				}
+			}
+
+		}
+	}
+	else {
+		chart2.GetAspect().SetView3D(FALSE);
+
+		if (fun_id == 0) {
+			for (int t = 0; t < 200; t++) {
+				double x = 0 + 0.5 / (200)*t;
+				chart2.Series(0).AddXY(x, 0.5 - x, NULL, RGB(255, 255, 255));
+			}
+		}
+		else {
+			for (int t = 0; t < 200; t++) {
+				double x = 0 + pi/2/ (200)*t;
+				chart2.Series(0).AddXY(cos(x), sin(x), NULL, RGB(255, 255, 255));
+
+			}
+		}
+
+	}
+
+}
 void  CMFCTeeChartDlg::drawnsga(int i) {
 	int len = vsga[i].size();
-	//lineSeries.Clear();
+	
 	SeriesIndex.vt = VT_INT;
 	m_TChart.Series(0).Clear();
 
-
+	m_TChart.Series(1).Clear();
 
 	if (numObjectives == 3) {
 		m_TChart.GetAspect().SetView3D(TRUE);
@@ -393,6 +458,9 @@ void CMFCTeeChartDlg::OnBnClickedCle()
 	// TODO: 在此添加控件通知处理程序代码
 	m_TChart.Series(0).Clear();
 	m_TChart.Series(1).Clear();
+	if(algoid==1) {
+		isNsgaEnd = true;
+	}
 	KillTimer(0);
 }
 

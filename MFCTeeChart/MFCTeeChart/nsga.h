@@ -307,9 +307,13 @@ void select(int demension) {
 void work(int id, int demension,vector<vector<one>>& vsga) {
 	srand(time(0));
 	vsga.clear();
-	
+	P.clear();
+	Q.clear();
+	R.clear();
+	for (int i = 0; i < 1005; i++) F[i].clear();
 	popinit(id, demension);
 	for (int iter = 0; iter < iteration; ++iter) {
+		if (isNsgaEnd == true) return;
 		generate(id, demension);
 		toposort(demension);
 		select(demension);
