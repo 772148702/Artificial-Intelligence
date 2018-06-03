@@ -28,7 +28,6 @@ inline int randint(const int &a, const int &b) {
 const double d1 = 1e-8, d2 = 1.0 - 1e-8;
 const int D = 10;
 int popsize = 500; //种群大小
-int iteration = 3000; //迭代次数
 bool isNsgaEnd = false;
 
 struct one {
@@ -304,7 +303,7 @@ void select(int demension) {
 		if (cnt == popsize) break;
 	}
 }
-void work(int id, int demension,vector<vector<one>>& vsga) {
+void work(int id, int demension, int iteration, vector<vector<one>>& vsga) {
 	srand(time(0));
 	vsga.clear();
 	P.clear();
@@ -327,7 +326,6 @@ void work(int id, int demension,vector<vector<one>>& vsga) {
 
 }
 int main() {
-	freopen("output.txt", "w", stdout);
 
 	return 0;
 }

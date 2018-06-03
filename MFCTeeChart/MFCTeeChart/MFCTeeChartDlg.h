@@ -43,20 +43,19 @@ public:
 	HANDLE thread1;
 	HANDLE thread2;
 	void drawdmoea(int i);
-	void  drawnsga(int i);
+	void drawnsga(int i);
 	int cnt;
 	void drawans();
 	
 	afx_msg void OnTimer(UINT_PTR nIDEvent);
 	CComboBox m_cbxFUN;
 	CComboBox m_cbxDIM;
-	 int fun_id ;
-	 int dim ;
-	 int iteration ;
-	 int algoid;
+	int fun_id ;
+	int dim ;
+	int iteration = 3000 ;
+	int algoid;
 	afx_msg void OnBnClickedCle();
 
 	CComboBox algo;
 	CComboBox Speed;
-	CTChart chart2;
 };

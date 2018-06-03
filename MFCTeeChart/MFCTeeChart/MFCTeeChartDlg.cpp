@@ -24,7 +24,7 @@ vector<vector<one>> vsga;
 
 
 // 用于应用程序“关于”菜单项的 CAboutDlg 对话框
-void de_work(int id, int demension, vector<vector<TSOP>>& vde);
+void de_work(int id, int demension, int it, vector<vector<TSOP>>& vde);
 class CAboutDlg : public CDialogEx
 {
 public:
@@ -75,7 +75,6 @@ void CMFCTeeChartDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_COMBO_DIM, m_cbxDIM);
 	DDX_Control(pDX, IDC_COMBO2, algo);
 	DDX_Control(pDX, IDC_SPEED, Speed);
-	DDX_Control(pDX, IDC_TCHART2, chart2);
 }
 
 BEGIN_MESSAGE_MAP(CMFCTeeChartDlg, CDialogEx)
@@ -121,8 +120,11 @@ BOOL CMFCTeeChartDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// 设置小图标
 
 	// TODO: 在此添加额外的初始化代码
-	SetDlgItemText(IDC_IT, L"1000");
-	Speed.SetCurSel(0);
+	SetDlgItemText(IDC_IT, L"3000");
+	Speed.SetCurSel(1);
+	algo.SetCurSel(0);
+	m_cbxFUN.SetCurSel(1);
+	m_cbxDIM.SetCurSel(1);
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
 }
 
@@ -177,31 +179,69 @@ HCURSOR CMFCTeeChartDlg::OnQueryDragIcon()
 
 
 
+void de_work(int id, int demension, int it, vector<vector<TSOP>>& vde) {
+	strcpy(strFunctionType, "_TCH1");
 
+	int  total_run = 1;         // totoal number of runs
+	int  max_gen = it;       // maximal number of generations
+	int  niche = 20;        // neighborhood size
+
+	char *instances[] = {
+		"DTLZ1","DTLZ2","DTLZ3", "DTLZ4"
+	}; // names of test instances
+	int  nvars[] = {
+		10,10,10,10
+	};                         // number of variables
+	int  nobjs[] = {
+		2, 2, 2, 2, 2, 3, 3
+	};                                // number of objectives
+
+
+
+	strcpy(strTestInstance, instances[id]);
+	numVariables = nvars[id];
+
+
+	for (int run = 1; run <= total_run; run++)
+	{
+
+		seed = (seed + 111) % 1235;
+		rnd_uni_init = -(long)seed;
+		TMOEAD  MOEAD;
+
+		if (numObjectives == 3)  MOEAD.run(23, niche, max_gen, run, vde);  //23 -3  popsize 300
+
+		if (numObjectives == 2)  MOEAD.run(99, niche, max_gen, run, vde);  //99 -2  popsize 100
+
+	}
+
+
+	return;
+}
 UINT CMFCTeeChartDlg::Thread1(LPVOID  param) {
 
 	CMFCTeeChartDlg * p = (CMFCTeeChartDlg *)param;
 	
 	if (p->algoid == 0) {
 		vde.clear();
-		de_work(p->fun_id, p->dim, vde);
+		de_work(p->fun_id, p->dim, p->iteration, vde);
 	}
 	else {
 		vsga.clear();
 		isNsgaEnd = false;
-		work(p->fun_id, p->dim, vsga);
+		work(p->fun_id, p->dim, p->iteration, vsga);
 	}
 
 	return 0;
 }
 
-UINT CMFCTeeChartDlg::Thread2(LPVOID  param) {
+/*UINT CMFCTeeChartDlg::Thread2(LPVOID  param) {
 
 
 	CMFCTeeChartDlg * p = (CMFCTeeChartDlg *)param;
 	p->drawans();
 	return 0;
-}
+}*/
 
 //界面接口函数
 void CMFCTeeChartDlg::Get_Config() {  //取得函数，维数，代数
@@ -228,7 +268,6 @@ void CMFCTeeChartDlg::Get_Config() {  //取得函数，维数，代数
 
 void CMFCTeeChartDlg::drawdmoea(int i) {
 	int len = vde[i].size();
-	//lineSeries.Clear();
 	SeriesIndex.vt = VT_INT;
 	m_TChart.Series(0).Clear();
 	
@@ -237,18 +276,8 @@ void CMFCTeeChartDlg::drawdmoea(int i) {
 		if (numObjectives == 3) {
 			m_TChart.GetAspect().SetView3D(TRUE);
 			for (int j = 0; j < len; j++) 
-				m_TChart.Series(0).GetAsPoint3D().AddXYZ((vde[i][j].indiv.y_obj[0]), (vde[i][j].indiv.y_obj[1]), (vde[i][j].indiv.y_obj[2]), NULL, RGB(255, 255, 255));
-			//最优解还没找到数据
-			//for (int i = 0; i < 10; i++)
-				//m_TChart.Series(1).GetAsPoint3D().AddXYZ(i + 2, i, i, NULL, RGB(255, 255, 255));
-
-			//	CAspect  tmp = chart1.get_Aspect();
-			//	tmp.put_View3D(TRUE);
-
-			//	CPoint3DSeries0  tt(chart1.Series(0));
-			//chart1.AddSeries((long)tt);
-			//	tt.AddXYZ((vde[i][j].indiv.y_obj[0]),( vde[i][j].indiv.y_obj[1]), (vde[i][j].indiv.y_obj[2]), NULL, RGB(255, 255, 0));
-			//lineSeries.AddXYZ(vde[i][j].indiv.y_obj[0], vde[i][j].indiv.y_obj[1], vde[i][j].indiv.y_obj[2], NULL, RGB(0, 0, 255));
+				m_TChart.Series(0).GetAsPoint3D().AddXYZ((vde[i][j].indiv.y_obj[0]), (vde[i][j].indiv.y_obj[1]), 
+				(vde[i][j].indiv.y_obj[2]), NULL, RGB(255, 255, 255));
 		}
 
 		else {
@@ -257,48 +286,7 @@ void CMFCTeeChartDlg::drawdmoea(int i) {
 			 m_TChart.Series(0).AddXY((vde[i][j].indiv.y_obj[0]), (vde[i][j].indiv.y_obj[1]), NULL ,RGB(255, 255, 255));
 			
 		}
-		//lineSeries.AddXYZ(vde[i][j].indiv.y_obj[0], vde[i][j].indiv.y_obj[1], 0, NULL, RGB(0, 0, 255));
-	
 
-}
-void de_work(int id, int demension, vector<vector<TSOP>>& vde) {
-	strcpy(strFunctionType, "_TCH1");
-
-	int  total_run = 1;         // totoal number of runs
-	int  max_gen = 3000;       // maximal number of generations
-	int  niche = 20;        // neighborhood size
-
-	char *instances[] = {
-		"DTLZ1","DTLZ2","DTLZ3", "DTLZ4"
-	}; // names of test instances
-	int  nvars[] = {
-		10,10,10,10
-	};                         // number of variables
-	int  nobjs[] = {
-		2, 2, 2, 2, 2, 3, 3
-	};                                // number of objectives
-
-
-
-	strcpy(strTestInstance, instances[id]);
-	numVariables = nvars[id];
-	
-
-	for (int run = 1; run <= total_run; run++)
-	{
-
-		seed = (seed + 111) % 1235;
-		rnd_uni_init = -(long)seed;
-		TMOEAD  MOEAD;
-
-		if (numObjectives == 3)  MOEAD.run(23, niche, max_gen, run, vde);  //23 -3  popsize 300
-
-		if (numObjectives == 2)  MOEAD.run(99, niche, max_gen, run, vde);  //99 -2  popsize 100
-
-	}
-
-
-	return;
 }
 void CMFCTeeChartDlg::OnClickedDraw()
 {
@@ -313,18 +301,18 @@ void CMFCTeeChartDlg::OnClickedDraw()
 	vsga.clear();
 	vde.clear();
 	thread1 = AfxBeginThread(Thread1, a);
-	thread1 = AfxBeginThread(Thread2, a);
+	//thread2 = AfxBeginThread(Thread2, a);
 	int speed=200;
 	isNsgaEnd = false;
 	int lo = Speed.GetCurSel();
 	if (lo == 1) {
-		speed = 400;
+		speed = 200;
 	} 
 	if (lo == 2) {
-		speed = 300;
+		speed = 50;
 	}
 	if (lo == 3) {
-		speed = 200;
+		speed = 10;
 	}
 	SetTimer(0, speed, NULL);
 
@@ -335,21 +323,19 @@ void CMFCTeeChartDlg::OnClickedDraw()
 
 }
 
-void CMFCTeeChartDlg::drawans() {
-	chart2.Series(0).Clear();
-	chart2.Series(1).Clear();
+/*void CMFCTeeChartDlg::drawans() {
 	if (numObjectives == 3) {
 		chart2.GetAspect().SetView3D(TRUE);
 		if (fun_id == 0) {
-			int nummm = 200;
-			double en = 0.5 / nummm;
-			for (int t = 0; t <= nummm; t++) {
-				for (int k = 0; k <= nummm; k++) {
+			int steps = 20000;
+			double M = 0.5 / steps;
+			for (int t = 0; t <= steps; t++) {
+				for (int k = 0; k <= steps; k++) {
 					
-					double x = 0 + en*t;
-					double y = 0 + en*k;
-					if(0.5 - x - y>=0&& 0.5 - x - y<=0.5)
-					chart2.Series(1).GetAsPoint3D().AddXYZ(x, y, 0.5 - x - y,NULL,RGB(255,255,255));
+					double x = 0 + M*t;
+					double y = 0 + M*k;
+					if (0.5 - x - y >= 0 && 0.5 - x - y <= 0.5)
+						chart2.Series(0).GetAsPoint3D().AddXYZ(x, y, 0.5 - x - y, NULL, RGB(255, 255, 255));
 				}
 			}
 		}
@@ -386,30 +372,17 @@ void CMFCTeeChartDlg::drawans() {
 
 	}
 
-}
+}*/
 void  CMFCTeeChartDlg::drawnsga(int i) {
 	int len = vsga[i].size();
 	
 	SeriesIndex.vt = VT_INT;
 	m_TChart.Series(0).Clear();
 
-	m_TChart.Series(1).Clear();
-
 	if (numObjectives == 3) {
 		m_TChart.GetAspect().SetView3D(TRUE);
 		for (int j = 0; j < len; j++)
 			m_TChart.Series(0).GetAsPoint3D().AddXYZ((vsga[i][j].f[0]), vsga[i][j].f[1], vsga[i][j].f[2], NULL, RGB(255, 255, 255));
-		//最优解还没找到数据
-		//for (int i = 0; i < 10; i++)
-		//m_TChart.Series(1).GetAsPoint3D().AddXYZ(i + 2, i, i, NULL, RGB(255, 255, 255));
-
-		//	CAspect  tmp = chart1.get_Aspect();
-		//	tmp.put_View3D(TRUE);
-
-		//	CPoint3DSeries0  tt(chart1.Series(0));
-		//chart1.AddSeries((long)tt);
-		//	tt.AddXYZ((vde[i][j].indiv.y_obj[0]),( vde[i][j].indiv.y_obj[1]), (vde[i][j].indiv.y_obj[2]), NULL, RGB(255, 255, 0));
-		//lineSeries.AddXYZ(vde[i][j].indiv.y_obj[0], vde[i][j].indiv.y_obj[1], vde[i][j].indiv.y_obj[2], NULL, RGB(0, 0, 255));
 	}
 
 	else {
@@ -458,7 +431,6 @@ void CMFCTeeChartDlg::OnBnClickedCle()
 {
 	// TODO: 在此添加控件通知处理程序代码
 	m_TChart.Series(0).Clear();
-	m_TChart.Series(1).Clear();
 	if(algoid==1) {
 		isNsgaEnd = true;
 	}
