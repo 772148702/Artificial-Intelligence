@@ -120,7 +120,7 @@ BOOL CMFCTeeChartDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// 设置小图标
 
 	// TODO: 在此添加额外的初始化代码
-	SetDlgItemText(IDC_IT, L"3000");
+	SetDlgItemText(IDC_IT, L"1500");
 	Speed.SetCurSel(1);
 	algo.SetCurSel(0);
 	m_cbxFUN.SetCurSel(1);
