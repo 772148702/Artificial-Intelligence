@@ -18,13 +18,15 @@
 #include "nsga.h"
 vector<vector<TSOP>> vde;
 vector<vector<one>> vsga;
+vector<double> igdv;
+vector<double> hvv;
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
 
 
 // 用于应用程序“关于”菜单项的 CAboutDlg 对话框
-void de_work(int id, int demension, int it, vector<vector<TSOP>>& vde);
+void de_work(int id, int demension, int it, vector<vector<TSOP>>& vde,vector<double>& igd, vector<double>& hv);
 class CAboutDlg : public CDialogEx
 {
 public:
@@ -63,8 +65,10 @@ CMFCTeeChartDlg::CMFCTeeChartDlg(CWnd* pParent /*=NULL*/)
 	: CDialogEx(CMFCTeeChartDlg::IDD, pParent)
 //	, m_TChart(0)
 
+
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
+	isEnd = true;
 }
 
 void CMFCTeeChartDlg::DoDataExchange(CDataExchange* pDX)
@@ -75,6 +79,8 @@ void CMFCTeeChartDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_COMBO_DIM, m_cbxDIM);
 	DDX_Control(pDX, IDC_COMBO2, algo);
 	DDX_Control(pDX, IDC_SPEED, Speed);
+	DDX_Control(pDX, IDC_TCHART3, igd);
+	DDX_Control(pDX, IDC_TCHART2, hv);
 }
 
 BEGIN_MESSAGE_MAP(CMFCTeeChartDlg, CDialogEx)
@@ -179,7 +185,7 @@ HCURSOR CMFCTeeChartDlg::OnQueryDragIcon()
 
 
 
-void de_work(int id, int demension, int it, vector<vector<TSOP>>& vde) {
+void de_work(int id, int demension, int it, vector<vector<TSOP>>& vde,vector<double>& igd, vector<double>& hv) {
 	strcpy(strFunctionType, "_TCH1");
 
 	int  total_run = 1;         // totoal number of runs
@@ -209,9 +215,9 @@ void de_work(int id, int demension, int it, vector<vector<TSOP>>& vde) {
 		rnd_uni_init = -(long)seed;
 		TMOEAD  MOEAD;
 
-		if (numObjectives == 3)  MOEAD.run(23, niche, max_gen, run, vde);  //23 -3  popsize 300
+		if (numObjectives == 3)  MOEAD.run(23, niche, max_gen, run, vde,igd, hv);  //23 -3  popsize 300
 
-		if (numObjectives == 2)  MOEAD.run(99, niche, max_gen, run, vde);  //99 -2  popsize 100
+		if (numObjectives == 2)  MOEAD.run(99, niche, max_gen, run, vde, igd, hv);  //99 -2  popsize 100
 
 	}
 
@@ -221,17 +227,20 @@ void de_work(int id, int demension, int it, vector<vector<TSOP>>& vde) {
 UINT CMFCTeeChartDlg::Thread1(LPVOID  param) {
 
 	CMFCTeeChartDlg * p = (CMFCTeeChartDlg *)param;
-	
+	hvv.clear();
+	igdv.clear();
+	vector<double> tmp1;
+	vector<double> tmp2;
 	if (p->algoid == 0) {
 		vde.clear();
-		de_work(p->fun_id, p->dim, p->iteration, vde);
+		de_work(p->fun_id, p->dim, p->iteration, vde, igdv, hvv);
 	}
 	else {
 		vsga.clear();
 		isNsgaEnd = false;
-		work(p->fun_id, p->dim, p->iteration, vsga);
+		work(p->fun_id, p->dim, p->iteration, vsga,igdv, hvv);
 	}
-
+	p->isEnd = true;
 	return 0;
 }
 
@@ -286,36 +295,48 @@ void CMFCTeeChartDlg::drawdmoea(int i) {
 			 m_TChart.Series(0).AddXY((vde[i][j].indiv.y_obj[0]), (vde[i][j].indiv.y_obj[1]), NULL ,RGB(255, 255, 255));
 			
 		}
+		igd.Series(0).Clear();
+		for (int j = 0; j < igdv.size(); j++) {
+			igd.Series(0).AddXY(j, igdv[j], NULL, RGB(255, 255, 255));
+		}
+		hv.Series(0).Clear();
+		for (int j = 0; j < hvv.size(); j++) {
+			hv.Series(0).AddXY(j, hvv[j], NULL, RGB(255, 255, 255));
+		}
 
 }
 void CMFCTeeChartDlg::OnClickedDraw()
 {
 	//Get_Config();
-
-	cnt = 0;
-	CMFCTeeChartDlg * a = this;
-	numObjectives = 3;
-	fun_id = 2;
-	algoid = 1;
-	Get_Config();
-	vsga.clear();
-	vde.clear();
-	thread1 = AfxBeginThread(Thread1, a);
-	//thread2 = AfxBeginThread(Thread2, a);
-	int speed=200;
-	isNsgaEnd = false;
-	int lo = Speed.GetCurSel();
-	if (lo == 1) {
-		speed = 200;
-	} 
-	if (lo == 2) {
-		speed = 50;
+	if (isEnd == true) {
+		cnt = 0;
+		isEnd = false;
+		CMFCTeeChartDlg * a = this;
+		numObjectives = 3;
+		fun_id = 2;
+		algoid = 1;
+		Get_Config();
+		vsga.clear();
+		vde.clear();
+		thread1 = AfxBeginThread(Thread1, a);
+		//thread2 = AfxBeginThread(Thread2, a);
+		int speed = 200;
+		isNsgaEnd = false;
+		int lo = Speed.GetCurSel();
+		if (lo == 1) {
+			speed = 200;
+		}
+		if (lo == 2) {
+			speed = 50;
+		}
+		if (lo == 3) {
+			speed = 10;
+		}
+		SetTimer(0, speed, NULL);
 	}
-	if (lo == 3) {
-		speed = 10;
+	else {
+		MessageBox(L"请等待程序结束后再重新运行");
 	}
-	SetTimer(0, speed, NULL);
-
 	
 	// TODO: 在此添加控件通知处理程序代码
 	// TODO: 在此添加控件通知处理程序代码
@@ -391,6 +412,14 @@ void  CMFCTeeChartDlg::drawnsga(int i) {
 			m_TChart.Series(0).AddXY((vsga[i][j].f[0]), vsga[i][j].f[1], NULL, RGB(255, 255, 255));
 
 	}
+	igd.Series(0).Clear();
+	for (int j = 0; j < igdv.size(); j++) {
+		igd.Series(0).AddXY(j, igdv[j], NULL, RGB(255, 255, 255));
+	}
+	hv.Series(0).Clear();
+	for (int j = 0; j < hvv.size(); j++) {
+		hv.Series(0).AddXY(j, hvv[j], NULL, RGB(255, 255, 255));
+	}
 }
 
 
@@ -431,6 +460,8 @@ void CMFCTeeChartDlg::OnBnClickedCle()
 {
 	// TODO: 在此添加控件通知处理程序代码
 	m_TChart.Series(0).Clear();
+	igd.Series(0).Clear();
+	hv.Series(0).Clear();
 	if(algoid==1) {
 		isNsgaEnd = true;
 	}

@@ -33,8 +33,11 @@ protected:
 	afx_msg HCURSOR OnQueryDragIcon();
 	DECLARE_MESSAGE_MAP()
 public:
+
 	//CTchart1 m_TChart;
 	CTChart m_TChart;
+	CTChart igd;
+	CTChart hv;
 	afx_msg void OnClickedDraw();
 	VARIANT SeriesIndex;
 	static UINT Thread1(LPVOID  param);
@@ -45,8 +48,8 @@ public:
 	void drawdmoea(int i);
 	void drawnsga(int i);
 	int cnt;
-	void drawans();
-	
+	//void drawans();
+
 	afx_msg void OnTimer(UINT_PTR nIDEvent);
 	CComboBox m_cbxFUN;
 	CComboBox m_cbxDIM;
@@ -55,7 +58,9 @@ public:
 	int iteration = 3000 ;
 	int algoid;
 	afx_msg void OnBnClickedCle();
-
+	bool isEnd;
 	CComboBox algo;
 	CComboBox Speed;
+
+
 };

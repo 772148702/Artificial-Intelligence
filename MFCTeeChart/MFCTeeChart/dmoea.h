@@ -6,6 +6,7 @@
 #include "individual.h"
 #include "scalarfunc.h"
 #include "recombination.h"
+#include "cmath"
 
 class TMOEAD
 {
@@ -23,7 +24,7 @@ public:
 	void update_reference(TIndividual &ind);           // update the approximation of ideal point
 	void update_problem(TIndividual &child, int id);   // compare and update the neighboring solutions
 	void evolution();                                  // mating restriction, recombination, mutation, update
-	void run(int sd, int nc, int mg, int rn, vector<vector <TSOP>>& tmp);          // execute MOEAD
+	void run(int sd, int nc, int mg, int rn, vector<vector <TSOP>>& tmp, vector<double>& igd, vector<double>& hv);          // execute MOEAD
 	void save_front(char savefilename[1024]);          // save the pareto front into files
 
 	vector <TSOP>  population;  // current population         
@@ -212,9 +213,57 @@ void TMOEAD::evolution()
 
 }
 
+void calcu(vector<double>& igd, vector<double>& hv, vector <TSOP > & val) {
+	//"DTLZ1","DTLZ2","DTLZ3", "DTLZ4"
+
+	double tmp = 0;
+	if (numObjectives == 2) {
+		//Ö±Ïß x+y=0.5
+		if (strcmp(strTestInstance, "DTLZ1") == 0) {
+			for (int i = 0; i < val.size(); i++) {
+				tmp+=abs(val[i].indiv.y_obj[0] + val[i].indiv.y_obj[1] - 0.5) / (pow(2, 0.5));
+			}
+
+		}
+		//x*x+y*y=1
+		else {
+			for (int i = 0; i < val.size(); i++) {
+				tmp += pow(pow(val[i].indiv.y_obj[0], 2) + pow(val[i].indiv.y_obj[1], 2), 0.5) - 1;
+			}
+			
+		}
+	}
+	else {
+		if (strcmp(strTestInstance, "DTLZ1") == 0) {
+			for (int i = 0; i < val.size(); i++) {
+				tmp += abs(val[i].indiv.y_obj[0] + val[i].indiv.y_obj[1] + val[i].indiv.y_obj[2] - 0.5) / (pow(3, 0.5));
+			}
+
+		}
+		else {
+			for (int i = 0; i < val.size(); i++) {
+				tmp += pow(pow(val[i].indiv.y_obj[0], 2) + pow(val[i].indiv.y_obj[1], 2)+ pow(val[i].indiv.y_obj[2], 2), 0.5) - 1;
+			}
+		}
+	}
+	tmp = tmp / val.size();
+	igd.push_back(tmp);
+	int mm = 20;
+	if (numObjectives == 2) {
+		for (int i = 0; i <val.size(); i++) {
+			tmp += abs((val[i].indiv.y_obj[0] - mm)*(val[i].indiv.y_obj[1] - mm));
+		}
+	}
+	else {
+		for (int i = 0; i < val.size(); i++) {
+			tmp += abs((val[i].indiv.y_obj[0] - mm)*(val[i].indiv.y_obj[1] - mm)*(val[i].indiv.y_obj[2] - mm));
+		}
+	}
+	hv.push_back(tmp);
+}
 
 
-void TMOEAD::run(int sd, int nc, int mg, int rn, vector<vector <TSOP>>& tmp)
+void TMOEAD::run(int sd, int nc, int mg, int rn, vector<vector <TSOP>>& tmp, vector<double>& igd, vector<double>& hv)
 {
 
 	// sd: integer number for generating weight vectors
@@ -228,6 +277,7 @@ void TMOEAD::run(int sd, int nc, int mg, int rn, vector<vector <TSOP>>& tmp)
 	for (int gen = 2; gen <= mg; gen++) {
 		evolution();
 		tmp.push_back(population);
+		calcu(igd, hv, population);
 	}
 	char savefilename[1024];
 	sprintf(savefilename, "ParetoFront/DMOEA_%s_R%d.dat", strTestInstance, rn);

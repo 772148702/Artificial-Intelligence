@@ -7,6 +7,7 @@
 #include <cstring>
 #include <cmath>
 #include <vector>
+#include  "hv.h"
 using namespace std;
 
 const double PI = acos(-1.0);
@@ -303,7 +304,58 @@ void select(int demension) {
 		if (cnt == popsize) break;
 	}
 }
-void work(int id, int demension, int iteration, vector<vector<one>>& vsga) {
+
+void cal_cu(vector<double>& igd, vector<double>& hv) {
+	//"DTLZ1","DTLZ2","DTLZ3", "DTLZ4"
+	int len = F[0].size();
+	double tmp = 0;
+	if (numObjectives == 2) {
+		//Ö±Ïß x+y=0.5
+		if (strcmp(strTestInstance, "DTLZ1") == 0) {
+			for (int i = 0; i < len; i++) {
+				tmp += abs(R[F[0][i]].f[0] + R[F[0][i]].f[1] - 0.5) / (pow(2, 0.5));
+			}
+
+		}
+		//x*x+y*y=1
+		else {
+			for (int i = 0; i < len; i++) {
+				tmp += pow(pow(R[F[0][i]].f[0], 2) + pow(R[F[0][i]].f[1], 2), 0.5) - 1;
+			}
+
+		}
+	}
+	else {
+		if (strcmp(strTestInstance, "DTLZ1") == 0) {
+			for (int i = 0; i < len; i++) {
+				tmp += abs(R[F[0][i]].f[0] + R[F[0][i]].f[1] + R[F[0][i]].f[2] - 0.5) / (pow(3, 0.5));
+			}
+
+		}
+		else {
+			for (int i = 0; i < len; i++) {
+				tmp += pow(pow(R[F[0][i]].f[0], 2) + pow(R[F[0][i]].f[1], 2) + pow(R[F[0][i]].f[2], 2), 0.5) - 1;
+			}
+		}
+	}
+	tmp = tmp / len;
+	igd.push_back(tmp);
+	vector<double> a1, a2, a3;
+	int mm = 20;
+	tmp = 0;
+	if (numObjectives == 2) {
+		for (int i = 0; i < len; i++) {
+			tmp += abs((R[F[0][i]].f[0] - mm)*(R[F[0][i]].f[1] - mm));
+		}
+	}
+	else {
+		for (int i = 0; i < len; i++) {
+			tmp += abs((R[F[0][i]].f[0] - mm)*(R[F[0][i]].f[1] - mm)*(R[F[0][i]].f[2] - mm));
+		}
+	}
+	hv.push_back(tmp);
+}
+void work(int id, int demension, int iteration, vector<vector<one>>& vsga,vector<double>& igd,vector<double>& hv) {
 	srand(time(0));
 	vsga.clear();
 	P.clear();
@@ -318,13 +370,16 @@ void work(int id, int demension, int iteration, vector<vector<one>>& vsga) {
 		select(demension);
 		vector<one> tmp;
 		int len = F[0].size();
+
 		for (int i = 0; i < len; i++) {
 			tmp.push_back(R[F[0][i]]);
 		}
+		cal_cu(igd, hv);
 		vsga.push_back(tmp);
 	}
 
 }
+
 int main() {
 
 	return 0;
