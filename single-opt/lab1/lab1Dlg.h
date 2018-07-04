@@ -8,6 +8,7 @@
 #include "tchart1.h"
 #include "CSeries.h"
 #include "CTChart.h"
+#include "afxcmn.h"
 // Clab1Dlg ¶Ô»°¿ò
 class Clab1Dlg : public CDialogEx
 {
@@ -36,6 +37,7 @@ protected:
 	afx_msg HCURSOR OnQueryDragIcon();
 	DECLARE_MESSAGE_MAP()
 public:
+	int speed = 30;
 	afx_msg void OnBnClickedOk();
 	bool running;
 	DE  de;
@@ -59,4 +61,6 @@ public:
 	CComboBox m_cbxDE;
 	CComboBox m_cbxPSO;
 	int * opt = new int[30];
+	CSliderCtrl slider;
+	afx_msg void OnNMCustomdrawSlider4(NMHDR *pNMHDR, LRESULT *pResult);
 };

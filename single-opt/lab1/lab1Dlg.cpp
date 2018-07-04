@@ -55,6 +55,7 @@ Clab1Dlg::Clab1Dlg(CWnd* pParent /*=NULL*/)
 
 	
 {
+	running = false;
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
 
@@ -67,6 +68,7 @@ void Clab1Dlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_TCHART5, m_chart2);
 	DDX_Control(pDX, IDC_IT_DE, m_cbxDE);
 	DDX_Control(pDX, IDC_IT_PSO, m_cbxPSO);
+	DDX_Control(pDX, IDC_SLIDER4, slider);
 }
 
 BEGIN_MESSAGE_MAP(Clab1Dlg, CDialogEx)
@@ -78,6 +80,7 @@ BEGIN_MESSAGE_MAP(Clab1Dlg, CDialogEx)
 
 	ON_WM_TIMER()
 	ON_BN_CLICKED(IDC_CLEAR, &Clab1Dlg::OnBnClickedClear)
+	ON_NOTIFY(NM_CUSTOMDRAW, IDC_SLIDER4, &Clab1Dlg::OnNMCustomdrawSlider4)
 END_MESSAGE_MAP()
 
 
@@ -118,6 +121,8 @@ BOOL Clab1Dlg::OnInitDialog()
 	for (int i = 0; i < 30; i++) {
 		opt[i] = (i + 1) * 100;
 	}
+	slider.SetRange(0, 100);
+	slider.SetPos(30);
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
 }
 
@@ -185,40 +190,44 @@ void Clab1Dlg::OnBnClickedOk()
 void Clab1Dlg::OnBnClickedStart()
 {
 	// TODO: 在此添加控件通知处理程序代码
-	CString str;
-	GetDlgItemText(IDC_FUN, str);
-	id = _ttoi(str);
-	running = true;
-	if (id == 2) {
-		MessageBox(_T("原测试函数文件不包含函数2，所以选择2默认为函数3"));
-		id = 3;
-		SetDlgItemText(IDC_FUN, L"3");
-	}
-	CString opt_str;
-	opt_str.Format(_T("%d"), opt[id - 1]),
-	SetDlgItemText(IDC_OPT, opt_str);
-	int nIndex = m_cbxDE.GetCurSel();
-	CString strDE;
-	m_cbxDE.GetLBText(nIndex, strDE);
-	nIndex = m_cbxPSO.GetCurSel();
-	CString strPSO;
-	m_cbxPSO.GetLBText(nIndex, strPSO);
-	it_de = _ttoi(strDE);
-	it_pso = _ttoi(strPSO);
-	UpdateData(FALSE);
-	if (id > 0 && id <= 30) {
-		Clab1Dlg * a = this;
-		SetTimer(0, 1000, NULL);
-		SetTimer(1, 1000, NULL);
-		cnt = 0;
-		cnt1 = 0;
-		thread1 = AfxBeginThread(Thread1, a);
-		thread2 = AfxBeginThread(Thread2, a);
+	if (running==false) {
+		CString str;
+		GetDlgItemText(IDC_FUN, str);
+		id = _ttoi(str);
+		running = true;
+		if (id == 2) {
+			MessageBox(_T("原测试函数文件不包含函数2，所以选择2默认为函数3"));
+			id = 3;
+			SetDlgItemText(IDC_FUN, L"3");
+		}
+		CString opt_str;
+		opt_str.Format(_T("%d"), opt[id - 1]),
+			SetDlgItemText(IDC_OPT, opt_str);
+		int nIndex = m_cbxDE.GetCurSel();
+		CString strDE;
+		m_cbxDE.GetLBText(nIndex, strDE);
+		nIndex = m_cbxPSO.GetCurSel();
+		CString strPSO;
+		m_cbxPSO.GetLBText(nIndex, strPSO);
+		it_de = _ttoi(strDE);
+		it_pso = _ttoi(strPSO);
+		UpdateData(FALSE);
+		if (id > 0 && id <= 30) {
+			Clab1Dlg * a = this;
+			SetTimer(0, 500-speed, NULL);
+			SetTimer(1, 500 - speed, NULL);
+			cnt = 0;
+			cnt1 = 0;
+			AfxBeginThread(Thread1, a);
+			
+		}
+		else {
+			MessageBox(_T("请输入函数的编号"));
+		}
 	}
 	else {
-		MessageBox(_T("请输入函数的编号"));
+		MessageBox(_T("请按清除后，再运行程序"));
 	}
-
 	
 }
 
@@ -227,13 +236,14 @@ UINT Clab1Dlg::Thread1(LPVOID  param) {
 	Clab1Dlg * p = (Clab1Dlg *)param;
 
 	p->de.run(p->id, p->it_de, p->running);
+	p->pso.run(p->id, p->it_pso, p->running);
 	return 0;
 }
 
 UINT Clab1Dlg::Thread2(LPVOID  param) {
 
 	Clab1Dlg * p = (Clab1Dlg *)param;
-	p->pso.run(p->id, p->it_pso, p->running);
+	
 	return 0;
 }
 
@@ -248,16 +258,16 @@ void Clab1Dlg::OnTimer(UINT_PTR nIDEvent)
 	if (0 == nIDEvent)
 	{
 		cnt++;
-		CSeries lineSeries = (CSeries)m_chart.Series(0);
+	
 
-		lineSeries.Clear();
+		((CSeries)m_chart.Series(0)).Clear();
 	
 		//lineSeries.
 		for (int i = 0; i <cnt*30&&i<de.getResult().size() ; i++)
 
 		{
 			if(de.getResult()[i]>0)
-			lineSeries.AddXY(i, de.getResult()[i], NULL, NULL);
+			((CSeries)m_chart.Series(0)).AddXY(i, de.getResult()[i], NULL, NULL);
 
 		}
 
@@ -267,14 +277,14 @@ void Clab1Dlg::OnTimer(UINT_PTR nIDEvent)
 		cnt1++;
 		CSeries lineSeries = (CSeries)m_chart2.Series(0);
 
-		lineSeries.Clear();
+		((CSeries) m_chart2.Series(0)).Clear();
 
 		//lineSeries.
 		for (int i = 0; i < cnt1 * 30 && i < pso.getResult().size(); i++)
 
 		{
 			if (pso.getResult()[i] > 0)
-				lineSeries.AddXY(i, pso.getResult()[i], NULL, NULL);
+				((CSeries)m_chart2.Series(0)).AddXY(i, pso.getResult()[i], NULL, NULL);
 		}
 		
 	}
@@ -300,4 +310,18 @@ void Clab1Dlg::OnBnClickedClear()
 	de.Clear_ans();
 	pso.Clear_ans();
 	cnt = 0;
+	cnt1 = 0;
+}
+
+
+void Clab1Dlg::OnNMCustomdrawSlider4(NMHDR *pNMHDR, LRESULT *pResult)
+{
+	LPNMCUSTOMDRAW pNMCD = reinterpret_cast<LPNMCUSTOMDRAW>(pNMHDR);
+	// TODO: 在此添加控件通知处理程序代码
+	*pResult = 0;
+	int nPos = slider.GetPos();
+	CString str = L"";
+	speed = nPos;
+	str.Format(L"%d%%", nPos);
+	SetDlgItemText(IDC_EDIT3, str);
 }
