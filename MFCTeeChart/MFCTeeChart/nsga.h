@@ -341,19 +341,20 @@ void cal_cu(vector<double>& igd, vector<double>& hv) {
 	tmp = tmp / len;
 	igd.push_back(tmp);
 	vector<double> a1, a2, a3;
+	for (int i = 0; i < len; i++) {
+		a1.push_back(R[F[0][i]].f[0]);
+		a2.push_back(R[F[0][i]].f[1]);
+		a3.push_back(R[F[0][i]].f[2]);
+	}
 	int mm = 20;
 	tmp = 0;
 	if (numObjectives == 2) {
-		for (int i = 0; i < len; i++) {
-			tmp += abs((R[F[0][i]].f[0] - mm)*(R[F[0][i]].f[1] - mm));
-		}
+		tmp = get_hv(a1, a2);
 	}
 	else {
-		for (int i = 0; i < len; i++) {
-			tmp += abs((R[F[0][i]].f[0] - mm)*(R[F[0][i]].f[1] - mm)*(R[F[0][i]].f[2] - mm));
-		}
+		tmp = get_hv(a1, a2, a3);
 	}
-	hv.push_back(tmp);
+	hv.push_back(abs(tmp));
 }
 void work(int id, int demension, int iteration, vector<vector<one>>& vsga,vector<double>& igd,vector<double>& hv) {
 	srand(time(0));

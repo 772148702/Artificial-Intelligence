@@ -106,7 +106,6 @@
     <ClInclude Include="dmoea.h" />
     <ClInclude Include="global.h" />
     <ClInclude Include="hv.h" />
-    <ClInclude Include="hv2.h" />
     <ClInclude Include="individual.h" />
     <ClInclude Include="MFCTeeChart.h" />
     <ClInclude Include="MFCTeeChartDlg.h" />

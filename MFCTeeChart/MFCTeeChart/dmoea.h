@@ -7,6 +7,7 @@
 #include "scalarfunc.h"
 #include "recombination.h"
 #include "cmath"
+#include "hv.h"
 
 class TMOEAD
 {
@@ -249,17 +250,21 @@ void calcu(vector<double>& igd, vector<double>& hv, vector <TSOP > & val) {
 	tmp = tmp / val.size();
 	igd.push_back(tmp);
 	int mm = 20;
+	vector<double> a1, a2, a3;
+	for (int i = 0; i < val.size(); i++) {
+		a1.push_back(val[i].indiv.y_obj[0]);
+		a2.push_back(val[i].indiv.y_obj[1]);
+		if(numObjectives==3)
+		a3.push_back(val[i].indiv.y_obj[2]);
+	}
 	if (numObjectives == 2) {
-		for (int i = 0; i <val.size(); i++) {
-			tmp += abs((val[i].indiv.y_obj[0] - mm)*(val[i].indiv.y_obj[1] - mm));
-		}
+		tmp = get_hv(a1, a2);
+
 	}
 	else {
-		for (int i = 0; i < val.size(); i++) {
-			tmp += abs((val[i].indiv.y_obj[0] - mm)*(val[i].indiv.y_obj[1] - mm)*(val[i].indiv.y_obj[2] - mm));
-		}
+		tmp = get_hv(a1, a2,a3);
 	}
-	hv.push_back(tmp);
+	hv.push_back(abs(tmp));
 }
 
 
