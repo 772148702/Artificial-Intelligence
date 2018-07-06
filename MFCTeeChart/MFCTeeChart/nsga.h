@@ -354,7 +354,7 @@ void cal_cu(vector<double>& igd, vector<double>& hv) {
 	else {
 		tmp = get_hv(a1, a2, a3);
 	}
-	hv.push_back(abs(tmp));
+	hv.push_back(tmp);
 }
 void work(int id, int demension, int iteration, vector<vector<one>>& vsga,vector<double>& igd,vector<double>& hv) {
 	srand(time(0));

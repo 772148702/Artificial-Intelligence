@@ -31,7 +31,14 @@ double get_hv(vector<double> &x, vector<double> &y) {
 	vector <point2D> p; p.clear();
 	for (int i = 0; i < n; ++i) p.push_back(point2D(x[i], y[i]));
 	sort(p.begin(), p.end());
-	double m = 2.0, lasty = 2.0, ret = 0.0;
+
+	double m = x[0], lasty = x[0], ret = 0.0;
+	for (int i = 0; i < n; i++) {
+		m = max(m, x[i]);
+		m = max(m, y[i]);
+	}
+	m = m + 1;
+	lasty = m;
 	for (int i = 0; i < n; ++i) {
 		ret += (lasty - p[i].y) * (m - p[i].x);
 		lasty = p[i].y;
@@ -41,10 +48,16 @@ double get_hv(vector<double> &x, vector<double> &y) {
 double get_hv(vector<double> &x, vector<double> &y, vector<double> &z) {
 	int n = x.size();
 	vector <point3D> p; p.clear();
-	double m = 2.0;
+	double m = 10000;
+	m = x[0];
+	for (int i = 0; i < n; i++) {
+		m = max(max(x[i], y[i]),m);
+		m = max(m, z[i]);
+	}
+	m = m + 1;
 	for (int i = 0; i < n; ++i)
 		p.push_back(point3D(m - x[i], m - y[i], m - z[i]));
-	double INF = 3.0;
+	double INF = m+1;
 	set <point2D> s;
 	set <point2D> ::iterator it1, it2, it3, tmp;
 	s.clear();

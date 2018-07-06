@@ -264,7 +264,7 @@ void calcu(vector<double>& igd, vector<double>& hv, vector <TSOP > & val) {
 	else {
 		tmp = get_hv(a1, a2,a3);
 	}
-	hv.push_back(abs(tmp));
+	hv.push_back(tmp);
 }
 
 
